@@ -1,0 +1,2 @@
+defualt:default
+admin:admin

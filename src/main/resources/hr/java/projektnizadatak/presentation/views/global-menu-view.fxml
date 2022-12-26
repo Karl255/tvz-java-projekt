@@ -6,6 +6,9 @@
 
 <?import javafx.geometry.Insets?>
 <MenuBar xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/19" fx:controller="hr.java.projektnizadatak.presentation.controllers.GlobalMenuController">
+	<Menu mnemonicParsing="false" text="User">
+		<MenuItem mnemonicParsing="false" text="Log out" onAction="#logout"/>
+	</Menu>
 	<Menu mnemonicParsing="false" text="View">
 		<MenuItem mnemonicParsing="false" text="Main screen" onAction="#showMainScreen"/>
 	</Menu>
@@ -16,9 +19,6 @@
 			<MenuItem mnemonicParsing="false" text="*Data 3"/>
 		</Menu>
 		<MenuItem mnemonicParsing="false" text="*Changes"/>
-	</Menu>
-	<Menu mnemonicParsing="false" text="User">
-		<MenuItem mnemonicParsing="false" text="*Log out"/>
 	</Menu>
 	<padding>
 		<Insets/>
