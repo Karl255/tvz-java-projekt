@@ -1,4 +1,4 @@
-package hr.java.projektnizadatak;
+package hr.java.projektnizadatak.presentation;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
