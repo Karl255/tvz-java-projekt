@@ -1,2 +1,2 @@
-defualt:default
-admin:admin
+admin:jGl25bVBBBW96Qi9Te4V37Fnqchz/Eu4qB9vKrRIqRg=
+default:N6juwc4ZaH0TL+KQUdymKdFk4sSVi6FB1fQTOjPwaI8=

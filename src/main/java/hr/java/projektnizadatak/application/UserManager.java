@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class UserManager {
 	private final UserStore userStore;
-	private User loggedIn = null;
+	private User loggedInUser = null;
 
 	public UserManager(UserStore userStore) {
 		this.userStore = userStore;
@@ -19,14 +19,14 @@ public class UserManager {
 			.anyMatch(user::equals);
 
 		if (found) {
-			loggedIn = user;
+			loggedInUser = user;
 		}
 
 		return found;
 	}
 
 	public void logout() {
-		loggedIn = null;
+		loggedInUser = null;
 	}
 
 	public boolean tryAddUser(User user) {
@@ -45,5 +45,9 @@ public class UserManager {
 		users.add(user);
 		userStore.storeUsers(users);
 		return true;
+	}
+
+	public User getUser() {
+		return loggedInUser;
 	}
 }

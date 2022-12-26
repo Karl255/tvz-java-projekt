@@ -27,7 +27,10 @@ public class UserFileStore implements UserStore {
 
 	private User parseUser(String line) {
 		var s = line.split(":");
-		return new User(s[0], s[1]);
+		
+		return new User.UserBuilder(s[0])
+			.withPasswordHash(s[1])
+			.build();
 	}
 
 	@Override
