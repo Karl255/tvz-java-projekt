@@ -35,6 +35,7 @@ public class UserManager {
 		}
 		
 		var users = new ArrayList<>(userStore.loadUsers());
+		
 		boolean usernameTaken = users.stream()
 			.anyMatch(u -> u.username().equals(user.username()));
 		

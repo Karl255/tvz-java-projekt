@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class UserFileStore implements UserStore {
-	private final String USERS_FILE_PATH = "data/users.txt";
+	private static final String USERS_FILE_PATH = "data/users.txt";
 
 	@Override
 	public List<User> loadUsers() {
