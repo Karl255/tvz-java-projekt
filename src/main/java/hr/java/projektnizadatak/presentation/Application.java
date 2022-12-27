@@ -13,7 +13,7 @@ import java.util.Objects;
 
 public class Application extends javafx.application.Application {
 	private static Stage stage;
-	
+
 	private static UserManager userManager = new UserManager(new UserFileStore());
 
 	public static void main(String[] args) {
@@ -38,7 +38,7 @@ public class Application extends javafx.application.Application {
 	}
 
 	@Override
-	public void start(Stage stage) throws IOException {
+	public void start(Stage stage) {
 		Application.stage = stage;
 
 		stage.setTitle("Projektni zadatak");

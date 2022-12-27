@@ -10,12 +10,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class UserFileStore implements UserStore {
-	private static final String USERS_FILE_PATH = "data/users.txt";
+	private static final Path USERS_FILE_PATH = Path.of("data/users.txt");
+
+	public UserFileStore() {
+		FileUtil.ensureFileExists(USERS_FILE_PATH);
+	}
 
 	@Override
 	public List<User> loadUsers() {
 		try {
-			return Files.readAllLines(Path.of(USERS_FILE_PATH))
+			return Files.readAllLines(USERS_FILE_PATH)
 				.stream()
 				.map(this::parseUser)
 				.toList();
@@ -40,7 +44,7 @@ public class UserFileStore implements UserStore {
 			.collect(Collectors.joining());
 
 		try {
-			Files.writeString(Path.of(USERS_FILE_PATH), serialized);
+			Files.writeString(USERS_FILE_PATH, serialized);
 		} catch (IOException e) {
 			// TODO: implement proper error handling
 			throw new RuntimeException(e);
