@@ -1,6 +1,8 @@
 package hr.java.projektnizadatak.application;
 
 import hr.java.projektnizadatak.application.entities.User;
+import hr.java.projektnizadatak.shared.exceptions.InvalidUsernameException;
+import hr.java.projektnizadatak.shared.exceptions.UsernameTakenException;
 
 import java.util.ArrayList;
 
@@ -12,40 +14,48 @@ public class UserManager {
 		this.userStore = userStore;
 	}
 
-	public boolean tryLoginUser(User user) {
+	public boolean tryLoginUser(String username, String password) {
+		var passwordHash = User.hashPassword(password);
 		var users = userStore.loadUsers();
 
 		var found = users.stream()
-			.anyMatch(user::equals);
+			.filter(u -> u.username().equals(username) && u.passwordHash().equals(passwordHash))
+			.findFirst();
 
-		if (found) {
-			loggedInUser = user;
+		if (found.isPresent()) {
+			loggedInUser = found.get();
 		}
 
-		return found;
+		return found.isPresent();
 	}
 
 	public void logout() {
 		loggedInUser = null;
 	}
 
-	public boolean tryAddUser(User user) {
-		if (!user.isUsernameValid()) {
-			return false;
+	public User createUser(String username, String password) throws InvalidUsernameException, UsernameTakenException {
+		if (!User.isUsernameValid(username)) {
+			throw new InvalidUsernameException("Invalid username: " + username);
 		}
-		
+
+		var passwordHash = User.hashPassword(password);
 		var users = new ArrayList<>(userStore.loadUsers());
-		
+
 		boolean usernameTaken = users.stream()
-			.anyMatch(u -> u.username().equals(user.username()));
-		
+			.anyMatch(u -> u.username().equals(username));
+
 		if (usernameTaken) {
-			return false;
+			throw new UsernameTakenException("Username taken: " + username);
 		}
+
+		var user = new User.UserBuilder(username)
+			.withPasswordHash(passwordHash)
+			.build();
 		
 		users.add(user);
 		userStore.storeUsers(users);
-		return true;
+		
+		return user;
 	}
 
 	public User getUser() {

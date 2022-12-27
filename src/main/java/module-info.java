@@ -11,4 +11,5 @@ module hr.java.projektnizadatak {
 	opens hr.java.projektnizadatak.presentation.controllers to javafx.fxml;
 	exports hr.java.projektnizadatak.presentation.models;
 	exports hr.java.projektnizadatak.presentation.views;
+	exports hr.java.projektnizadatak.shared.exceptions;
 }

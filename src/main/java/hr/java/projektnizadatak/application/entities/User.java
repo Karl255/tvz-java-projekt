@@ -16,7 +16,7 @@ public final class User {
 		this.passwordHash = passwordHash;
 	}
 
-	private static String digestPasswordToBase64(String password) {
+	public static String hashPassword(String password) {
 		try {
 			var digest = MessageDigest.getInstance("SHA-256")
 				.digest(password.getBytes());
@@ -28,7 +28,7 @@ public final class User {
 		}
 	}
 
-	public boolean isUsernameValid() {
+	public static boolean isUsernameValid(String username) {
 		return VALID_USERNAME_PATTERN.matcher(username)
 			.matches();
 	}
@@ -69,7 +69,7 @@ public final class User {
 		}
 
 		public UserBuilder withPassword(String password) {
-			this.passwordHash = digestPasswordToBase64(password);
+			this.passwordHash = hashPassword(password);
 			return this;
 		}
 
