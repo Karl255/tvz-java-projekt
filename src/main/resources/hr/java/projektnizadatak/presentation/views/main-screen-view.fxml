@@ -40,11 +40,9 @@
 				<Label alignment="CENTER" layoutX="222.0" layoutY="373.0" text="Wednesday" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER"/>
 				<Label alignment="CENTER" layoutX="425.0" layoutY="373.0" text="Thursday" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER"/>
 				<Label alignment="CENTER" layoutX="628.0" layoutY="373.0" text="Friday" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER"/>
-				<ComboBox fx:id="departmentComboBox" maxWidth="1.7976931348623157E308" onAction="#selectDepartment"/>
-				<ComboBox fx:id="semesterComboBox" layoutX="18.0" layoutY="18.0" maxWidth="1.7976931348623157E308" onAction="#selectSemester" GridPane.columnIndex="1"/>
-				<TextArea fx:id="depsOutput" prefHeight="200.0" prefWidth="200.0" wrapText="true" GridPane.rowIndex="2"/>
-				<TextArea fx:id="semsOutput" layoutX="18.0" layoutY="76.0" prefHeight="200.0" prefWidth="200.0" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-				<TextArea fx:id="calendarOutput" layoutX="222.0" layoutY="76.0" prefHeight="200.0" prefWidth="200.0" wrapText="true" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="2"/>
+				<ComboBox fx:id="departmentComboBox" maxWidth="1.7976931348623157E308" onAction="#selectDepartment" promptText="&lt;select&gt;"/>
+				<ComboBox fx:id="semesterComboBox" layoutX="18.0" layoutY="18.0" maxWidth="1.7976931348623157E308" onAction="#selectSemester" GridPane.columnIndex="1" promptText="&lt;select&gt;"/>
+				<TextArea fx:id="calendarOutput" layoutX="222.0" layoutY="76.0" prefHeight="200.0" prefWidth="200.0" wrapText="true" GridPane.columnIndex="0" GridPane.columnSpan="5" GridPane.rowIndex="2"/>
 			</children>
 		</GridPane>
 	</children>

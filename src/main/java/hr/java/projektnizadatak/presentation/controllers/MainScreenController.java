@@ -12,6 +12,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 
+import java.time.LocalDate;
+
 public class MainScreenController {
 	@FXML
 	private ComboBox<Department> departmentComboBox;
@@ -20,14 +22,14 @@ public class MainScreenController {
 	private ComboBox<Semester> semesterComboBox;
 	
 	@FXML
-	private TextArea depsOutput;
-	@FXML
-	private TextArea semsOutput;
-	@FXML
 	private TextArea calendarOutput;
 	
 	// TODO: move this to a different place
 	private final ScheduleApiSource api = new ScheduleApiSource();
+	
+	private final int calendarYear = 2022;
+	private final LocalDate calendarStart = LocalDate.of(2022, 10, 3);
+	private final int caledarDays = 7;
 	
 	public void initialize() {
 		departmentComboBox.setConverter(new DepartmentStringConverter());
@@ -38,12 +40,13 @@ public class MainScreenController {
 		User user = Application.getUserManager().getUser();
 		
 		if (user.defaultSemester() != null) {
-			getCalendar();
+			var sem = user.defaultSemester();
+			getCalendar(sem.subdepartment(), sem.semester(), calendarYear, calendarStart, caledarDays);
 		}
 		
 		if (user.defaultDepartmentCode() != null) {
 			if (applyDefaultDepartment(user.defaultDepartmentCode())) {
-				semesterComboBox.setItems(FXCollections.observableList(api.fetchAvailableSemesters()));
+				semesterComboBox.setItems(FXCollections.observableList(api.fetchAvailableSemesters(user.defaultDepartmentCode(), 2022)));
 				
 				if (user.defaultSemester() != null) {
 					applyDefaultSemester(user.defaultSemester());
@@ -70,16 +73,24 @@ public class MainScreenController {
 	
 	@FXML
 	private void selectDepartment() {
-		// fetch new semesters
+		var department = departmentComboBox.getSelectionModel().getSelectedItem();
+		
+		if (department != null) {
+			semesterComboBox.setItems(FXCollections.observableList(api.fetchAvailableSemesters(department.code(), 2022)));
+		}
 	}
 	
 	@FXML
 	private void selectSemester() {
+		var semester = semesterComboBox.getSelectionModel().getSelectedItem();
 		
+		if (semester != null) {
+			getCalendar(semester.subdepartment(), semester.semester(), calendarYear, calendarStart, caledarDays);
+		}
 	}
 	
-	private void getCalendar() {
-		var calendar = api.fetchCalendar();
+	private void getCalendar(String subdepartment, int semester, int year, LocalDate start, int days) {
+		var calendar = api.fetchCalendar(subdepartment, semester, year, start, days);
 		var sb = new StringBuilder();
 		
 		for (var scheduleItem : calendar.scheduleItems()) {
