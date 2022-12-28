@@ -8,12 +8,17 @@ import java.util.regex.Pattern;
 
 public final class User {
 	private static final Pattern VALID_USERNAME_PATTERN = Pattern.compile("^[A-Za-z0-9\\-_ ]{4,32}$");
+	
 	private final String username;
 	private final String passwordHash;
+	private final String defaultDepartmentCode; 
+	private final Semester defaultSemester;
 
-	private User(String username, String passwordHash) {
+	private User(String username, String passwordHash, String defaultDepartmentCode, Semester defaultSemester) {
 		this.username = username;
 		this.passwordHash = passwordHash;
+		this.defaultDepartmentCode = defaultDepartmentCode;
+		this.defaultSemester = defaultSemester;
 	}
 
 	public static String hashPassword(String password) {
@@ -37,6 +42,10 @@ public final class User {
 
 	public String passwordHash() {return passwordHash;}
 
+	public String defaultDepartmentCode() {return defaultDepartmentCode;}
+
+	public Semester defaultSemester() {return defaultSemester;}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == this) {return true;}
@@ -52,12 +61,19 @@ public final class User {
 
 	@Override
 	public String toString() {
-		return username;
+		return "User{" +
+			"username=" + username +
+			", passwordHash=" + passwordHash +
+			", defaultDepartmentCode=" + defaultDepartmentCode +
+			", defaultSemester=" + defaultSemester +
+			'}';
 	}
 
 	public static class UserBuilder {
 		private final String username;
 		private String passwordHash;
+		private String defaultDepartmentCode = null;
+		private Semester defaultSemester = null;
 
 		public UserBuilder(String username) {
 			this.username = username;
@@ -72,9 +88,19 @@ public final class User {
 			this.passwordHash = hashPassword(password);
 			return this;
 		}
+		
+		public UserBuilder withDefaultDepartmentCode(String defaultDepartmentCode) {
+			this.defaultDepartmentCode = defaultDepartmentCode;
+			return this;
+		}
+		
+		public UserBuilder withDefaultSemester(Semester defaultSemester) {
+			this.defaultSemester = defaultSemester;
+			return this;
+		}
 
 		public User build() {
-			return new User(username, passwordHash);
+			return new User(username, passwordHash, defaultDepartmentCode, defaultSemester);
 		}
 	}
 }

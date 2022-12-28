@@ -1,6 +1,7 @@
 package hr.java.projektnizadatak.data;
 
 import hr.java.projektnizadatak.application.UserStore;
+import hr.java.projektnizadatak.application.entities.Semester;
 import hr.java.projektnizadatak.application.entities.User;
 
 import java.io.IOException;
@@ -30,13 +31,28 @@ public class UserFileStore implements UserStore {
 	}
 
 	private User parseUser(String line) {
-		var s = line.split(":");
+		var s = line.split(":", -1);
+		var ub = new User.UserBuilder(s[0])
+			.withPasswordHash(s[1]);
 		
-		return new User.UserBuilder(s[0])
-			.withPasswordHash(s[1])
-			.build();
+		if (!s[2].equals("")) {
+			ub.withDefaultDepartmentCode(s[2]);
+		}
+		
+		if (!s[3].equals("")) {
+			ub.withDefaultSemester(parseSemester(s[3]));
+		}
+		
+		return ub.build();
 	}
 
+	private Semester parseSemester(String string) {
+		var splits = string.split("-");
+		int semesterNumber = Integer.parseInt(splits[0]);
+		
+		return new Semester(splits[1], semesterNumber);
+	}
+	
 	@Override
 	public void storeUsers(List<User> users) {
 		var serialized = users.stream()
@@ -52,6 +68,21 @@ public class UserFileStore implements UserStore {
 	}
 
 	private String formatUser(User user) {
-		return user.username() + ':' + user.passwordHash() + '\n';
+		return new StringBuilder()
+			.append(user.username())
+			.append(':')
+			.append(user.passwordHash())
+			.append(':')
+			.append(user.defaultDepartmentCode() != null ? user.defaultDepartmentCode() : "")
+			.append(':')
+			.append(semesterToString(user.defaultSemester()))
+			.append('\n')
+			.toString();
+	}
+	
+	private String semesterToString(Semester semester) {
+		return semester != null
+			? semester.semester() + '-' + semester.subdepartment()
+			: "";
 	}
 }

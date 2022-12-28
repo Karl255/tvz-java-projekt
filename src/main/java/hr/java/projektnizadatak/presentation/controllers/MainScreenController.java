@@ -2,7 +2,9 @@ package hr.java.projektnizadatak.presentation.controllers;
 
 import hr.java.projektnizadatak.application.entities.Department;
 import hr.java.projektnizadatak.application.entities.Semester;
+import hr.java.projektnizadatak.application.entities.User;
 import hr.java.projektnizadatak.data.ScheduleApiSource;
+import hr.java.projektnizadatak.presentation.Application;
 import hr.java.projektnizadatak.presentation.util.DepartmentStringConverter;
 import hr.java.projektnizadatak.presentation.util.SemesterStringConverter;
 import javafx.collections.FXCollections;
@@ -24,6 +26,7 @@ public class MainScreenController {
 	@FXML
 	private TextArea calendarOutput;
 	
+	// TODO: move this to a different place
 	private final ScheduleApiSource api = new ScheduleApiSource();
 	
 	public void initialize() {
@@ -32,12 +35,37 @@ public class MainScreenController {
 		
 		departmentComboBox.setItems(FXCollections.observableList(api.fetchAvailableDepartments()));
 		
-		// TODO: apply user settings
-		// TODO: select department in combobox
+		User user = Application.getUserManager().getUser();
 		
-		// TODO: only if departmentModel has department selected
-		semesterComboBox.setItems(FXCollections.observableList(api.fetchAvailableSemesters()));
-		// TODO: select semester in combobox
+		if (user.defaultSemester() != null) {
+			getCalendar();
+		}
+		
+		if (user.defaultDepartmentCode() != null) {
+			if (applyDefaultDepartment(user.defaultDepartmentCode())) {
+				semesterComboBox.setItems(FXCollections.observableList(api.fetchAvailableSemesters()));
+				
+				if (user.defaultSemester() != null) {
+					applyDefaultSemester(user.defaultSemester());
+				}
+			}
+		}
+	}
+	
+	private boolean applyDefaultDepartment(String departmentCode) {
+		var department = departmentComboBox.getItems().stream()
+			.filter(d -> d.code().equals(departmentCode))
+			.findFirst();
+		
+		if (department.isPresent()) {
+			departmentComboBox.getSelectionModel().select(department.get());
+		}
+		
+		return department.isPresent();
+	}
+	
+	private void applyDefaultSemester(Semester semester) {
+		semesterComboBox.getSelectionModel().select(semester);
 	}
 	
 	@FXML
@@ -48,6 +76,25 @@ public class MainScreenController {
 	@FXML
 	private void selectSemester() {
 		
+	}
+	
+	private void getCalendar() {
+		var calendar = api.fetchCalendar();
+		var sb = new StringBuilder();
+		
+		for (var scheduleItem : calendar.scheduleItems()) {
+			sb.append(scheduleItem.title())
+				.append('\n');
+		}
+		
+		sb.append('\n');
+		
+		for (var holiday : calendar.holidays()) {
+			sb.append(holiday.title())
+				.append('\n');
+		}
+		
+		calendarOutput.setText(sb.toString());
 	}
 }
 

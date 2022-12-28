@@ -26,13 +26,15 @@ public class ScheduleApiSource implements ScheduleSource {
 			.toList();
 	}
 	
+	// TODO: add arguments
 	public List<Semester> fetchAvailableSemesters() {
 		String json = HttpUtil.fetchFromEndpoint(AVAILABLE_SEMESTERS_ENDPOINT);
 		return Arrays.stream(gson.fromJson(json, ApiSemester[].class))
 			.map(ApiSemester::toSemester)
 			.toList();
 	}
-	
+
+	// TODO: add arguments
 	public Calendar fetchCalendar() {
 		String json = HttpUtil.fetchFromEndpoint(CALENDAR_ENDPOINT);
 		var events = gson.fromJson(json, ApiEvent[].class);
