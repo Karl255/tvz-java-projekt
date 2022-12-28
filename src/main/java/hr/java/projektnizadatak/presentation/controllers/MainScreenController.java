@@ -11,6 +11,7 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.Pane;
 
 import java.time.LocalDate;
 
@@ -23,6 +24,13 @@ public class MainScreenController {
 	
 	@FXML
 	private TextArea calendarOutput;
+	
+	@FXML
+	private Pane mondayPane;
+	@FXML
+	private Pane tuesdayPane;
+	@FXML
+	private Pane wednesdayPane;
 	
 	// TODO: move this to a different place
 	private final ScheduleApiSource api = new ScheduleApiSource();
@@ -106,6 +114,14 @@ public class MainScreenController {
 		}
 		
 		calendarOutput.setText(sb.toString());
+		
+		
+		// -----
+		
+		var item = new CalendarItemController();
+		item.setLayoutX(20);
+		item.setLayoutY(20);
+		mondayPane.getChildren().add(0, item);
 	}
 	
 	@FXML

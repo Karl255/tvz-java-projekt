@@ -7,8 +7,10 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 
+<?import hr.java.projektnizadatak.presentation.controllers.CalendarItemController?>
 <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hr.java.projektnizadatak.presentation.controllers.MainScreenController">
 	<columnConstraints>
 		<ColumnConstraints hgrow="ALWAYS" minWidth="10.0"/>
@@ -44,9 +46,15 @@
 
 				<ComboBox fx:id="departmentComboBox" maxWidth="1.7976931348623157E308" onAction="#selectDepartment" promptText="&lt;select&gt;"/>
 				<ComboBox fx:id="semesterComboBox" layoutX="18.0" layoutY="18.0" maxWidth="1.7976931348623157E308" onAction="#selectSemester" promptText="&lt;select&gt;" GridPane.columnIndex="1"/>
-				<Button mnemonicParsing="false" text="Save" GridPane.columnIndex="2" GridPane.halignment="LEFT" onAction="#saveSettings"/>
+				<Button mnemonicParsing="false" onAction="#saveSettings" text="Save" GridPane.columnIndex="2" GridPane.halignment="LEFT"/>
 
-				<TextArea fx:id="calendarOutput" layoutX="222.0" layoutY="76.0" prefHeight="200.0" prefWidth="200.0" wrapText="true" GridPane.columnIndex="0" GridPane.columnSpan="5" GridPane.rowIndex="2"/>
+				<Pane fx:id="mondayPane" layoutX="222.0" layoutY="76.0" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2">
+					<CalendarItemController timestamp="10:00 - 12:00" title="something something"/>
+					<CalendarItemController layoutY="100" prefWidth="50"/>
+				</Pane>
+				<Pane fx:id="tuesdayPane" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+				<Pane fx:id="wednesdayPane" layoutX="18.0" layoutY="76.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+				<TextArea fx:id="calendarOutput" layoutX="222.0" layoutY="76.0" prefHeight="200.0" prefWidth="200.0" wrapText="true" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="2"/>
 			</children>
 		</GridPane>
 	</children>
