@@ -2,11 +2,13 @@ package hr.java.projektnizadatak.data;
 
 import com.google.gson.Gson;
 import hr.java.projektnizadatak.application.ScheduleSource;
+import hr.java.projektnizadatak.application.entities.*;
 import hr.java.projektnizadatak.data.api_response.ApiDepartment;
 import hr.java.projektnizadatak.data.api_response.ApiEvent;
 import hr.java.projektnizadatak.data.api_response.ApiSemester;
 
 import java.net.URI;
+import java.util.Arrays;
 import java.util.List;
 
 public class ScheduleApiSource implements ScheduleSource {
@@ -16,20 +18,35 @@ public class ScheduleApiSource implements ScheduleSource {
 	
 	private static final Gson gson = new Gson();
 	
-	public List<ApiDepartment> fetchAvailableDepartments() {
+	public List<Department> fetchAvailableDepartments() {
 		String json = HttpUtil.fetchFromEndpoint(AVAILABLE_DEPARTMENTS_ENDPOINT);
 		
-		return List.of(gson.fromJson(json, ApiDepartment[].class));
+		return Arrays.stream(gson.fromJson(json, ApiDepartment[].class))
+			.map(ApiDepartment::toDepartment)
+			.toList();
 	}
 	
-	public List<ApiSemester> fetchAvailableSemesters() {
+	public List<Semester> fetchAvailableSemesters() {
 		String json = HttpUtil.fetchFromEndpoint(AVAILABLE_SEMESTERS_ENDPOINT);
-		return List.of(gson.fromJson(json, ApiSemester[].class));
+		return Arrays.stream(gson.fromJson(json, ApiSemester[].class))
+			.map(ApiSemester::toSemester)
+			.toList();
 	}
 	
-	public List<ApiEvent> fetchCalendar() {
+	public Calendar fetchCalendar() {
 		String json = HttpUtil.fetchFromEndpoint(CALENDAR_ENDPOINT);
+		var events = gson.fromJson(json, ApiEvent[].class);
 		
-		return List.of(gson.fromJson(json, ApiEvent[].class));
+		var scheduleItems = Arrays.stream(events)
+			.filter(e -> !e.allDay())
+			.map(ApiEvent::toScheduleItem)
+			.toList();
+		
+		var holidays = Arrays.stream(events)
+			.filter(ApiEvent::allDay)
+			.map(ApiEvent::toHoliday)
+			.toList();
+		
+		return new Calendar(scheduleItems, holidays);
 	}
 }

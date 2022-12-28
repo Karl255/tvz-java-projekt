@@ -13,7 +13,7 @@ public class MainScreenController {
 	@FXML
 	private TextArea calendarOutput;
 	
-	private ScheduleApiSource api = new ScheduleApiSource();
+	private final ScheduleApiSource api = new ScheduleApiSource();
 	
 	@FXML
 	private void fetchDeps() {
@@ -45,11 +45,11 @@ public class MainScreenController {
 	
 	@FXML
 	private void fetchCalendar() {
-		var events = api.fetchCalendar();
+		var calendar = api.fetchCalendar();
 		var sb = new StringBuilder();
 
-		for (var event : events) {
-			sb.append(event.title())
+		for (var scheduleItem : calendar.scheduleItems()) {
+			sb.append(scheduleItem.title())
 				.append("\n\n");
 		}
 		
