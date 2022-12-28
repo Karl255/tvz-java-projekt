@@ -1,6 +1,7 @@
 module hr.java.projektnizadatak {
 	requires javafx.controls;
 	requires javafx.fxml;
+	requires java.net.http;
 
 	exports hr.java.projektnizadatak.application;
 	exports hr.java.projektnizadatak.application.entities;

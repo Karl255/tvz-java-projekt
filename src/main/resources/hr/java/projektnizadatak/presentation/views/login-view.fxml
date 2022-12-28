@@ -27,8 +27,8 @@
 
 	<Label text="Username" GridPane.columnSpan="2" />
 	<Label layoutX="18.0" layoutY="22.0" text="Password" GridPane.columnSpan="2" GridPane.rowIndex="2" />
-	<TextField GridPane.columnSpan="2" GridPane.rowIndex="1" fx:id="usernameInput" onAction="#login" />
-	<PasswordField GridPane.columnSpan="2" GridPane.rowIndex="3" fx:id="passwordInput" onAction="#login" />
+	<TextField GridPane.columnSpan="2" GridPane.rowIndex="1" fx:id="usernameInput" onAction="#login" text="default" />
+	<PasswordField GridPane.columnSpan="2" GridPane.rowIndex="3" fx:id="passwordInput" onAction="#login" text="default" />
 	<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Create user" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4" onAction="#createUser" />
 	<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Login" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4" onAction="#login" />
 </GridPane>
