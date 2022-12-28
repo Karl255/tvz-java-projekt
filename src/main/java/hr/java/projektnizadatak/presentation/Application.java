@@ -1,7 +1,7 @@
 package hr.java.projektnizadatak.presentation;
 
 import hr.java.projektnizadatak.application.UserManager;
-import hr.java.projektnizadatak.data.UserFileStore;
+import hr.java.projektnizadatak.data.UsersFileStore;
 import hr.java.projektnizadatak.presentation.views.ApplicationScreen;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -14,7 +14,7 @@ import java.util.Objects;
 public class Application extends javafx.application.Application {
 	private static Stage stage;
 
-	private static UserManager userManager = new UserManager(new UserFileStore());
+	private static UserManager userManager = new UserManager(new UsersFileStore());
 
 	public static void main(String[] args) {
 		launch();

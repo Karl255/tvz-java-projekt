@@ -107,5 +107,13 @@ public class MainScreenController {
 		
 		calendarOutput.setText(sb.toString());
 	}
+	
+	@FXML
+	private void saveSettings() {
+		var department = departmentComboBox.getSelectionModel().getSelectedItem();
+		var semester = semesterComboBox.getSelectionModel().getSelectedItem();
+		
+		Application.getUserManager().updateLoggedInSettings(department != null ? department.code() : null, semester);
+	}
 }
 

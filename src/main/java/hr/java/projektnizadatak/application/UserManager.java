@@ -1,22 +1,21 @@
 package hr.java.projektnizadatak.application;
 
+import hr.java.projektnizadatak.application.entities.Semester;
 import hr.java.projektnizadatak.application.entities.User;
 import hr.java.projektnizadatak.shared.exceptions.InvalidUsernameException;
 import hr.java.projektnizadatak.shared.exceptions.UsernameTakenException;
 
-import java.util.ArrayList;
-
 public class UserManager {
-	private final UserStore userStore;
+	private final UsersStore usersStore;
 	private User loggedInUser = null;
 
-	public UserManager(UserStore userStore) {
-		this.userStore = userStore;
+	public UserManager(UsersStore usersStore) {
+		this.usersStore = usersStore;
 	}
 
 	public boolean tryLoginUser(String username, String password) {
 		var passwordHash = User.hashPassword(password);
-		var users = userStore.loadUsers();
+		var users = usersStore.read();
 
 		var found = users.stream()
 			.filter(u -> u.username().equals(username) && u.passwordHash().equals(passwordHash))
@@ -39,7 +38,7 @@ public class UserManager {
 		}
 
 		var passwordHash = User.hashPassword(password);
-		var users = new ArrayList<>(userStore.loadUsers());
+		var users = usersStore.read();
 
 		boolean usernameTaken = users.stream()
 			.anyMatch(u -> u.username().equals(username));
@@ -51,11 +50,25 @@ public class UserManager {
 		var user = new User.UserBuilder(username)
 			.withPasswordHash(passwordHash)
 			.build();
-		
-		users.add(user);
-		userStore.storeUsers(users);
-		
+
+		usersStore.create(user);
+
 		return user;
+	}
+
+	public User updateLoggedInSettings(String departmentCode, Semester semester) {
+		return updateUserSettings(loggedInUser, departmentCode, semester);
+	}
+	
+	public User updateUserSettings(User user, String departmentCode, Semester semester) {
+		var newUser = new User.UserBuilder(user)
+			.withDefaultDepartmentCode(departmentCode)
+			.withDefaultSemester(semester)
+			.build();
+
+		usersStore.update(user, newUser);
+		
+		return newUser;
 	}
 
 	public User getUser() {

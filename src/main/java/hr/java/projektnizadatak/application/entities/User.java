@@ -78,6 +78,13 @@ public final class User {
 		public UserBuilder(String username) {
 			this.username = username;
 		}
+		
+		public UserBuilder(User original) {
+			this.username = original.username;
+			this.passwordHash = original.passwordHash;
+			this.defaultDepartmentCode = original.defaultDepartmentCode;
+			this.defaultSemester = original.defaultSemester;
+		}
 
 		public UserBuilder withPasswordHash(String passwordHash) {
 			this.passwordHash = passwordHash;
