@@ -1,11 +1,22 @@
 package hr.java.projektnizadatak.presentation.controllers;
 
+import hr.java.projektnizadatak.application.entities.Department;
+import hr.java.projektnizadatak.application.entities.Semester;
 import hr.java.projektnizadatak.data.ScheduleApiSource;
+import hr.java.projektnizadatak.presentation.util.DepartmentStringConverter;
+import hr.java.projektnizadatak.presentation.util.SemesterStringConverter;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 
 public class MainScreenController {
+	@FXML
+	private ComboBox<Department> departmentComboBox;
+	
+	@FXML
+	private ComboBox<Semester> semesterComboBox;
+	
 	@FXML
 	private TextArea depsOutput;
 	@FXML
@@ -15,44 +26,28 @@ public class MainScreenController {
 	
 	private final ScheduleApiSource api = new ScheduleApiSource();
 	
-	@FXML
-	private void fetchDeps() {
-		var deps = api.fetchAvailableDepartments();
-		var sb = new StringBuilder();
+	public void initialize() {
+		departmentComboBox.setConverter(new DepartmentStringConverter());
+		semesterComboBox.setConverter(new SemesterStringConverter());
 		
-		for (var dep : deps) {
-			sb.append(dep.code())
-				.append('\n');
-		}
+		departmentComboBox.setItems(FXCollections.observableList(api.fetchAvailableDepartments()));
 		
-		depsOutput.setText(sb.toString());
+		// TODO: apply user settings
+		// TODO: select department in combobox
+		
+		// TODO: only if departmentModel has department selected
+		semesterComboBox.setItems(FXCollections.observableList(api.fetchAvailableSemesters()));
+		// TODO: select semester in combobox
 	}
 	
 	@FXML
-	private void fetchSems() {
-		var sems = api.fetchAvailableSemesters();
-		var sb = new StringBuilder();
-
-		for (var sem : sems) {
-			sb.append(sem.subdepartment())
-				.append(" - ")
-				.append(sem.semester())
-				.append('\n');
-		}
-		
-		semsOutput.setText(sb.toString());
+	private void selectDepartment() {
+		// fetch new semesters
 	}
 	
 	@FXML
-	private void fetchCalendar() {
-		var calendar = api.fetchCalendar();
-		var sb = new StringBuilder();
-
-		for (var scheduleItem : calendar.scheduleItems()) {
-			sb.append(scheduleItem.title())
-				.append("\n\n");
-		}
+	private void selectSemester() {
 		
-		calendarOutput.setText(sb.toString());
 	}
 }
+
