@@ -2,6 +2,7 @@ module hr.java.projektnizadatak {
 	requires javafx.controls;
 	requires javafx.fxml;
 	requires java.net.http;
+	requires com.google.gson;
 
 	exports hr.java.projektnizadatak.application;
 	exports hr.java.projektnizadatak.application.entities;
@@ -12,5 +13,10 @@ module hr.java.projektnizadatak {
 	opens hr.java.projektnizadatak.presentation.controllers to javafx.fxml;
 	exports hr.java.projektnizadatak.presentation.models;
 	exports hr.java.projektnizadatak.presentation.views;
+	
+	//exports hr.java.projektnizadatak.shared;
 	exports hr.java.projektnizadatak.shared.exceptions;
+	
+	exports hr.java.projektnizadatak.data;
+	exports hr.java.projektnizadatak.data.api_response;
 }
