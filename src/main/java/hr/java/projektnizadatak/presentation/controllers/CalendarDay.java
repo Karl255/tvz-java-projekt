@@ -45,8 +45,6 @@ public class CalendarDay extends GridPane {
 	public void repositionItems() {
 		double width = contentAnchorPane.getBoundsInLocal().getWidth();
 		double height = contentAnchorPane.getBoundsInLocal().getHeight();
-
-		System.out.printf("width = %.1f%n", width);
 		
 		int maxColumn = contentAnchorPane.getChildren().stream()
 			.map(c -> (CalendarItem) c)

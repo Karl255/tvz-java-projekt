@@ -3,6 +3,7 @@ package hr.java.projektnizadatak.presentation.models;
 import hr.java.projektnizadatak.application.entities.ScheduleItem;
 import hr.java.projektnizadatak.shared.Util;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
@@ -35,7 +36,10 @@ public final class CalendarItemModel {
 	public static List<CalendarItemModel> organizeItems(List<ScheduleItem> items) {
 		var separated = items.stream()
 			.map(CalendarItemModel::new)
-			.sorted(Comparator.comparing(m -> m.scheduleItem.start()))
+			.sorted(Comparator
+				.comparing((CalendarItemModel m) -> m.scheduleItem.start())
+				.thenComparing((m) -> m.scheduleItem.end())
+			)
 			.toList();
 		
 		// separate into columns
