@@ -10,10 +10,12 @@ import hr.java.projektnizadatak.presentation.util.SemesterStringConverter;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextArea;
-import javafx.scene.layout.Pane;
+import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
 
 import java.time.LocalDate;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class MainScreenController {
 	@FXML
@@ -23,23 +25,36 @@ public class MainScreenController {
 	private ComboBox<Semester> semesterComboBox;
 	
 	@FXML
-	private TextArea calendarOutput;
-	
+	private CalendarDay monday;
 	@FXML
-	private Pane mondayPane;
+	private CalendarDay tuesday;
 	@FXML
-	private Pane tuesdayPane;
+	private CalendarDay wednesday;
 	@FXML
-	private Pane wednesdayPane;
+	private CalendarDay thursday;
+	@FXML
+	private CalendarDay friday;
+
+	private final CalendarDay[] calendarDays;
 	
 	// TODO: move this to a different place
 	private final ScheduleApiSource api = new ScheduleApiSource();
 	
-	private final int calendarYear = 2022;
-	private final LocalDate calendarStart = LocalDate.of(2022, 10, 3);
-	private final int caledarDays = 7;
-	
+	private final int TEMP_CALENDAR_YEAR = 2022;
+	private final LocalDate TEMP_CALENDAR_START = LocalDate.of(2022, 10, 3);
+	private final int TEMP_CALENDAR_DAYS = 5;
+
+	public MainScreenController() {
+		calendarDays = new CalendarDay[5];
+	}
+
 	public void initialize() {
+		calendarDays[0] = monday;
+		calendarDays[1] = tuesday;
+		calendarDays[2] = wednesday;
+		calendarDays[3] = thursday;
+		calendarDays[4] = friday;
+
 		departmentComboBox.setConverter(new DepartmentStringConverter());
 		semesterComboBox.setConverter(new SemesterStringConverter());
 		
@@ -49,7 +64,7 @@ public class MainScreenController {
 		
 		if (user.defaultSemester() != null) {
 			var sem = user.defaultSemester();
-			getCalendar(sem.subdepartment(), sem.semester(), calendarYear, calendarStart, caledarDays);
+			//getCalendar(sem.subdepartment(), sem.semester(), TEMP_CALENDAR_YEAR, TEMP_CALENDAR_START, TEMP_CALENDAR_DAYS);
 		}
 		
 		if (user.defaultDepartmentCode() != null) {
@@ -93,35 +108,30 @@ public class MainScreenController {
 		var semester = semesterComboBox.getSelectionModel().getSelectedItem();
 		
 		if (semester != null) {
-			getCalendar(semester.subdepartment(), semester.semester(), calendarYear, calendarStart, caledarDays);
+			getCalendar(semester.subdepartment(), semester.semester(), TEMP_CALENDAR_YEAR, TEMP_CALENDAR_START, TEMP_CALENDAR_DAYS);
 		}
 	}
 	
 	private void getCalendar(String subdepartment, int semester, int year, LocalDate start, int days) {
 		var calendar = api.fetchCalendar(subdepartment, semester, year, start, days);
-		var sb = new StringBuilder();
 		
-		for (var scheduleItem : calendar.scheduleItems()) {
-			sb.append(scheduleItem.title())
-				.append('\n');
+		var itemsByDate = calendar.scheduleItems().stream()
+			.collect(Collectors.groupingBy(e -> e.start().toLocalDate()));
+		
+		var dates = itemsByDate.keySet().stream().sorted().toList();
+		
+		for (int i = 0; i < 5; i++) {
+			if (false) {
+				// TODO: check if given date is a holiday
+			} else if (itemsByDate.containsKey(dates.get(i))) {
+				var items = itemsByDate.get(dates.get(i))
+					.stream()
+					.map(CalendarItem::new)
+					.toList();
+			
+				calendarDays[i].setItems(items);
+			}
 		}
-		
-		sb.append('\n');
-		
-		for (var holiday : calendar.holidays()) {
-			sb.append(holiday.title())
-				.append('\n');
-		}
-		
-		calendarOutput.setText(sb.toString());
-		
-		
-		// -----
-		
-		var item = new CalendarItemController();
-		item.setLayoutX(20);
-		item.setLayoutY(20);
-		mondayPane.getChildren().add(0, item);
 	}
 	
 	@FXML

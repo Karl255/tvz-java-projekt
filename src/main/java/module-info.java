@@ -21,4 +21,5 @@ module hr.java.projektnizadatak {
 	exports hr.java.projektnizadatak.data.api_response;
 	exports hr.java.projektnizadatak.presentation.util;
 	opens hr.java.projektnizadatak.presentation.util to javafx.fxml;
+	exports hr.java.projektnizadatak.shared;
 }
