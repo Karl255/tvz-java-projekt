@@ -124,12 +124,8 @@ public class MainScreenController {
 			if (false) {
 				// TODO: check if given date is a holiday
 			} else if (itemsByDate.containsKey(dates.get(i))) {
-				var items = itemsByDate.get(dates.get(i))
-					.stream()
-					.map(CalendarItem::new)
-					.toList();
 			
-				calendarDays[i].setItems(items);
+				calendarDays[i].setItems(itemsByDate.get(dates.get(i)));
 			}
 		}
 	}
