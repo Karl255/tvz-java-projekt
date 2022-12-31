@@ -24,18 +24,19 @@ public class MainScreenController {
 	@FXML
 	private ComboBox<Semester> semesterComboBox;
 	
-	@FXML
-	private CalendarDay monday;
-	@FXML
-	private CalendarDay tuesday;
-	@FXML
-	private CalendarDay wednesday;
-	@FXML
-	private CalendarDay thursday;
-	@FXML
-	private CalendarDay friday;
-
+	@FXML private CalendarDay monday;
+	@FXML private CalendarDay tuesday;
+	@FXML private CalendarDay wednesday;
+	@FXML private CalendarDay thursday;
+	@FXML private CalendarDay friday;
 	private final CalendarDay[] calendarDays;
+	
+	@FXML private Label mondayHolidayText;
+	@FXML private Label tuesdayHolidayText;
+	@FXML private Label wednesdayHolidayText;
+	@FXML private Label thursdayHolidayText;
+	@FXML private Label fridayHolidayText;
+	private final Label[] holidayTexts;
 	
 	// TODO: move this to a different place
 	private final ScheduleApiSource api = new ScheduleApiSource();
@@ -46,6 +47,7 @@ public class MainScreenController {
 
 	public MainScreenController() {
 		calendarDays = new CalendarDay[5];
+		holidayTexts = new Label[5];
 	}
 
 	public void initialize() {
@@ -54,12 +56,19 @@ public class MainScreenController {
 		calendarDays[2] = wednesday;
 		calendarDays[3] = thursday;
 		calendarDays[4] = friday;
+		
+		holidayTexts[0] = mondayHolidayText;
+		holidayTexts[1] = tuesdayHolidayText;
+		holidayTexts[2] = wednesdayHolidayText;
+		holidayTexts[3] = thursdayHolidayText;
+		holidayTexts[4] = fridayHolidayText;
 
 		departmentComboBox.setConverter(new DepartmentStringConverter());
 		semesterComboBox.setConverter(new SemesterStringConverter());
 		
 		departmentComboBox.setItems(FXCollections.observableList(api.fetchAvailableDepartments()));
 		
+		// TODO: this should happen after initialization
 		User user = Application.getUserManager().getUser();
 		
 		if (user.defaultSemester() != null) {
@@ -118,14 +127,19 @@ public class MainScreenController {
 		var itemsByDate = calendar.scheduleItems().stream()
 			.collect(Collectors.groupingBy(e -> e.start().toLocalDate()));
 		
-		var dates = itemsByDate.keySet().stream().sorted().toList();
-		
 		for (int i = 0; i < 5; i++) {
-			if (false) {
-				// TODO: check if given date is a holiday
-			} else if (itemsByDate.containsKey(dates.get(i))) {
+			var todaysDate = start.plusDays(i);
 			
-				calendarDays[i].setItems(itemsByDate.get(dates.get(i)));
+			var holiday = calendar.holidays()
+				.stream()
+				.filter(h -> h.date().equals(todaysDate))
+				.findFirst();
+			
+			if (holiday.isPresent()) {
+				holidayTexts[i].setText(holiday.get().title());
+			} else if (itemsByDate.containsKey(todaysDate)) {
+				holidayTexts[i].setText("");
+				calendarDays[i].setItems(itemsByDate.get(todaysDate));
 			}
 		}
 	}

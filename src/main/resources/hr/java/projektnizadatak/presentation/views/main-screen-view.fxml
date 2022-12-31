@@ -8,6 +8,8 @@
 <?import javafx.scene.layout.RowConstraints?>
 
 <?import hr.java.projektnizadatak.presentation.controllers.CalendarDay?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.control.Label?>
 <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hr.java.projektnizadatak.presentation.controllers.MainScreenController">
 	<columnConstraints>
 		<ColumnConstraints hgrow="ALWAYS" minWidth="10.0"/>
@@ -39,11 +41,26 @@
 				<ComboBox fx:id="semesterComboBox" layoutX="18.0" layoutY="18.0" maxWidth="1.7976931348623157E308" onAction="#selectSemester" promptText="&lt;select&gt;" GridPane.columnIndex="1"/>
 				<Button mnemonicParsing="false" onAction="#saveSettings" text="Save" GridPane.columnIndex="2" GridPane.halignment="LEFT"/>
 
-				<CalendarDay fx:id="monday" title="Monday" GridPane.rowIndex="2" />
-				<CalendarDay fx:id="tuesday" title="Tuesday" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-				<CalendarDay fx:id="wednesday" title="Wednesday" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-				<CalendarDay fx:id="thursday" title="Thursday" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-				<CalendarDay fx:id="friday" title="Friday" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+				<StackPane GridPane.rowIndex="2">
+					<CalendarDay fx:id="monday" title="Monday" />
+					<Label fx:id="mondayHolidayText" />
+				</StackPane>
+				<StackPane GridPane.rowIndex="2" GridPane.columnIndex="1">
+					<CalendarDay fx:id="tuesday" title="Tuesday" />
+					<Label fx:id="tuesdayHolidayText" />
+				</StackPane>
+				<StackPane GridPane.rowIndex="2" GridPane.columnIndex="2">
+					<CalendarDay fx:id="wednesday" title="Wednesday" />
+					<Label fx:id="wednesdayHolidayText" />
+				</StackPane>
+				<StackPane GridPane.rowIndex="2" GridPane.columnIndex="3">
+					<CalendarDay fx:id="thursday" title="Thursday" />
+					<Label fx:id="thursdayHolidayText" />
+				</StackPane>
+				<StackPane GridPane.rowIndex="2" GridPane.columnIndex="4">
+					<CalendarDay fx:id="friday" title="Friday" />
+					<Label fx:id="fridayHolidayText" />
+				</StackPane>
 			</children>
 		</GridPane>
 	</children>
