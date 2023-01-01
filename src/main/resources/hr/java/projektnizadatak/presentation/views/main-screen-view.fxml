@@ -44,10 +44,9 @@
 			<children>
 				<ComboBox fx:id="departmentComboBox" maxWidth="1.7976931348623157E308" onAction="#selectDepartment" promptText="&lt;select&gt;"/>
 				<ComboBox fx:id="semesterComboBox" layoutX="18.0" layoutY="18.0" maxWidth="1.7976931348623157E308" onAction="#selectSemester" promptText="&lt;select&gt;" GridPane.rowIndex="1"/>
-				
-				<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#saveSettings" text="Save as default" GridPane.halignment="LEFT" GridPane.rowIndex="2"/>
-				<!-- TODO: make functional -->
-				<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Load default" GridPane.rowIndex="3"/>
+
+				<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#loadDefaults" text="Load default" GridPane.rowIndex="2"/>
+				<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#saveDefaults" text="Save as default" GridPane.rowIndex="3"/>
 
 				<StackPane GridPane.rowIndex="4">
 					<CalendarDay fx:id="monday" title="Monday" onItemSelected="#showItemDetails"/>
@@ -78,6 +77,11 @@
 						</Label>
 						<Label fx:id="detailsLabel"/>
 					</children>
+					<style>
+						-fx-border-color: #b5b5b5;
+						-fx-border-radius: 3px;
+						-fx-padding: 4px;
+					</style>
 				</VBox>
 			</children>
 		</GridPane>

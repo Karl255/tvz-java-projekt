@@ -65,12 +65,23 @@ public class MainScreenController {
 
 		departmentComboBox.setItems(FXCollections.observableList(api.fetchAvailableDepartments()));
 
-		// TODO: this should happen after initialization
-		User user = Application.getUserManager().getUser();
+		// loading only default department
+		var user = Application.getUserManager().getUser();
+		
+		if (user.defaultDepartmentCode() != null) {
+			if (applyDefaultDepartment(user.defaultDepartmentCode())) {
+				semesterComboBox.setItems(FXCollections.observableList(api.fetchAvailableSemesters(user.defaultDepartmentCode(), 2022)));
+			}
+		}
+	}
+
+	@FXML
+	private void loadDefaults() {
+		var user = Application.getUserManager().getUser();
 
 		if (user.defaultSemester() != null) {
 			var sem = user.defaultSemester();
-			//getCalendar(sem.subdepartment(), sem.semester(), TEMP_CALENDAR_YEAR, TEMP_CALENDAR_START, TEMP_CALENDAR_DAYS);
+			getCalendar(sem.subdepartment(), sem.semester(), TEMP_CALENDAR_YEAR, TEMP_CALENDAR_START, TEMP_CALENDAR_DAYS);
 		}
 
 		if (user.defaultDepartmentCode() != null) {
@@ -82,6 +93,14 @@ public class MainScreenController {
 				}
 			}
 		}
+	}
+
+	@FXML
+	private void saveDefaults() {
+		var department = departmentComboBox.getSelectionModel().getSelectedItem();
+		var semester = semesterComboBox.getSelectionModel().getSelectedItem();
+
+		Application.getUserManager().updateLoggedInSettings(department != null ? department.code() : null, semester);
 	}
 
 	private boolean applyDefaultDepartment(String departmentCode) {
@@ -139,14 +158,6 @@ public class MainScreenController {
 				calendarDays[i].setItems(itemsByDate.get(todaysDate));
 			}
 		}
-	}
-
-	@FXML
-	private void saveSettings() {
-		var department = departmentComboBox.getSelectionModel().getSelectedItem();
-		var semester = semesterComboBox.getSelectionModel().getSelectedItem();
-
-		Application.getUserManager().updateLoggedInSettings(department != null ? department.code() : null, semester);
 	}
 
 	@FXML
