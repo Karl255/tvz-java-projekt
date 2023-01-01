@@ -52,4 +52,8 @@ public class CalendarItem extends VBox {
 	public CalendarItemModel getModel() {
 		return model;
 	}
+	
+	public ScheduleItem getScheduleItem() {
+		return model.getScheduleItem();
+	}
 }

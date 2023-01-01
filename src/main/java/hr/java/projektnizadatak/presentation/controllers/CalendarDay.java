@@ -3,10 +3,14 @@ package hr.java.projektnizadatak.presentation.controllers;
 import hr.java.projektnizadatak.application.entities.ScheduleItem;
 import hr.java.projektnizadatak.presentation.Application;
 import hr.java.projektnizadatak.presentation.models.CalendarItemModel;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ObjectPropertyBase;
 import javafx.beans.property.StringProperty;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 
 import java.io.IOException;
@@ -35,7 +39,11 @@ public class CalendarDay extends GridPane {
 	public void setItems(List<ScheduleItem> items) {
 		var elements = CalendarItemModel.organizeItems(items)
 			.stream()
-			.map(x -> new CalendarItem(x))
+			.map(model -> {
+				CalendarItem calendarItem = new CalendarItem(model);
+				calendarItem.setOnMouseClicked(this::calednarItemClicked);
+				return calendarItem;
+			})
 			.toList();
 
 		contentAnchorPane.getChildren().setAll(elements);
@@ -68,6 +76,25 @@ public class CalendarDay extends GridPane {
 		}
 	}
 
+	public final ObjectProperty<EventHandler<MouseEvent>> onItemSelectedProperty() { return onItemSelected; }
+	public final void setOnItemSelected(EventHandler<MouseEvent> value) { onItemSelectedProperty().setValue(value); }
+	public final EventHandler<MouseEvent> getOnItemSelected() { return onItemSelectedProperty().get(); }
+	private final ObjectProperty<EventHandler<MouseEvent>> onItemSelected = new ObjectPropertyBase<>() {
+		@Override
+		public Object getBean() {
+			return CalendarDay.this;
+		}
+
+		@Override
+		public String getName() {
+			return "itemSelected";
+		}
+	};
+	
+	private void calednarItemClicked(MouseEvent e) {
+		getOnItemSelected().handle(e);
+	}
+	
 	public String getTitle() {
 		return titleLabel.getText();
 	}
