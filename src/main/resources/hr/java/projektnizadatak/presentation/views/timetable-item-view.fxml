@@ -5,13 +5,13 @@
 
 <?import javafx.geometry.Insets?>
 <fx:root type="javafx.scene.layout.VBox" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
-	<Label fx:id="timestampLabel" text="10:00 - 12:00" wrapText="true" />
-	<Label fx:id="titleLabel" text="Something something" wrapText="true" />
-	
+	<Label fx:id="timestampLabel" text="10:00 - 12:00" wrapText="true"/>
+	<Label fx:id="titleLabel" text="Something something" wrapText="true" style="-fx-font-weight: bold;"/>
+
 	<padding>
-		<Insets top="4" bottom="4" left="4" right="4" />
+		<Insets top="4" bottom="4" left="4" right="4"/>
 	</padding>
-	
+
 	<style>
 		-fx-background-color: #D4E8F3;
 		-fx-background-radius: 4px;

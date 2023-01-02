@@ -66,12 +66,7 @@
 			<TimetableDay fx:id="friday" title="Friday" onItemSelected="#showItemDetails"/>
 			<Label fx:id="fridayHolidayText"/>
 		</StackPane>
-		<VBox GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowSpan="4" GridPane.hgrow="NEVER">
-			<Label layoutX="10.0" layoutY="10.0" text="Details" wrapText="true">
-				<font>
-					<Font name="System Bold" size="12.0"/>
-				</font>
-			</Label>
+		<VBox GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowSpan="4">
 			<Label fx:id="detailsLabel"/>
 
 			<style>

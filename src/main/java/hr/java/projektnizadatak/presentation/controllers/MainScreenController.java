@@ -1,6 +1,7 @@
 package hr.java.projektnizadatak.presentation.controllers;
 
 import hr.java.projektnizadatak.application.entities.Department;
+import hr.java.projektnizadatak.application.entities.ScheduleItem;
 import hr.java.projektnizadatak.application.entities.Semester;
 import hr.java.projektnizadatak.data.ScheduleApiSource;
 import hr.java.projektnizadatak.presentation.Application;
@@ -16,30 +17,26 @@ import java.time.LocalDate;
 import java.util.stream.Collectors;
 
 public class MainScreenController {
+	private final TimetableDay[] timetableDays;
+	private final Label[] holidayTexts;
+	// TODO: move this to a different place
+	private final ScheduleApiSource api = new ScheduleApiSource();
+	private final int TEMP_TIMETABLE_YEAR = 2022;
+	private final LocalDate TEMP_TIMETABLE_START = LocalDate.of(2022, 10, 3);
+	private final int TEMP_TIMETABLE_DAYS = 5;
 	@FXML private ComboBox<Department> departmentComboBox;
 	@FXML private ComboBox<Semester> semesterComboBox;
-	
 	@FXML private TimetableDay monday;
 	@FXML private TimetableDay tuesday;
 	@FXML private TimetableDay wednesday;
 	@FXML private TimetableDay thursday;
 	@FXML private TimetableDay friday;
-	private final TimetableDay[] timetableDays;
-	
 	@FXML private Label mondayHolidayText;
 	@FXML private Label tuesdayHolidayText;
 	@FXML private Label wednesdayHolidayText;
 	@FXML private Label thursdayHolidayText;
 	@FXML private Label fridayHolidayText;
 	@FXML private Label detailsLabel;
-	private final Label[] holidayTexts;
-	
-	// TODO: move this to a different place
-	private final ScheduleApiSource api = new ScheduleApiSource();
-	
-	private final int TEMP_TIMETABLE_YEAR = 2022;
-	private final LocalDate TEMP_TIMETABLE_START = LocalDate.of(2022, 10, 3);
-	private final int TEMP_TIMETABLE_DAYS = 5;
 
 	public MainScreenController() {
 		timetableDays = new TimetableDay[5];
@@ -67,7 +64,7 @@ public class MainScreenController {
 
 		// loading only default department
 		var user = Application.getUserManager().getUser();
-		
+
 		if (user.defaultDepartmentCode() != null) {
 			if (applyDefaultDepartment(user.defaultDepartmentCode())) {
 				semesterComboBox.setItems(FXCollections.observableList(api.fetchAvailableSemesters(user.defaultDepartmentCode(), 2022)));
@@ -141,7 +138,7 @@ public class MainScreenController {
 		var timetable = api.fetchTimetable(subdepartment, semester, year, start, days);
 
 		var itemsByDate = timetable.scheduleItems().stream()
-			.collect(Collectors.groupingBy(e -> e.start().toLocalDate()));
+			.collect(Collectors.groupingBy(ScheduleItem::date));
 
 		for (int i = 0; i < 5; i++) {
 			var todaysDate = start.plusDays(i);
@@ -165,10 +162,20 @@ public class MainScreenController {
 		if (e.getSource() instanceof TimetableItem timetableItem) {
 			var info = timetableItem.getScheduleItem();
 			var sb = new StringBuilder()
-				.append(info.id()).append('\n')
-				.append("timestamp").append('\n')
-				.append(info.title());
-			
+				.append(info.getTimestamp()).append('\n')
+				.append(info.className()).append('\n')
+				.append(info.classType()).append('\n')
+				.append(info.classroom()).append('\n')
+				.append(info.professor()).append('\n');
+
+			if (info.group() != null) {
+				sb.append("Grupa: ").append(info.group());
+			}
+
+			if (info.note() != null) {
+				sb.append("Napomena: ").append(info.note());
+			}
+
 			detailsLabel.setText(sb.toString());
 		}
 	}

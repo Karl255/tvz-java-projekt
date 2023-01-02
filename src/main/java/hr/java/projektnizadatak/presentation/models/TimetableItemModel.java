@@ -4,6 +4,7 @@ import hr.java.projektnizadatak.application.entities.ScheduleItem;
 import hr.java.projektnizadatak.shared.Util;
 
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -12,7 +13,7 @@ public final class TimetableItemModel {
 	private static final double BEGINNING_TIME = Util.toHours(LocalTime.of(7, 0));
 	private static final double ENDING_TIME = Util.toHours(LocalTime.of(22, 0));
 	private static final double TIME_SPAN = ENDING_TIME - BEGINNING_TIME;
-
+	
 	private final ScheduleItem scheduleItem;
 	private final LocalTime start;
 	private final LocalTime end;
@@ -23,11 +24,11 @@ public final class TimetableItemModel {
 
 	public TimetableItemModel(ScheduleItem item) {
 		this.scheduleItem = item;
-		this.start = item.start().toLocalTime();
-		this.end = item.end().toLocalTime();
+		this.start = item.start();
+		this.end = item.end();
 
-		this.relativeStart = (Util.toHours(item.start().toLocalTime()) - BEGINNING_TIME) / TIME_SPAN;
-		this.relativeEnd = (ENDING_TIME - Util.toHours(item.end().toLocalTime())) / TIME_SPAN;
+		this.relativeStart = (Util.toHours(start) - BEGINNING_TIME) / TIME_SPAN;
+		this.relativeEnd = (ENDING_TIME - Util.toHours(end)) / TIME_SPAN;
 		this.column = 0;
 		this.columnSpan = 1;
 	}
