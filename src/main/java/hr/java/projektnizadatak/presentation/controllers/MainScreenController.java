@@ -2,7 +2,6 @@ package hr.java.projektnizadatak.presentation.controllers;
 
 import hr.java.projektnizadatak.application.entities.Department;
 import hr.java.projektnizadatak.application.entities.Semester;
-import hr.java.projektnizadatak.application.entities.User;
 import hr.java.projektnizadatak.data.ScheduleApiSource;
 import hr.java.projektnizadatak.presentation.Application;
 import hr.java.projektnizadatak.presentation.util.DepartmentStringConverter;
@@ -20,12 +19,12 @@ public class MainScreenController {
 	@FXML private ComboBox<Department> departmentComboBox;
 	@FXML private ComboBox<Semester> semesterComboBox;
 	
-	@FXML private CalendarDay monday;
-	@FXML private CalendarDay tuesday;
-	@FXML private CalendarDay wednesday;
-	@FXML private CalendarDay thursday;
-	@FXML private CalendarDay friday;
-	private final CalendarDay[] calendarDays;
+	@FXML private TimetableDay monday;
+	@FXML private TimetableDay tuesday;
+	@FXML private TimetableDay wednesday;
+	@FXML private TimetableDay thursday;
+	@FXML private TimetableDay friday;
+	private final TimetableDay[] timetableDays;
 	
 	@FXML private Label mondayHolidayText;
 	@FXML private Label tuesdayHolidayText;
@@ -38,21 +37,22 @@ public class MainScreenController {
 	// TODO: move this to a different place
 	private final ScheduleApiSource api = new ScheduleApiSource();
 	
-	private final int TEMP_CALENDAR_YEAR = 2022;
-	private final LocalDate TEMP_CALENDAR_START = LocalDate.of(2022, 10, 3);
-	private final int TEMP_CALENDAR_DAYS = 5;
+	private final int TEMP_TIMETABLE_YEAR = 2022;
+	private final LocalDate TEMP_TIMETABLE_START = LocalDate.of(2022, 10, 3);
+	private final int TEMP_TIMETABLE_DAYS = 5;
 
 	public MainScreenController() {
-		calendarDays = new CalendarDay[5];
+		timetableDays = new TimetableDay[5];
 		holidayTexts = new Label[5];
 	}
 
-	public void initialize() {
-		calendarDays[0] = monday;
-		calendarDays[1] = tuesday;
-		calendarDays[2] = wednesday;
-		calendarDays[3] = thursday;
-		calendarDays[4] = friday;
+	@FXML
+	private void initialize() {
+		timetableDays[0] = monday;
+		timetableDays[1] = tuesday;
+		timetableDays[2] = wednesday;
+		timetableDays[3] = thursday;
+		timetableDays[4] = friday;
 
 		holidayTexts[0] = mondayHolidayText;
 		holidayTexts[1] = tuesdayHolidayText;
@@ -81,7 +81,7 @@ public class MainScreenController {
 
 		if (user.defaultSemester() != null) {
 			var sem = user.defaultSemester();
-			getCalendar(sem.subdepartment(), sem.semester(), TEMP_CALENDAR_YEAR, TEMP_CALENDAR_START, TEMP_CALENDAR_DAYS);
+			getTimetable(sem.subdepartment(), sem.semester(), TEMP_TIMETABLE_YEAR, TEMP_TIMETABLE_START, TEMP_TIMETABLE_DAYS);
 		}
 
 		if (user.defaultDepartmentCode() != null) {
@@ -133,20 +133,20 @@ public class MainScreenController {
 		var semester = semesterComboBox.getSelectionModel().getSelectedItem();
 
 		if (semester != null) {
-			getCalendar(semester.subdepartment(), semester.semester(), TEMP_CALENDAR_YEAR, TEMP_CALENDAR_START, TEMP_CALENDAR_DAYS);
+			getTimetable(semester.subdepartment(), semester.semester(), TEMP_TIMETABLE_YEAR, TEMP_TIMETABLE_START, TEMP_TIMETABLE_DAYS);
 		}
 	}
 
-	private void getCalendar(String subdepartment, int semester, int year, LocalDate start, int days) {
-		var calendar = api.fetchCalendar(subdepartment, semester, year, start, days);
+	private void getTimetable(String subdepartment, int semester, int year, LocalDate start, int days) {
+		var timetable = api.fetchTimetable(subdepartment, semester, year, start, days);
 
-		var itemsByDate = calendar.scheduleItems().stream()
+		var itemsByDate = timetable.scheduleItems().stream()
 			.collect(Collectors.groupingBy(e -> e.start().toLocalDate()));
 
 		for (int i = 0; i < 5; i++) {
 			var todaysDate = start.plusDays(i);
 
-			var holiday = calendar.holidays()
+			var holiday = timetable.holidays()
 				.stream()
 				.filter(h -> h.date().equals(todaysDate))
 				.findFirst();
@@ -155,15 +155,15 @@ public class MainScreenController {
 				holidayTexts[i].setText(holiday.get().title());
 			} else if (itemsByDate.containsKey(todaysDate)) {
 				holidayTexts[i].setText("");
-				calendarDays[i].setItems(itemsByDate.get(todaysDate));
+				timetableDays[i].setItems(itemsByDate.get(todaysDate));
 			}
 		}
 	}
 
 	@FXML
 	private void showItemDetails(MouseEvent e) {
-		if (e.getSource() instanceof CalendarItem calendarItem) {
-			var info = calendarItem.getScheduleItem();
+		if (e.getSource() instanceof TimetableItem timetableItem) {
+			var info = timetableItem.getScheduleItem();
 			var sb = new StringBuilder()
 				.append(info.id()).append('\n')
 				.append("timestamp").append('\n')

@@ -17,7 +17,7 @@ import java.util.List;
 public class ScheduleApiSource implements ScheduleSource {
 	private static final URI AVAILABLE_DEPARTMENTS_ENDPOINT = URI.create("https://homer.tvz.hr/CalendarJson/Departments");
 	private static final String AVAILABLE_SEMESTERS_ENDPOINT_BASE = "https://homer.tvz.hr/CalendarJson/Semesters";
-	private static final String CALENDAR_ENDPOINT_BASE = "https://homer.tvz.hr/CalendarJson";
+	private static final String TIMETABLE_ENDPOINT_BASE = "https://homer.tvz.hr/CalendarJson";
 	
 	private static final DateTimeFormatter API_DATE_FORMAT = DateTimeFormatter.ISO_DATE;
 	
@@ -46,8 +46,8 @@ public class ScheduleApiSource implements ScheduleSource {
 	}
 
 	// TODO: add arguments
-	public Calendar fetchCalendar(String subdepartment, int semester, int year, LocalDate start, int days) {
-		var uri = HttpUtil.buildUriWithParams(CALENDAR_ENDPOINT_BASE,
+	public Timetable fetchTimetable(String subdepartment, int semester, int year, LocalDate start, int days) {
+		var uri = HttpUtil.buildUriWithParams(TIMETABLE_ENDPOINT_BASE,
 			new Pair<>("department", subdepartment),
 			new Pair<>("semester", Integer.toString(semester)),
 			new Pair<>("year", Integer.toString(year)),
@@ -68,6 +68,6 @@ public class ScheduleApiSource implements ScheduleSource {
 			.map(ApiEvent::toHoliday)
 			.toList();
 		
-		return new Calendar(scheduleItems, holidays);
+		return new Timetable(scheduleItems, holidays);
 	}
 }

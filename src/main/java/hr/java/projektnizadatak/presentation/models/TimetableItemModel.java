@@ -3,13 +3,12 @@ package hr.java.projektnizadatak.presentation.models;
 import hr.java.projektnizadatak.application.entities.ScheduleItem;
 import hr.java.projektnizadatak.shared.Util;
 
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public final class CalendarItemModel {
+public final class TimetableItemModel {
 	private static final double BEGINNING_TIME = Util.toHours(LocalTime.of(7, 0));
 	private static final double ENDING_TIME = Util.toHours(LocalTime.of(22, 0));
 	private static final double TIME_SPAN = ENDING_TIME - BEGINNING_TIME;
@@ -22,7 +21,7 @@ public final class CalendarItemModel {
 	private int column;
 	private int columnSpan;
 
-	public CalendarItemModel(ScheduleItem item) {
+	public TimetableItemModel(ScheduleItem item) {
 		this.scheduleItem = item;
 		this.start = item.start().toLocalTime();
 		this.end = item.end().toLocalTime();
@@ -33,12 +32,16 @@ public final class CalendarItemModel {
 		this.columnSpan = 1;
 	}
 
-	public static List<CalendarItemModel> organizeItems(List<ScheduleItem> items) {
+	public static List<TimetableItemModel> organizeItems(List<ScheduleItem> items) {
+		if (items.size() == 0) {
+			return Collections.emptyList();
+		}
+		
 		var separated = items.stream()
-			.map(CalendarItemModel::new)
+			.map(TimetableItemModel::new)
 			.sorted(Comparator
-				.comparing((CalendarItemModel m) -> m.scheduleItem.start())
-				.thenComparing((m) -> m.scheduleItem.end())
+				.comparing(TimetableItemModel::start)
+				.thenComparing(TimetableItemModel::end)
 			)
 			.toList();
 		
@@ -54,7 +57,7 @@ public final class CalendarItemModel {
 					var m2 = separated.get(j);
 
 					if (m1.getColumn() == m2.getColumn() && timespanIntersects(m1, m2)) {
-						separated.get(j).column++;
+						separated.get(j).setColumn( separated.get(j).getColumn() + 1);
 						overlaps = true;
 					}
 				}
@@ -65,7 +68,7 @@ public final class CalendarItemModel {
 		// spread out
 		int maxColumn = separated.stream()
 			.max(Comparator.comparing(m -> m.column))
-			.get()
+			.orElseThrow(() -> new RuntimeException(""))
 			.getColumn();
 
 		for (int i = 0; i < separated.size(); i++) {
@@ -89,18 +92,18 @@ public final class CalendarItemModel {
 		return separated;
 	}
 
-	private static boolean timespanIntersects(CalendarItemModel m1, CalendarItemModel m2) {
-		return Util.isBetween(m1.start, m2.start, m2.end)
-			|| Util.isBetween(m2.start, m1.start, m1.end);
+	private static boolean timespanIntersects(TimetableItemModel m1, TimetableItemModel m2) {
+		return Util.isBetween(m1.start(), m2.start(), m2.end())
+			|| Util.isBetween(m2.start(), m1.start(), m1.end());
 	}
 
 	public ScheduleItem getScheduleItem() {return scheduleItem;}
 
-	public LocalTime getStart() {
+	public LocalTime start() {
 		return start;
 	}
 
-	public LocalTime getEnd() {
+	public LocalTime end() {
 		return end;
 	}
 

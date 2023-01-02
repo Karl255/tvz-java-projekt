@@ -37,7 +37,6 @@ public class UserManager {
 			throw new InvalidUsernameException("Invalid username: " + username);
 		}
 
-		var passwordHash = User.hashPassword(password);
 		var users = usersStore.read();
 
 		boolean usernameTaken = users.stream()
@@ -48,7 +47,7 @@ public class UserManager {
 		}
 
 		var user = new User.UserBuilder(username)
-			.withPasswordHash(passwordHash)
+			.withPassword(password)
 			.build();
 
 		usersStore.create(user);

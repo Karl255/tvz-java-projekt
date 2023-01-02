@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<?import hr.java.projektnizadatak.presentation.controllers.CalendarDay?>
+<?import hr.java.projektnizadatak.presentation.controllers.TimetableDay?>
 
 <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hr.java.projektnizadatak.presentation.controllers.MainScreenController">
 	<columnConstraints>
@@ -21,69 +21,64 @@
 		<RowConstraints minHeight="25.0" vgrow="NEVER"/>
 		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS"/>
 	</rowConstraints>
-	<children>
-		<fx:include source="global-menu-view.fxml"/>
-		<GridPane hgap="8.0" vgap="8.0" GridPane.rowIndex="1">
-			<columnConstraints>
-				<ColumnConstraints hgrow="SOMETIMES" percentWidth="20"/>
-				<ColumnConstraints hgrow="SOMETIMES" percentWidth="20"/>
-				<ColumnConstraints hgrow="SOMETIMES" percentWidth="20"/>
-				<ColumnConstraints hgrow="SOMETIMES" percentWidth="20"/>
-				<ColumnConstraints hgrow="SOMETIMES" percentWidth="20"/>
-			</columnConstraints>
-			<rowConstraints>
-				<RowConstraints vgrow="SOMETIMES"/>
-				<RowConstraints vgrow="SOMETIMES"/>
-				<RowConstraints vgrow="SOMETIMES"/>
-				<RowConstraints vgrow="SOMETIMES"/>
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS"/>
-			</rowConstraints>
-			<padding>
-				<Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
-			</padding>
-			<children>
-				<ComboBox fx:id="departmentComboBox" maxWidth="1.7976931348623157E308" onAction="#selectDepartment" promptText="&lt;select&gt;"/>
-				<ComboBox fx:id="semesterComboBox" layoutX="18.0" layoutY="18.0" maxWidth="1.7976931348623157E308" onAction="#selectSemester" promptText="&lt;select&gt;" GridPane.rowIndex="1"/>
+	<fx:include source="global-menu-view.fxml"/>
+	<GridPane hgap="8.0" vgap="8.0" GridPane.rowIndex="1">
+		<columnConstraints>
+			<ColumnConstraints hgrow="SOMETIMES" percentWidth="20"/>
+			<ColumnConstraints hgrow="SOMETIMES" percentWidth="20"/>
+			<ColumnConstraints hgrow="SOMETIMES" percentWidth="20"/>
+			<ColumnConstraints hgrow="SOMETIMES" percentWidth="20"/>
+			<ColumnConstraints hgrow="SOMETIMES" percentWidth="20"/>
+		</columnConstraints>
+		<rowConstraints>
+			<RowConstraints vgrow="SOMETIMES"/>
+			<RowConstraints vgrow="SOMETIMES"/>
+			<RowConstraints vgrow="SOMETIMES"/>
+			<RowConstraints vgrow="SOMETIMES"/>
+			<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS"/>
+		</rowConstraints>
+		<padding>
+			<Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
+		</padding>
+		<ComboBox fx:id="departmentComboBox" maxWidth="1.7976931348623157E308" onAction="#selectDepartment" promptText="&lt;select&gt;"/>
+		<ComboBox fx:id="semesterComboBox" layoutX="18.0" layoutY="18.0" maxWidth="1.7976931348623157E308" onAction="#selectSemester" promptText="&lt;select&gt;" GridPane.rowIndex="1"/>
 
-				<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#loadDefaults" text="Load default" GridPane.rowIndex="2"/>
-				<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#saveDefaults" text="Save as default" GridPane.rowIndex="3"/>
+		<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#loadDefaults" text="Load default" GridPane.rowIndex="2"/>
+		<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#saveDefaults" text="Save as default" GridPane.rowIndex="3"/>
 
-				<StackPane GridPane.rowIndex="4">
-					<CalendarDay fx:id="monday" title="Monday" onItemSelected="#showItemDetails"/>
-					<Label fx:id="mondayHolidayText"/>
-				</StackPane>
-				<StackPane GridPane.columnIndex="1" GridPane.rowIndex="4">
-					<CalendarDay fx:id="tuesday" title="Tuesday" onItemSelected="#showItemDetails"/>
-					<Label fx:id="tuesdayHolidayText"/>
-				</StackPane>
-				<StackPane GridPane.columnIndex="2" GridPane.rowIndex="4">
-					<CalendarDay fx:id="wednesday" title="Wednesday" onItemSelected="#showItemDetails"/>
-					<Label fx:id="wednesdayHolidayText"/>
-				</StackPane>
-				<StackPane GridPane.columnIndex="3" GridPane.rowIndex="4">
-					<CalendarDay fx:id="thursday" title="Thursday" onItemSelected="#showItemDetails"/>
-					<Label fx:id="thursdayHolidayText"/>
-				</StackPane>
-				<StackPane GridPane.columnIndex="4" GridPane.rowIndex="4">
-					<CalendarDay fx:id="friday" title="Friday" onItemSelected="#showItemDetails"/>
-					<Label fx:id="fridayHolidayText"/>
-				</StackPane>
-				<VBox GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowSpan="4" GridPane.hgrow="NEVER">
-					<children>
-						<Label layoutX="10.0" layoutY="10.0" text="Details" wrapText="true">
-							<font>
-								<Font name="System Bold" size="12.0"/>
-							</font>
-						</Label>
-						<Label fx:id="detailsLabel"/>
-					</children>
-					<style>
-						-fx-border-color: #b5b5b5;
-						-fx-border-radius: 3px;
-						-fx-padding: 4px;
-					</style>
-				</VBox>
-			</children>
-		</GridPane>
-	</children>
+		<StackPane GridPane.rowIndex="4">
+			<TimetableDay fx:id="monday" title="Monday" onItemSelected="#showItemDetails"/>
+			<Label fx:id="mondayHolidayText"/>
+		</StackPane>
+		<StackPane GridPane.columnIndex="1" GridPane.rowIndex="4">
+			<TimetableDay fx:id="tuesday" title="Tuesday" onItemSelected="#showItemDetails"/>
+			<Label fx:id="tuesdayHolidayText"/>
+		</StackPane>
+		<StackPane GridPane.columnIndex="2" GridPane.rowIndex="4">
+			<TimetableDay fx:id="wednesday" title="Wednesday" onItemSelected="#showItemDetails"/>
+			<Label fx:id="wednesdayHolidayText"/>
+		</StackPane>
+		<StackPane GridPane.columnIndex="3" GridPane.rowIndex="4">
+			<TimetableDay fx:id="thursday" title="Thursday" onItemSelected="#showItemDetails"/>
+			<Label fx:id="thursdayHolidayText"/>
+		</StackPane>
+		<StackPane GridPane.columnIndex="4" GridPane.rowIndex="4">
+			<TimetableDay fx:id="friday" title="Friday" onItemSelected="#showItemDetails"/>
+			<Label fx:id="fridayHolidayText"/>
+		</StackPane>
+		<VBox GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowSpan="4" GridPane.hgrow="NEVER">
+			<Label layoutX="10.0" layoutY="10.0" text="Details" wrapText="true">
+				<font>
+					<Font name="System Bold" size="12.0"/>
+				</font>
+			</Label>
+			<Label fx:id="detailsLabel"/>
+
+			<style>
+				-fx-border-color: #b5b5b5;
+				-fx-border-radius: 3px;
+				-fx-padding: 4px;
+			</style>
+		</VBox>
+	</GridPane>
 </GridPane>

@@ -3,7 +3,7 @@ package hr.java.projektnizadatak.presentation.views;
 public enum ApplicationScreen {
 	// TODO: check titles and stuff
 	Login("views/login-view.fxml", "Login", false),
-	MainScreen("views/main-screen-view.fxml", "Projektni zadatak", true),
+	MainScreen("views/main-screen-view.fxml", "Timetable", true),
 	;
 	
 	private final String fxmlPath;
@@ -18,6 +18,10 @@ public enum ApplicationScreen {
 
 	public String getFxmlPath() {
 		return fxmlPath;
+	}
+
+	public String getTitle() {
+		return title;
 	}
 
 	public boolean canResize() {

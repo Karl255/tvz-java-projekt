@@ -14,7 +14,7 @@ import java.util.Objects;
 public class Application extends javafx.application.Application {
 	private static Stage stage;
 
-	private static UserManager userManager = new UserManager(new UsersFileStore());
+	private static final UserManager userManager = new UserManager(new UsersFileStore());
 
 	public static void main(String[] args) {
 		launch();
@@ -26,6 +26,7 @@ public class Application extends javafx.application.Application {
 			var window = (Parent) FXMLLoader.load(Objects.requireNonNull(Application.class.getResource(fxmlPath)));
 			stage.setResizable(screen.canResize());
 			stage.setScene(new Scene(window));
+			stage.setTitle(screen.getTitle());
 			stage.show();
 		} catch (IOException e) {
 			// TODO: handle this better

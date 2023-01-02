@@ -1,6 +1,5 @@
 package hr.java.projektnizadatak.presentation.util;
 
-import hr.java.projektnizadatak.application.entities.Department;
 import hr.java.projektnizadatak.application.entities.Semester;
 import javafx.util.StringConverter;
 

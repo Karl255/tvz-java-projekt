@@ -1,6 +1,5 @@
 package hr.java.projektnizadatak.data.api_response;
 
-import hr.java.projektnizadatak.application.entities.Department;
 import hr.java.projektnizadatak.application.entities.Holiday;
 import hr.java.projektnizadatak.application.entities.ScheduleItem;
 

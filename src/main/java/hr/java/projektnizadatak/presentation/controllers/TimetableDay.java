@@ -2,7 +2,7 @@ package hr.java.projektnizadatak.presentation.controllers;
 
 import hr.java.projektnizadatak.application.entities.ScheduleItem;
 import hr.java.projektnizadatak.presentation.Application;
-import hr.java.projektnizadatak.presentation.models.CalendarItemModel;
+import hr.java.projektnizadatak.presentation.models.TimetableItemModel;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ObjectPropertyBase;
 import javafx.beans.property.StringProperty;
@@ -17,14 +17,14 @@ import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 
-public class CalendarDay extends GridPane {
+public class TimetableDay extends GridPane {
 	@FXML
 	private Label titleLabel;
 	@FXML
 	private AnchorPane contentAnchorPane;
 
-	public CalendarDay() {
-		FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("views/calendar-day-view.fxml"));
+	public TimetableDay() {
+		FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("views/timetable-day-view.fxml"));
 		fxmlLoader.setRoot(this);
 		fxmlLoader.setController(this);
 
@@ -37,12 +37,12 @@ public class CalendarDay extends GridPane {
 	}
 
 	public void setItems(List<ScheduleItem> items) {
-		var elements = CalendarItemModel.organizeItems(items)
+		var elements = TimetableItemModel.organizeItems(items)
 			.stream()
 			.map(model -> {
-				CalendarItem calendarItem = new CalendarItem(model);
-				calendarItem.setOnMouseClicked(this::calednarItemClicked);
-				return calendarItem;
+				TimetableItem timetableItem = new TimetableItem(model);
+				timetableItem.setOnMouseClicked(this::calednarItemClicked);
+				return timetableItem;
 			})
 			.toList();
 
@@ -51,19 +51,24 @@ public class CalendarDay extends GridPane {
 	}
 
 	public void repositionItems() {
+		if (contentAnchorPane.getChildren().size() == 0) {
+			return;
+		}
+		
 		double width = contentAnchorPane.getBoundsInLocal().getWidth();
 		double height = contentAnchorPane.getBoundsInLocal().getHeight();
 		
 		int maxColumn = contentAnchorPane.getChildren().stream()
-			.map(c -> (CalendarItem) c)
+			.map(c -> (TimetableItem) c)
 			.max(Comparator.comparing(c -> c.getModel().getColumn()))
-			.get()
+			// TODO: use custom exception
+			.orElseThrow(() -> new RuntimeException("Unreachable code"))
 			.getModel().getColumn();
 
 		double columnWidth = width / (maxColumn + 1);
 
 		for (var itemNode : contentAnchorPane.getChildren()) {
-			if (itemNode instanceof CalendarItem item) {
+			if (itemNode instanceof TimetableItem item) {
 				var model = item.getModel();
 
 				AnchorPane.setTopAnchor(itemNode, height * model.getRelativeStart());
@@ -82,7 +87,7 @@ public class CalendarDay extends GridPane {
 	private final ObjectProperty<EventHandler<MouseEvent>> onItemSelected = new ObjectPropertyBase<>() {
 		@Override
 		public Object getBean() {
-			return CalendarDay.this;
+			return TimetableDay.this;
 		}
 
 		@Override
