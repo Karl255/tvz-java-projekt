@@ -1,5 +1,7 @@
 package hr.java.projektnizadatak.data;
 
+import hr.java.projektnizadatak.shared.exceptions.ReadOrWriteErrorException;
+import hr.java.projektnizadatak.shared.exceptions.UnexpectedInterruptException;
 import javafx.util.Pair;
 
 import java.io.IOException;
@@ -20,9 +22,10 @@ public class HttpUtil {
 
 		try {
 			return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
-		} catch (IOException | InterruptedException e) {
-			// TODO?
-			throw new RuntimeException(e);
+		} catch (IOException e) {
+			throw new ReadOrWriteErrorException("Fetching endpoint: " + endpoint, e);
+		} catch (InterruptedException e) {
+			throw new UnexpectedInterruptException("Fetching endpoint: " + endpoint, e);
 		}
 	}
 
@@ -30,11 +33,11 @@ public class HttpUtil {
 	public static URI buildUriWithParams(String endpoint, Pair<String, String>... parameters) {
 		var sb = new StringBuilder(endpoint);
 		boolean first = true;
-		
+
 		for (var parameter : parameters) {
 			sb.append(first ? '?' : '&');
 			first = false;
-			
+
 			sb.append(urlEncode(parameter.getKey()));
 
 			if (parameter.getValue() != null) {
@@ -45,7 +48,7 @@ public class HttpUtil {
 
 		return URI.create(sb.toString());
 	}
-	
+
 	private static String urlEncode(String s) {
 		return URLEncoder.encode(s, Charset.defaultCharset());
 	}

@@ -3,6 +3,7 @@ package hr.java.projektnizadatak.presentation.controllers;
 import hr.java.projektnizadatak.application.entities.ScheduleItem;
 import hr.java.projektnizadatak.presentation.Application;
 import hr.java.projektnizadatak.presentation.models.TimetableItemModel;
+import hr.java.projektnizadatak.shared.exceptions.FxmlLoadingException;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ObjectPropertyBase;
 import javafx.beans.property.StringProperty;
@@ -31,8 +32,7 @@ public class TimetableDay extends GridPane {
 		try {
 			fxmlLoader.load();
 		} catch (IOException e) {
-			// TODO
-			throw new RuntimeException(e);
+			throw new FxmlLoadingException("Loading fxml for " + getClass().getName(), e);
 		}
 	}
 

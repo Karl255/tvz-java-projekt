@@ -3,6 +3,7 @@ package hr.java.projektnizadatak.data;
 import hr.java.projektnizadatak.application.UsersStore;
 import hr.java.projektnizadatak.application.entities.Semester;
 import hr.java.projektnizadatak.application.entities.User;
+import hr.java.projektnizadatak.shared.exceptions.ReadOrWriteErrorException;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -33,8 +34,7 @@ public class UsersFileStore implements UsersStore {
 				.map(this::parseUser)
 				.toList();
 		} catch (IOException e) {
-			// TODO: implement proper error handling
-			throw new RuntimeException(e);
+			throw new ReadOrWriteErrorException("Reading file: " + USERS_FILE_PATH, e);
 		}
 	}
 
@@ -79,8 +79,7 @@ public class UsersFileStore implements UsersStore {
 		try {
 			Files.writeString(USERS_FILE_PATH, serialized);
 		} catch (IOException e) {
-			// TODO: implement proper error handling
-			throw new RuntimeException(e);
+			throw new ReadOrWriteErrorException("Writing file: " + USERS_FILE_PATH, e);
 		}
 	}
 

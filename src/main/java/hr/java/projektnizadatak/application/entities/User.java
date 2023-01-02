@@ -1,5 +1,7 @@
 package hr.java.projektnizadatak.application.entities;
 
+import hr.java.projektnizadatak.shared.exceptions.UnsupportedAlgorithmException;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
@@ -29,7 +31,7 @@ public final class User {
 			return new String(Base64.getEncoder()
 				.encode(digest));
 		} catch (NoSuchAlgorithmException e) {
-			throw new RuntimeException(e);
+			throw new UnsupportedAlgorithmException("System doesn't support SHA-256", e);
 		}
 	}
 

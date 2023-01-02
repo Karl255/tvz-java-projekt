@@ -3,6 +3,7 @@ package hr.java.projektnizadatak.presentation.controllers;
 import hr.java.projektnizadatak.application.entities.ScheduleItem;
 import hr.java.projektnizadatak.presentation.Application;
 import hr.java.projektnizadatak.presentation.models.TimetableItemModel;
+import hr.java.projektnizadatak.shared.exceptions.FxmlLoadingException;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
@@ -35,8 +36,7 @@ public class TimetableItem extends VBox {
 		try {
 			fxmlLoader.load();
 		} catch (IOException e) {
-			// TODO
-			throw new RuntimeException(e);
+			throw new FxmlLoadingException("Loading fxml for " + getClass().getName(), e);
 		}
 	}
 	
