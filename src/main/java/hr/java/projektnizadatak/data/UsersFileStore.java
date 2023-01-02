@@ -4,6 +4,8 @@ import hr.java.projektnizadatak.application.UsersStore;
 import hr.java.projektnizadatak.application.entities.Semester;
 import hr.java.projektnizadatak.application.entities.User;
 import hr.java.projektnizadatak.shared.exceptions.ReadOrWriteErrorException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -12,6 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class UsersFileStore implements UsersStore {
+	private static final Logger logger = LoggerFactory.getLogger(UsersFileStore.class);
 	private static final Path USERS_FILE_PATH = Path.of("data/users.txt");
 
 	public UsersFileStore() {
@@ -34,7 +37,10 @@ public class UsersFileStore implements UsersStore {
 				.map(this::parseUser)
 				.toList();
 		} catch (IOException e) {
-			throw new ReadOrWriteErrorException("Reading file: " + USERS_FILE_PATH, e);
+			String m = "Reading file: " + USERS_FILE_PATH;
+			logger.error(m);
+
+			throw new ReadOrWriteErrorException(m, e);
 		}
 	}
 
@@ -79,7 +85,10 @@ public class UsersFileStore implements UsersStore {
 		try {
 			Files.writeString(USERS_FILE_PATH, serialized);
 		} catch (IOException e) {
-			throw new ReadOrWriteErrorException("Writing file: " + USERS_FILE_PATH, e);
+			String m = "Writing file: " + USERS_FILE_PATH;
+			logger.error(m);
+
+			throw new ReadOrWriteErrorException(m, e);
 		}
 	}
 

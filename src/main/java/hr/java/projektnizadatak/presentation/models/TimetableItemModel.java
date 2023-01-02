@@ -2,6 +2,9 @@ package hr.java.projektnizadatak.presentation.models;
 
 import hr.java.projektnizadatak.application.entities.ScheduleItem;
 import hr.java.projektnizadatak.shared.Util;
+import hr.java.projektnizadatak.shared.exceptions.UnreachableCodeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -10,10 +13,12 @@ import java.util.Comparator;
 import java.util.List;
 
 public final class TimetableItemModel {
+	private static final Logger logger = LoggerFactory.getLogger(TimetableItemModel.class);
+
 	private static final double BEGINNING_TIME = Util.toHours(LocalTime.of(7, 0));
 	private static final double ENDING_TIME = Util.toHours(LocalTime.of(22, 0));
 	private static final double TIME_SPAN = ENDING_TIME - BEGINNING_TIME;
-	
+
 	private final ScheduleItem scheduleItem;
 	private final LocalTime start;
 	private final LocalTime end;
@@ -37,7 +42,7 @@ public final class TimetableItemModel {
 		if (items.size() == 0) {
 			return Collections.emptyList();
 		}
-		
+
 		var separated = items.stream()
 			.map(TimetableItemModel::new)
 			.sorted(Comparator
@@ -45,7 +50,7 @@ public final class TimetableItemModel {
 				.thenComparing(TimetableItemModel::end)
 			)
 			.toList();
-		
+
 		// separate into columns
 		boolean overlaps;
 
@@ -58,7 +63,7 @@ public final class TimetableItemModel {
 					var m2 = separated.get(j);
 
 					if (m1.getColumn() == m2.getColumn() && timespanIntersects(m1, m2)) {
-						separated.get(j).setColumn( separated.get(j).getColumn() + 1);
+						separated.get(j).setColumn(separated.get(j).getColumn() + 1);
 						overlaps = true;
 					}
 				}
@@ -69,13 +74,18 @@ public final class TimetableItemModel {
 		// spread out
 		int maxColumn = separated.stream()
 			.max(Comparator.comparing(m -> m.column))
-			.orElseThrow(() -> new RuntimeException(""))
+			.orElseThrow(() -> {
+				String m = "No maximum found while organizing items";
+				logger.error(m);
+
+				return new UnreachableCodeException(m);
+			})
 			.getColumn();
 
 		for (int i = 0; i < separated.size(); i++) {
 			var m1 = separated.get(i);
 			boolean isUnobstructed = true;
-			
+
 			for (int j = 0; j < separated.size(); j++) {
 				var m2 = separated.get(j);
 

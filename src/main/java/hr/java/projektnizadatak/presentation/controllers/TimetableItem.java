@@ -8,11 +8,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.time.format.DateTimeFormatter;
 
 public class TimetableItem extends VBox {
+	private static final Logger logger = LoggerFactory.getLogger(TimetableItem.class);
 	private final TimetableItemModel model;
 	
 	@FXML
@@ -34,7 +36,10 @@ public class TimetableItem extends VBox {
 		try {
 			fxmlLoader.load();
 		} catch (IOException e) {
-			throw new FxmlLoadingException("Loading fxml for " + getClass().getName(), e);
+			String m = "Loading fxml for " + getClass().getName();
+			logger.error(m);
+			
+			throw new FxmlLoadingException(m, e);
 		}
 	}
 

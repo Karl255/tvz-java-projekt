@@ -10,12 +10,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Objects;
 
 @SuppressWarnings("FieldMayBeFinal")
 public class Application extends javafx.application.Application {
+	private static final Logger logger = LoggerFactory.getLogger(Application.class);
 	private static Stage stage;
 
 	private static UserManager userManager = new UserManager(new UsersFileStore());
@@ -34,7 +37,10 @@ public class Application extends javafx.application.Application {
 			stage.setTitle(screen.getTitle());
 			stage.show();
 		} catch (IOException e) {
-			throw new FxmlLoadingException("Loading FXML for screen: " + screen, e);
+			String m = "Loading FXML for screen: " + screen;
+			logger.error(m);
+			
+			throw new FxmlLoadingException(m, e);
 		}
 	}
 

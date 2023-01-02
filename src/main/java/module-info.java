@@ -3,6 +3,7 @@ module hr.java.projektnizadatak {
 	requires javafx.fxml;
 	requires java.net.http;
 	requires com.google.gson;
+	requires org.slf4j;
 
 	exports hr.java.projektnizadatak.application;
 	exports hr.java.projektnizadatak.application.entities;

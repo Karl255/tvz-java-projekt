@@ -14,12 +14,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 
 public class TimetableDay extends GridPane {
+	private static final Logger logger = LoggerFactory.getLogger(TimetableDay.class);
+	
 	@FXML
 	private Label titleLabel;
 	@FXML
@@ -33,7 +37,9 @@ public class TimetableDay extends GridPane {
 		try {
 			fxmlLoader.load();
 		} catch (IOException e) {
-			throw new FxmlLoadingException("Loading fxml for " + getClass().getName(), e);
+			String m = "Loading fxml for " + getClass().getName();
+			logger.error(m);
+			throw new FxmlLoadingException(m, e);
 		}
 	}
 
@@ -62,7 +68,12 @@ public class TimetableDay extends GridPane {
 		int maxColumn = contentAnchorPane.getChildren().stream()
 			.map(item -> (TimetableItem) item)
 			.max(Comparator.comparing(item -> item.getModel().getColumn()))
-			.orElseThrow(() -> new UnreachableCodeException("No maximum found while repositioning items"))
+			.orElseThrow(() -> {
+				String m = "No maximum found while repositioning items";
+				logger.error(m);
+				
+				return new UnreachableCodeException(m);
+			})
 			.getModel().getColumn();
 
 		double columnWidth = width / (maxColumn + 1);

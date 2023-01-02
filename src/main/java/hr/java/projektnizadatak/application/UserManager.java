@@ -4,8 +4,12 @@ import hr.java.projektnizadatak.application.entities.Semester;
 import hr.java.projektnizadatak.application.entities.User;
 import hr.java.projektnizadatak.shared.exceptions.InvalidUsernameException;
 import hr.java.projektnizadatak.shared.exceptions.UsernameTakenException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class UserManager {
+	private static final Logger logger = LoggerFactory.getLogger(UserManager.class);
+	
 	private final UsersStore usersStore;
 	private User loggedInUser = null;
 
@@ -34,7 +38,10 @@ public class UserManager {
 
 	public User createUser(String username, String password) throws InvalidUsernameException, UsernameTakenException {
 		if (!User.isUsernameValid(username)) {
-			throw new InvalidUsernameException("Invalid username: " + username);
+			String m = "Invalid username: " + username;
+			logger.error(m);
+			
+			throw new InvalidUsernameException(m);
 		}
 
 		var users = usersStore.read();
@@ -43,7 +50,10 @@ public class UserManager {
 			.anyMatch(u -> u.username().equals(username));
 
 		if (usernameTaken) {
-			throw new UsernameTakenException("Username taken: " + username);
+			String m = "Username taken: " + username;
+			logger.error(m);
+			
+			throw new UsernameTakenException(m);
 		}
 
 		var user = new User.UserBuilder(username)

@@ -2,8 +2,12 @@ package hr.java.projektnizadatak.presentation.util;
 
 import hr.java.projektnizadatak.application.entities.Semester;
 import javafx.util.StringConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SemesterStringConverter extends StringConverter<Semester> {
+	private static final Logger logger = LoggerFactory.getLogger(Semester.class);
+
 	@Override
 	public String toString(Semester semester) {
 		return semester != null
@@ -13,6 +17,9 @@ public class SemesterStringConverter extends StringConverter<Semester> {
 
 	@Override
 	public Semester fromString(String s) {
-		throw new UnsupportedOperationException("Cannot create Semester object from String");
+		String m = "Cannot create Semester object from String";
+		logger.error(m);
+
+		throw new UnsupportedOperationException(m);
 	}
 }

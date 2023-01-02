@@ -3,6 +3,8 @@ package hr.java.projektnizadatak.data;
 import hr.java.projektnizadatak.shared.exceptions.ReadOrWriteErrorException;
 import hr.java.projektnizadatak.shared.exceptions.UnexpectedInterruptException;
 import javafx.util.Pair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URI;
@@ -13,6 +15,7 @@ import java.net.http.HttpResponse;
 import java.nio.charset.Charset;
 
 public class HttpUtil {
+	private static final Logger logger = LoggerFactory.getLogger(FileUtil.class);
 	private static final HttpClient client = HttpClient.newHttpClient();
 
 	public static String fetchFromEndpoint(URI endpoint) {
@@ -23,9 +26,15 @@ public class HttpUtil {
 		try {
 			return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
 		} catch (IOException e) {
-			throw new ReadOrWriteErrorException("Fetching endpoint: " + endpoint, e);
+			String m = "Fetching endpoint: " + endpoint;
+			logger.error(m);
+
+			throw new ReadOrWriteErrorException(m, e);
 		} catch (InterruptedException e) {
-			throw new UnexpectedInterruptException("Fetching endpoint: " + endpoint, e);
+			String m = "Fetching endpoint: " + endpoint;
+			logger.error(m);
+
+			throw new UnexpectedInterruptException(m, e);
 		}
 	}
 

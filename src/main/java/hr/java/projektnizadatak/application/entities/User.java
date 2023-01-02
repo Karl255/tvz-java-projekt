@@ -1,6 +1,8 @@
 package hr.java.projektnizadatak.application.entities;
 
 import hr.java.projektnizadatak.shared.exceptions.UnsupportedAlgorithmException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -9,11 +11,13 @@ import java.util.Objects;
 import java.util.regex.Pattern;
 
 public final class User {
+	private static final Logger logger = LoggerFactory.getLogger(User.class);
+
 	private static final Pattern VALID_USERNAME_PATTERN = Pattern.compile("^[A-Za-z0-9\\-_ ]{4,32}$");
-	
+
 	private final String username;
 	private final String passwordHash;
-	private final String defaultDepartmentCode; 
+	private final String defaultDepartmentCode;
 	private final Semester defaultSemester;
 
 	private User(String username, String passwordHash, String defaultDepartmentCode, Semester defaultSemester) {
@@ -27,11 +31,14 @@ public final class User {
 		try {
 			var digest = MessageDigest.getInstance("SHA-256")
 				.digest(password.getBytes());
-			
+
 			return new String(Base64.getEncoder()
 				.encode(digest));
 		} catch (NoSuchAlgorithmException e) {
-			throw new UnsupportedAlgorithmException("System doesn't support SHA-256", e);
+			String m = "System doesn't support SHA-256";
+			logger.error(m);
+
+			throw new UnsupportedAlgorithmException(m, e);
 		}
 	}
 
@@ -80,7 +87,7 @@ public final class User {
 		public UserBuilder(String username) {
 			this.username = username;
 		}
-		
+
 		public UserBuilder(User original) {
 			this.username = original.username;
 			this.passwordHash = original.passwordHash;
@@ -97,12 +104,12 @@ public final class User {
 			this.passwordHash = hashPassword(password);
 			return this;
 		}
-		
+
 		public UserBuilder withDefaultDepartmentCode(String defaultDepartmentCode) {
 			this.defaultDepartmentCode = defaultDepartmentCode;
 			return this;
 		}
-		
+
 		public UserBuilder withDefaultSemester(Semester defaultSemester) {
 			this.defaultSemester = defaultSemester;
 			return this;
