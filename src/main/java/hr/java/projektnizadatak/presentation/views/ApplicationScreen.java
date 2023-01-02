@@ -1,7 +1,6 @@
 package hr.java.projektnizadatak.presentation.views;
 
 public enum ApplicationScreen {
-	// TODO: check titles and stuff
 	Login("views/login-view.fxml", "Login", false),
 	MainScreen("views/main-screen-view.fxml", "Timetable", true),
 	;

@@ -31,7 +31,6 @@ public class ScheduleApiSource implements ScheduleSource {
 			.toList();
 	}
 	
-	// TODO: add arguments
 	public List<Semester> fetchAvailableSemesters(String departmentCode, int year) {
 		var uri = HttpUtil.buildUriWithParams(AVAILABLE_SEMESTERS_ENDPOINT_BASE,
 			new Pair<>("department", departmentCode),
@@ -45,7 +44,6 @@ public class ScheduleApiSource implements ScheduleSource {
 			.toList();
 	}
 
-	// TODO: add arguments
 	public Timetable fetchTimetable(String subdepartment, int semester, int year, LocalDate start, int days) {
 		var uri = HttpUtil.buildUriWithParams(TIMETABLE_ENDPOINT_BASE,
 			new Pair<>("department", subdepartment),
