@@ -26,4 +26,9 @@ public enum ApplicationScreen {
 	public boolean canResize() {
 		return canResize;
 	}
+	
+	@Override
+	public String toString() {
+		return title + "(" + fxmlPath + ", " + canResize + ")";
+	}
 }

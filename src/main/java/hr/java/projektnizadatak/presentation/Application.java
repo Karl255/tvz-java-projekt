@@ -1,8 +1,11 @@
 package hr.java.projektnizadatak.presentation;
 
+import hr.java.projektnizadatak.application.ScheduleSource;
 import hr.java.projektnizadatak.application.UserManager;
+import hr.java.projektnizadatak.data.ScheduleApiSource;
 import hr.java.projektnizadatak.data.UsersFileStore;
 import hr.java.projektnizadatak.presentation.views.ApplicationScreen;
+import hr.java.projektnizadatak.shared.exceptions.FxmlLoadingException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -11,10 +14,12 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.Objects;
 
+@SuppressWarnings("FieldMayBeFinal")
 public class Application extends javafx.application.Application {
 	private static Stage stage;
 
-	private static final UserManager userManager = new UserManager(new UsersFileStore());
+	private static UserManager userManager = new UserManager(new UsersFileStore());
+	private static ScheduleSource scheduleSource = new ScheduleApiSource();
 
 	public static void main(String[] args) {
 		launch();
@@ -29,13 +34,16 @@ public class Application extends javafx.application.Application {
 			stage.setTitle(screen.getTitle());
 			stage.show();
 		} catch (IOException e) {
-			// TODO: handle this better
-			e.printStackTrace();
+			throw new FxmlLoadingException("Loading FXML for screen: " + screen, e);
 		}
 	}
 
 	public static UserManager getUserManager() {
 		return userManager;
+	}
+
+	public static ScheduleSource getScheduleSource() {
+		return scheduleSource;
 	}
 
 	@Override

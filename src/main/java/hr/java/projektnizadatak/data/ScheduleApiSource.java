@@ -23,7 +23,7 @@ public class ScheduleApiSource implements ScheduleSource {
 	
 	private static final Gson gson = new Gson();
 	
-	public List<Department> fetchAvailableDepartments() {
+	public List<Department> getAvailableDepartments() {
 		String json = HttpUtil.fetchFromEndpoint(AVAILABLE_DEPARTMENTS_ENDPOINT);
 		
 		return Arrays.stream(gson.fromJson(json, ApiDepartment[].class))
@@ -31,7 +31,7 @@ public class ScheduleApiSource implements ScheduleSource {
 			.toList();
 	}
 	
-	public List<Semester> fetchAvailableSemesters(String departmentCode, int year) {
+	public List<Semester> getAvailableSemesters(String departmentCode, int year) {
 		var uri = HttpUtil.buildUriWithParams(AVAILABLE_SEMESTERS_ENDPOINT_BASE,
 			new Pair<>("department", departmentCode),
 			new Pair<>("year", Integer.toString(year))
@@ -44,7 +44,7 @@ public class ScheduleApiSource implements ScheduleSource {
 			.toList();
 	}
 
-	public Timetable fetchTimetable(String subdepartment, int semester, int year, LocalDate start, int days) {
+	public Timetable getTimetable(String subdepartment, int semester, int year, LocalDate start, int days) {
 		var uri = HttpUtil.buildUriWithParams(TIMETABLE_ENDPOINT_BASE,
 			new Pair<>("department", subdepartment),
 			new Pair<>("semester", Integer.toString(semester)),

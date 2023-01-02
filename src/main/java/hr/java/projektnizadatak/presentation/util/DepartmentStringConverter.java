@@ -11,7 +11,6 @@ public class DepartmentStringConverter extends StringConverter<Department> {
 
 	@Override
 	public Department fromString(String s) {
-		// TODO: add message or use custom exception
-		throw new UnsupportedOperationException("");
+		throw new UnsupportedOperationException("Cannot create Semester object from String");
 	}
 }

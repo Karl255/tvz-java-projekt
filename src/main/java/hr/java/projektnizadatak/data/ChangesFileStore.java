@@ -40,7 +40,7 @@ public class ChangesFileStore implements ChangesStore {
 
 			return changes;
 		} catch (FileNotFoundException e) {
-			throw new UnreachableCodeException();
+			throw new UnreachableCodeException("File not found while reading change entries", e);
 		} catch (IOException e) {
 			throw new ReadOrWriteErrorException("Reading file: " + CHANGES_FILE_PATH, e);
 		} catch (ClassNotFoundException e) {

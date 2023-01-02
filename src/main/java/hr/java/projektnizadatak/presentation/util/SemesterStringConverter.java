@@ -13,7 +13,6 @@ public class SemesterStringConverter extends StringConverter<Semester> {
 
 	@Override
 	public Semester fromString(String s) {
-		// TODO: add message or use custom exception
-		throw new UnsupportedOperationException("");
+		throw new UnsupportedOperationException("Cannot create Semester object from String");
 	}
 }

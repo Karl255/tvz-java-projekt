@@ -4,6 +4,7 @@ import hr.java.projektnizadatak.application.entities.ScheduleItem;
 import hr.java.projektnizadatak.presentation.Application;
 import hr.java.projektnizadatak.presentation.models.TimetableItemModel;
 import hr.java.projektnizadatak.shared.exceptions.FxmlLoadingException;
+import hr.java.projektnizadatak.shared.exceptions.UnreachableCodeException;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ObjectPropertyBase;
 import javafx.beans.property.StringProperty;
@@ -59,10 +60,9 @@ public class TimetableDay extends GridPane {
 		double height = contentAnchorPane.getBoundsInLocal().getHeight();
 		
 		int maxColumn = contentAnchorPane.getChildren().stream()
-			.map(c -> (TimetableItem) c)
-			.max(Comparator.comparing(c -> c.getModel().getColumn()))
-			// TODO: use custom exception
-			.orElseThrow(() -> new RuntimeException("Unreachable code"))
+			.map(item -> (TimetableItem) item)
+			.max(Comparator.comparing(item -> item.getModel().getColumn()))
+			.orElseThrow(() -> new UnreachableCodeException("No maximum found while repositioning items"))
 			.getModel().getColumn();
 
 		double columnWidth = width / (maxColumn + 1);

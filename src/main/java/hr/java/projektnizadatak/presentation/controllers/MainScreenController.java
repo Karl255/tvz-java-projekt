@@ -3,7 +3,6 @@ package hr.java.projektnizadatak.presentation.controllers;
 import hr.java.projektnizadatak.application.entities.Department;
 import hr.java.projektnizadatak.application.entities.ScheduleItem;
 import hr.java.projektnizadatak.application.entities.Semester;
-import hr.java.projektnizadatak.data.ScheduleApiSource;
 import hr.java.projektnizadatak.presentation.Application;
 import hr.java.projektnizadatak.presentation.util.DepartmentStringConverter;
 import hr.java.projektnizadatak.presentation.util.SemesterStringConverter;
@@ -17,26 +16,27 @@ import java.time.LocalDate;
 import java.util.stream.Collectors;
 
 public class MainScreenController {
-	private final TimetableDay[] timetableDays;
-	private final Label[] holidayTexts;
-	// TODO: move this to a different place
-	private final ScheduleApiSource api = new ScheduleApiSource();
 	private final int TEMP_TIMETABLE_YEAR = 2022;
 	private final LocalDate TEMP_TIMETABLE_START = LocalDate.of(2022, 10, 3);
 	private final int TEMP_TIMETABLE_DAYS = 5;
+
 	@FXML private ComboBox<Department> departmentComboBox;
 	@FXML private ComboBox<Semester> semesterComboBox;
+
 	@FXML private TimetableDay monday;
 	@FXML private TimetableDay tuesday;
 	@FXML private TimetableDay wednesday;
 	@FXML private TimetableDay thursday;
 	@FXML private TimetableDay friday;
+	private final TimetableDay[] timetableDays;
+
 	@FXML private Label mondayHolidayText;
 	@FXML private Label tuesdayHolidayText;
 	@FXML private Label wednesdayHolidayText;
 	@FXML private Label thursdayHolidayText;
 	@FXML private Label fridayHolidayText;
 	@FXML private Label detailsLabel;
+	private final Label[] holidayTexts;
 
 	public MainScreenController() {
 		timetableDays = new TimetableDay[5];
@@ -60,14 +60,15 @@ public class MainScreenController {
 		departmentComboBox.setConverter(new DepartmentStringConverter());
 		semesterComboBox.setConverter(new SemesterStringConverter());
 
-		departmentComboBox.setItems(FXCollections.observableList(api.fetchAvailableDepartments()));
+		var user = Application.getUserManager().getUser();
+		var scheduleSource = Application.getScheduleSource();
+		
+		departmentComboBox.setItems(FXCollections.observableList(scheduleSource.getAvailableDepartments()));
 
 		// loading only default department
-		var user = Application.getUserManager().getUser();
-
 		if (user.defaultDepartmentCode() != null) {
 			if (applyDefaultDepartment(user.defaultDepartmentCode())) {
-				semesterComboBox.setItems(FXCollections.observableList(api.fetchAvailableSemesters(user.defaultDepartmentCode(), 2022)));
+				semesterComboBox.setItems(FXCollections.observableList(scheduleSource.getAvailableSemesters(user.defaultDepartmentCode(), 2022)));
 			}
 		}
 	}
@@ -75,6 +76,7 @@ public class MainScreenController {
 	@FXML
 	private void loadDefaults() {
 		var user = Application.getUserManager().getUser();
+		var scheduleSource = Application.getScheduleSource();
 
 		if (user.defaultSemester() != null) {
 			var sem = user.defaultSemester();
@@ -83,7 +85,7 @@ public class MainScreenController {
 
 		if (user.defaultDepartmentCode() != null) {
 			if (applyDefaultDepartment(user.defaultDepartmentCode())) {
-				semesterComboBox.setItems(FXCollections.observableList(api.fetchAvailableSemesters(user.defaultDepartmentCode(), 2022)));
+				semesterComboBox.setItems(FXCollections.observableList(scheduleSource.getAvailableSemesters(user.defaultDepartmentCode(), 2022)));
 
 				if (user.defaultSemester() != null) {
 					applyDefaultSemester(user.defaultSemester());
@@ -118,10 +120,11 @@ public class MainScreenController {
 
 	@FXML
 	private void selectDepartment() {
+		var scheduleSource = Application.getScheduleSource();
 		var department = departmentComboBox.getSelectionModel().getSelectedItem();
 
 		if (department != null) {
-			semesterComboBox.setItems(FXCollections.observableList(api.fetchAvailableSemesters(department.code(), 2022)));
+			semesterComboBox.setItems(FXCollections.observableList(scheduleSource.getAvailableSemesters(department.code(), 2022)));
 		}
 	}
 
@@ -135,7 +138,8 @@ public class MainScreenController {
 	}
 
 	private void getTimetable(String subdepartment, int semester, int year, LocalDate start, int days) {
-		var timetable = api.fetchTimetable(subdepartment, semester, year, start, days);
+		var scheduleSource = Application.getScheduleSource();
+		var timetable = scheduleSource.getTimetable(subdepartment, semester, year, start, days);
 
 		var itemsByDate = timetable.scheduleItems().stream()
 			.collect(Collectors.groupingBy(ScheduleItem::date));
