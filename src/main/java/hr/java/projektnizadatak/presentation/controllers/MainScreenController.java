@@ -8,6 +8,7 @@ import hr.java.projektnizadatak.presentation.Application;
 import hr.java.projektnizadatak.presentation.models.WeekModel;
 import hr.java.projektnizadatak.presentation.util.DepartmentStringConverter;
 import hr.java.projektnizadatak.presentation.util.SemesterStringConverter;
+import hr.java.projektnizadatak.presentation.views.ApplicationScreen;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -29,6 +30,9 @@ public class MainScreenController {
 
 	@FXML private ComboBox<Department> departmentComboBox;
 	@FXML private ComboBox<Semester> semesterComboBox;
+
+	private ScheduleItem selectedItem = null;
+	@FXML private Button manageOverridesButton;
 
 	@FXML private TimetableDay monday;
 	@FXML private TimetableDay tuesday;
@@ -189,29 +193,6 @@ public class MainScreenController {
 	}
 
 	@FXML
-	private void showItemDetails(MouseEvent e) {
-		if (e.getSource() instanceof TimetableItem timetableItem) {
-			var info = timetableItem.getScheduleItem();
-			var sb = new StringBuilder()
-				.append(info.getTimestamp()).append('\n')
-				.append(info.className()).append('\n')
-				.append(info.classType()).append('\n')
-				.append(info.classroom()).append('\n')
-				.append(info.professor()).append('\n');
-
-			if (info.group() != null) {
-				sb.append("Grupa: ").append(info.group()).append('\n');
-			}
-
-			if (info.note() != null) {
-				sb.append("Napomena: ").append(info.note()).append('\n');
-			}
-
-			detailsLabel.setText(sb.toString());
-		}
-	}
-
-	@FXML
 	private void setCurrentWeek() {
 		weekModel.setCurrentWeek();
 		updateCurrentWeek();
@@ -242,6 +223,40 @@ public class MainScreenController {
 
 	private void updateCurrentWeekButton() {
 		currentWeekButton.setText(weekModel.toTimespan(5, DATE_FORMAT));
+	}
+
+	@FXML
+	private void showItemDetails(MouseEvent e) {
+		if (e.getSource() instanceof TimetableItem timetableItem) {
+			var info = timetableItem.getScheduleItem();
+			selectedItem = info;
+
+			var sb = new StringBuilder()
+				.append(info.getTimestamp()).append('\n')
+				.append(info.className()).append('\n')
+				.append(info.classType()).append('\n')
+				.append(info.classroom()).append('\n')
+				.append(info.professor()).append('\n');
+
+			if (info.group() != null) {
+				sb.append("Grupa: ").append(info.group()).append('\n');
+			}
+
+			if (info.note() != null) {
+				sb.append("Napomena: ").append(info.note()).append('\n');
+			}
+
+			detailsLabel.setText(sb.toString());
+			manageOverridesButton.setDisable(false);
+		}
+	}
+	
+	@FXML
+	private void openEditOverride() {
+		if (selectedItem != null) {
+			Application.getOverrideManager().setItemBeingEdited(selectedItem);
+			Application.setScreen(ApplicationScreen.EditOverride);
+		}
 	}
 }
 

@@ -56,6 +56,10 @@ public class Application extends javafx.application.Application {
 		return scheduleSource;
 	}
 
+	public static ScheduleOverridesManager getOverrideManager() {
+		return scheduleOverridesManager;
+	}
+
 	@Override
 	public void start(Stage stage) {
 		Application.stage = stage;

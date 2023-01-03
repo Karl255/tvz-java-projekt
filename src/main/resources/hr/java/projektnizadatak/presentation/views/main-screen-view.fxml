@@ -46,6 +46,23 @@
 		<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#loadDefaults" text="Load default" GridPane.rowIndex="2"/>
 		<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#saveDefaults" text="Save as default" GridPane.rowIndex="3"/>
 
+		<Button fx:id="manageOverridesButton" disable="true" mnemonicParsing="false" text="Manage overrides" GridPane.columnIndex="2" GridPane.halignment="RIGHT" onAction="#openEditOverride"/>
+		<VBox GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowSpan="4">
+			<Label fx:id="detailsLabel"/>
+
+			<style>
+				-fx-border-color: #b5b5b5;
+				-fx-border-radius: 3px;
+				-fx-padding: 4px;
+			</style>
+		</VBox>
+
+		<HBox alignment="CENTER" spacing="8.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3">
+			<Button mnemonicParsing="false" onAction="#previousWeek" text="&lt;"/>
+			<Button fx:id="currentWeekButton" minWidth="120.0" mnemonicParsing="false" onAction="#setCurrentWeek" prefWidth="160.0"/>
+			<Button mnemonicParsing="false" onAction="#nextWeek" text="&gt;"/>
+		</HBox>
+
 		<StackPane GridPane.rowIndex="4">
 			<TimetableDay fx:id="monday" title="Monday" onItemSelected="#showItemDetails"/>
 			<Label fx:id="mondayHolidayText"/>
@@ -66,19 +83,5 @@
 			<TimetableDay fx:id="friday" title="Friday" onItemSelected="#showItemDetails"/>
 			<Label fx:id="fridayHolidayText"/>
 		</StackPane>
-		<VBox GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowSpan="4">
-			<Label fx:id="detailsLabel"/>
-
-			<style>
-				-fx-border-color: #b5b5b5;
-				-fx-border-radius: 3px;
-				-fx-padding: 4px;
-			</style>
-		</VBox>
-		<HBox alignment="CENTER" spacing="8.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3">
-			<Button mnemonicParsing="false" onAction="#previousWeek" text="&lt;"/>
-			<Button fx:id="currentWeekButton" minWidth="120.0" mnemonicParsing="false" onAction="#setCurrentWeek" prefWidth="160.0"/>
-			<Button mnemonicParsing="false" onAction="#nextWeek" text="&gt;"/>
-		</HBox>
 	</GridPane>
 </GridPane>

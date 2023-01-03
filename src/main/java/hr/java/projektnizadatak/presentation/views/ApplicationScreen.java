@@ -3,6 +3,7 @@ package hr.java.projektnizadatak.presentation.views;
 public enum ApplicationScreen {
 	Login("views/login-view.fxml", "Login", false),
 	MainScreen("views/main-screen-view.fxml", "Timetable", true),
+	EditOverride("views/edit-override-view.fxml", "Edit override", true)
 	;
 	
 	private final String fxmlPath;
