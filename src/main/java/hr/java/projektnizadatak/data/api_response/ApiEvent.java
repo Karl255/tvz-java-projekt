@@ -47,7 +47,8 @@ public record ApiEvent(String id, String title, String start, String end, boolea
 				"ERROR",
 				startTime.toLocalDate(),
 				startTime.toLocalTime(),
-				endTime.toLocalTime()
+				endTime.toLocalTime(),
+				true
 			);
 		}
 		
@@ -64,7 +65,9 @@ public record ApiEvent(String id, String title, String start, String end, boolea
 			trimOrNull(matches.group(7)),
 			startTime.toLocalDate(),
 			startTime.toLocalTime(),
-			endTime.toLocalTime());
+			endTime.toLocalTime(),
+			true
+		);
 	}
 	
 	private static String trimOrNull(String string) {

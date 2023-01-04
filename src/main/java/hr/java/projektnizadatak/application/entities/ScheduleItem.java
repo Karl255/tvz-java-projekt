@@ -15,7 +15,8 @@ public record ScheduleItem(
 	String group,
 	LocalDate date,
 	LocalTime start,
-	LocalTime end
+	LocalTime end,
+	boolean isOriginal
 ) {
 	private static final DateTimeFormatter TIMESTAMP_FORMAT = DateTimeFormatter.ofPattern("H:mm");
 

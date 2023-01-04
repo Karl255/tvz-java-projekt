@@ -5,6 +5,7 @@ import hr.java.projektnizadatak.application.entities.Department;
 import hr.java.projektnizadatak.application.entities.ScheduleItem;
 import hr.java.projektnizadatak.application.entities.Semester;
 import hr.java.projektnizadatak.presentation.Application;
+import hr.java.projektnizadatak.presentation.FXUtil;
 import hr.java.projektnizadatak.presentation.models.WeekModel;
 import hr.java.projektnizadatak.presentation.util.DepartmentStringConverter;
 import hr.java.projektnizadatak.presentation.util.SemesterStringConverter;
@@ -228,25 +229,9 @@ public class MainScreenController {
 	@FXML
 	private void showItemDetails(MouseEvent e) {
 		if (e.getSource() instanceof TimetableItem timetableItem) {
-			var info = timetableItem.getScheduleItem();
-			selectedItem = info;
-
-			var sb = new StringBuilder()
-				.append(info.getTimestamp()).append('\n')
-				.append(info.className()).append('\n')
-				.append(info.classType()).append('\n')
-				.append(info.classroom()).append('\n')
-				.append(info.professor()).append('\n');
-
-			if (info.group() != null) {
-				sb.append("Grupa: ").append(info.group()).append('\n');
-			}
-
-			if (info.note() != null) {
-				sb.append("Napomena: ").append(info.note()).append('\n');
-			}
-
-			detailsLabel.setText(sb.toString());
+			selectedItem = timetableItem.getScheduleItem();
+			
+			detailsLabel.setText(FXUtil.scheduleItemToString(selectedItem));
 			manageOverridesButton.setDisable(false);
 		}
 	}
