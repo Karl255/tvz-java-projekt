@@ -23,11 +23,10 @@ public abstract class ObjectStore<T extends Serializable> {
 	}
 
 	public void create(T item) {
-		var items = read();
+		var items = new ArrayList<>(read());
 		items.add(item);
 		writeAll(items);
 	}
-
 
 	public List<T> read() {
 		FileUtil.ensureFileExists(path);

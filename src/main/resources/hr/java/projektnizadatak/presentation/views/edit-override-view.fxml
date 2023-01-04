@@ -48,21 +48,36 @@
 		</style>
 
 	</TextFlow>
-	<TableView GridPane.columnSpan="3" GridPane.rowIndex="5" fx:id="replacementsTableView">
+	<TableView fx:id="replacementsTableView" GridPane.columnSpan="3" GridPane.rowIndex="5">
 		<columns>
-			<TableColumn prefWidth="75.0" text="Start time" fx:id="replacementStartTimeColumn"/>
-			<TableColumn prefWidth="75.0" text="End time" fx:id="replacementEndTimeColumn"/>
-			<TableColumn prefWidth="75.0" text="Class type" fx:id="replacementClassTypeColumn"/>
-			<TableColumn prefWidth="75.0" text="Classroom" fx:id="replacementClassroomColumn"/>
-			<TableColumn prefWidth="75.0" text="Professor" fx:id="replacementProfessorColumn"/>
-			<TableColumn prefWidth="75.0" text="Group" fx:id="replacementGroupColumn"/>
-			<TableColumn prefWidth="75.0" text="Note" fx:id="replacementNoteColumn"/>
+			<TableColumn fx:id="replacementStartTimeColumn" prefWidth="75.0" text="Start time"/>
+			<TableColumn fx:id="replacementEndTimeColumn" prefWidth="75.0" text="End time"/>
+			<TableColumn fx:id="replacementClassTypeColumn" prefWidth="75.0" text="Class type"/>
+			<TableColumn fx:id="replacementClassroomColumn" prefWidth="75.0" text="Classroom"/>
+			<TableColumn fx:id="replacementProfessorColumn" prefWidth="75.0" text="Professor"/>
+			<TableColumn fx:id="replacementGroupColumn" prefWidth="75.0" text="Group"/>
+			<TableColumn fx:id="replacementNoteColumn" prefWidth="75.0" text="Note"/>
 		</columns>
 	</TableView>
 
-	<Button onAction="#closeButtonClick" text="Close" GridPane.rowIndex="6"/>
-	<HBox alignment="TOP_RIGHT" spacing="8.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="6">
-		<Button text="Delete" onAction="#deleteButtonClick"/>
-		<Button text="Save" onAction="#saveButtonClick"/>
-	</HBox>
+	<GridPane GridPane.columnSpan="3" GridPane.rowIndex="6">
+		<columnConstraints>
+			<ColumnConstraints hgrow="SOMETIMES"/>
+			<ColumnConstraints hgrow="SOMETIMES"/>
+		</columnConstraints>
+		<rowConstraints>
+			<RowConstraints vgrow="SOMETIMES"/>
+		</rowConstraints>
+
+		<HBox alignment="TOP_RIGHT" spacing="8.0" GridPane.columnIndex="1">
+
+			<Button onAction="#closeButtonClick" text="Close"/>
+			<Button onAction="#deleteAllButtonClick" text="Delete all"/>
+			<Button onAction="#saveButtonClick" text="Save"/>
+		</HBox>
+		<HBox spacing="8.0">
+			<Button onAction="#deleteRowButtonClick" text="Delete row" fx:id="deleteRowButton" disable="true"/>
+			<Button onAction="#addRowButtonClick" text="Add row"/>
+		</HBox>
+	</GridPane>
 </GridPane>

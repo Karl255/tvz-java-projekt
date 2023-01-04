@@ -3,7 +3,6 @@ package hr.java.projektnizadatak.application;
 import hr.java.projektnizadatak.application.entities.ScheduleItem;
 import hr.java.projektnizadatak.application.entities.ScheduleOverride;
 import hr.java.projektnizadatak.shared.exceptions.DataNoLongerValidException;
-import hr.java.projektnizadatak.shared.exceptions.UnreachableCodeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,7 +55,9 @@ public class ScheduleOverridesManager {
 		if (oldOverride != null) {
 			store.update(oldOverride, newOverride);
 		} else {
-			store.create(newOverride);
+			if (newOverride != null) {
+				store.create(newOverride);
+			}
 		}
 	}
 	

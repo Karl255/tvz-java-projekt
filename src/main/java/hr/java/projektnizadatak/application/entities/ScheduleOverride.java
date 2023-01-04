@@ -1,6 +1,7 @@
 package hr.java.projektnizadatak.application.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public record ScheduleOverride(ScheduleItem original, List<ScheduleItem> replacements) implements Serializable {
@@ -18,6 +19,10 @@ public record ScheduleOverride(ScheduleItem original, List<ScheduleItem> replace
 	public ScheduleOverride withOriginal(ScheduleItem newOriginal) {
 		return new ScheduleOverride(newOriginal, replacements);
 	}
+	
+	public ScheduleOverride withReplacements(List<ScheduleItem> newReplacements) {
+		return new ScheduleOverride(original, new ArrayList<>(newReplacements));
+	}
 
 	public ScheduleOverride updateReplacement(ScheduleItem oldReplacement, ScheduleItem newReplacement) {
 		var newReplacements = replacements.stream()
@@ -27,5 +32,9 @@ public record ScheduleOverride(ScheduleItem original, List<ScheduleItem> replace
 			.toList();
 
 		return new ScheduleOverride(original, newReplacements);
+	}
+	
+	public boolean areReplacementsEqual(List<ScheduleItem> other) {
+		return replacements.equals(other);
 	}
 }
