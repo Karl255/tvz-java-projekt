@@ -24,8 +24,8 @@
 		-fx-padding: 8px;
 	</style>
 
-	<Button onAction="#close" text="Close" GridPane.rowIndex="6"/>
 	<TextField promptText="Search" GridPane.rowIndex="4"/>
+	<Label text="Search" GridPane.rowIndex="3" GridPane.valignment="BOTTOM"/>
 
 	<Label text="Original" GridPane.columnIndex="1" GridPane.valignment="BOTTOM"/>
 	<TextFlow fx:id="originalItemTextFlow" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.rowSpan="4">
@@ -60,9 +60,9 @@
 		</columns>
 	</TableView>
 
+	<Button onAction="#closeButtonClick" text="Close" GridPane.rowIndex="6"/>
 	<HBox alignment="TOP_RIGHT" spacing="8.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="6">
-		<Button mnemonicParsing="false" text="Delete"/>
-		<Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" text="Save"/>
+		<Button text="Delete" onAction="#deleteButtonClick"/>
+		<Button text="Save" onAction="#saveButtonClick"/>
 	</HBox>
-	<Label layoutX="18.0" layoutY="150.0" text="Search" GridPane.rowIndex="3" GridPane.valignment="BOTTOM"/>
 </GridPane>

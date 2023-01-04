@@ -9,9 +9,10 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public abstract class ObjectStore<T> {
+public abstract class ObjectStore<T extends Serializable> {
 	private static final Logger logger = LoggerFactory.getLogger(ObjectStore.class);
 	private final Path path;
 	private final Class<T> type;
@@ -38,6 +39,8 @@ public abstract class ObjectStore<T> {
 			}
 
 			return items;
+		} catch (EOFException e) {
+			return Collections.emptyList();
 		} catch (FileNotFoundException e) {
 			String m = "File not found while reading entries: " + path;
 			logger.error(m);
