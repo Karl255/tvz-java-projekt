@@ -3,6 +3,7 @@ package hr.java.projektnizadatak.presentation.controllers;
 import hr.java.projektnizadatak.application.Util;
 import hr.java.projektnizadatak.application.entities.Department;
 import hr.java.projektnizadatak.application.entities.ScheduleItem;
+import hr.java.projektnizadatak.application.entities.ScheduleOverride;
 import hr.java.projektnizadatak.application.entities.Semester;
 import hr.java.projektnizadatak.presentation.Application;
 import hr.java.projektnizadatak.presentation.FXUtil;
@@ -171,7 +172,11 @@ public class MainScreenController {
 			Util.getAcademicYear(monday),
 			monday,
 			TIMETABLE_DAYS);
+		
+		var overrides = Application.getOverrideManager().getAllOverrides();
 
+		timetable = ScheduleOverride.applyOverrides(timetable, overrides);
+		
 		var itemsByDate = timetable.scheduleItems().stream()
 			.collect(Collectors.groupingBy(ScheduleItem::date));
 

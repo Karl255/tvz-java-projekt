@@ -1,8 +1,8 @@
 package hr.java.projektnizadatak.application.entities;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Stream;
 
 public record ScheduleOverride(ScheduleItem original, List<ScheduleItem> replacements) implements Serializable {
 	@Override
@@ -36,5 +36,25 @@ public record ScheduleOverride(ScheduleItem original, List<ScheduleItem> replace
 	
 	public boolean areReplacementsEqual(List<ScheduleItem> other) {
 		return replacements.equals(other);
+	}
+	
+	
+	public static Timetable applyOverrides(Timetable timetable, List<ScheduleOverride> overrides) {
+		var mappedItems = timetable.scheduleItems()
+			.stream()
+			.flatMap(original -> {
+				var foundOverride = overrides.stream()
+					.filter(ov -> ov.original().effectivelyEqual(original))
+					.findFirst();
+				
+				if (foundOverride.isPresent()) {
+					return foundOverride.get().replacements().stream();
+				} else {
+					return Stream.of(original);
+				}
+			})
+			.toList();
+		
+		return new Timetable(mappedItems, timetable.holidays());
 	}
 }
