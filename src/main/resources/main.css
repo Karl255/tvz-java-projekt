@@ -1,0 +1,21 @@
+.timetable-item {
+	-fx-background-radius: 3px;
+	-fx-border-radius: 3px;
+	-fx-background-color: #e8e8e8;
+	-fx-border-color: #cccccc;
+}
+
+.timetable-item.timetable-item-lecture {
+	-fx-background-color: #d4e8f3;
+	-fx-border-color: #9fc1d4;
+}
+
+.timetable-item.timetable-item-auditory {
+	-fx-background-color: #f2cbcb;
+	-fx-border-color: #cc8b8b;
+}
+
+.timetable-item.timetable-item-lab {
+	-fx-background-color: #F7F7C8;
+	-fx-border-color: #E2E262;
+}

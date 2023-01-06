@@ -36,8 +36,11 @@ public class Application extends javafx.application.Application {
 		try {
 			var fxmlPath = screen.getFxmlPath();
 			var window = (Parent) FXMLLoader.load(Objects.requireNonNull(Application.class.getResource(fxmlPath)));
+			var scene = new Scene(window);
+			scene.getStylesheets().add("main.css");
+			
 			stage.setResizable(screen.canResize());
-			stage.setScene(new Scene(window));
+			stage.setScene(scene);
 			stage.setTitle(screen.getTitle());
 			stage.show();
 		} catch (IOException e) {
@@ -64,7 +67,6 @@ public class Application extends javafx.application.Application {
 	public void start(Stage stage) {
 		Application.stage = stage;
 
-		stage.setTitle("Projektni zadatak");
 		setScreen(ApplicationScreen.Login);
 	}
 }

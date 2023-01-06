@@ -47,6 +47,15 @@ public class TimetableItem extends VBox {
 	private void initialize() {
 		this.titleLabel.setText(model.getScheduleItem().className());
 		this.timestampLabel.setText(model.getScheduleItem().getTimestamp());
+
+		this.getStyleClass().add(
+			switch (model.getScheduleItem().classType()) {
+				case LECTURES -> "timetable-item-lecture";
+				case AUDITORY_EXERCISES -> "timetable-item-auditory";
+				case LAB -> "timetable-item-lab";
+				case OTHER -> "";
+			}
+		);
 	}
 
 	public TimetableDayItemModel getModel() {
