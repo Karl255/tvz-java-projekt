@@ -53,23 +53,5 @@ public record ScheduleItem(
 			&& classType == other.classType
 			&& classroom.equals(other.classroom);
 	}
-
-	@Override
-	public String toString() {
-		return "ScheduleItem{" +
-			   "id=" + id +
-			   ", courseName='" + courseName + '\'' +
-			   ", className='" + className + '\'' +
-			   ", professor='" + professor + '\'' +
-			   ", classType=" + classType +
-			   ", classroom='" + classroom + '\'' +
-			   ", note='" + note + '\'' +
-			   ", group='" + group + '\'' +
-			   ", date=" + date +
-			   ", start=" + start +
-			   ", end=" + end +
-			   ", isOriginal=" + isOriginal +
-			   '}';
-	}
 }
 

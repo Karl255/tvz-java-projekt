@@ -38,9 +38,6 @@ public class ScheduleOverridesManager {
 	public ScheduleOverride getOverrideFor(ScheduleItem item) throws DataNoLongerValidException {
 		var items = store.read();
 
-		System.out.printf("overrides read: %d%n", items.size());
-		printAll(items);
-		
 		if (item.isOriginal()) {
 			return items.stream()
 				.filter(o -> o.original().effectivelyEqual(item))
@@ -51,17 +48,6 @@ public class ScheduleOverridesManager {
 				.filter(o -> o.replacements().stream().anyMatch(i -> i.effectivelyEqual(item)))
 				.findFirst()
 				.orElseThrow(DataNoLongerValidException::new);
-		}
-	}
-	
-	@Deprecated
-	private void printAll(List<ScheduleOverride> overrides) {
-		for (var override : overrides) {
-			System.out.println(override.original());
-			
-			for (var replacement : override.replacements()) {
-				System.out.printf("- %s%n", replacement);
-			}
 		}
 	} 
 	
