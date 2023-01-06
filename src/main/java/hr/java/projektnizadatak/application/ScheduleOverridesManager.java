@@ -47,7 +47,12 @@ public class ScheduleOverridesManager {
 			return items.stream()
 				.filter(o -> o.replacements().stream().anyMatch(i -> i.effectivelyEqual(item)))
 				.findFirst()
-				.orElseThrow(DataNoLongerValidException::new);
+				.orElseThrow(() -> {
+					String m = "Previously fetched data from DB cannot be found anymore";
+					logger.error(m);
+					
+					return new DataNoLongerValidException(m);
+				});
 		}
 	} 
 	

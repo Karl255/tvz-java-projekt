@@ -191,11 +191,14 @@ public class MainScreenController {
 			if (holiday.isPresent()) {
 				holidayTexts[i].setText(holiday.get().title());
 				timetableDays[i].setItems(Collections.emptyList());
-			} else if (itemsByDate.containsKey(todaysDate)) {
+			} else {
 				holidayTexts[i].setText("");
-				timetableDays[i].setItems(itemsByDate.get(todaysDate));
+				timetableDays[i].setItems(itemsByDate.getOrDefault(todaysDate, Collections.emptyList()));
 			}
 		}
+		System.out.println(
+			
+		);
 	}
 
 	@FXML

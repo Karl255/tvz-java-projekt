@@ -46,7 +46,7 @@
 		<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#loadDefaults" text="Load default" GridPane.rowIndex="2"/>
 		<Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#saveDefaults" text="Save as default" GridPane.rowIndex="3"/>
 
-		<Button fx:id="manageOverridesButton" disable="true" mnemonicParsing="false" text="Manage overrides" GridPane.columnIndex="2" GridPane.halignment="RIGHT" onAction="#openEditOverride"/>
+		<Button fx:id="manageOverridesButton" disable="true" mnemonicParsing="false" text="Edit override" GridPane.columnIndex="2" GridPane.halignment="RIGHT" onAction="#openEditOverride"/>
 		<VBox GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowSpan="4">
 			<Label fx:id="detailsLabel"/>
 

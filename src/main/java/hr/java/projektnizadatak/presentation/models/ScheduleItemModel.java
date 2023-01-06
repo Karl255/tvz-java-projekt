@@ -24,7 +24,11 @@ public class ScheduleItemModel {
 	private final SimpleObjectProperty<LocalTime> end;
 	private final SimpleBooleanProperty isOriginal;
 	
-	public ScheduleItemModel(ScheduleItem item) {
+	private ScheduleItemModel(ScheduleItem item) {
+		this(item, item.isOriginal());
+	}
+	
+	private ScheduleItemModel(ScheduleItem item, boolean isOriginal) {
 		this.id = new SimpleLongProperty(item.id());
 		this.courseName = new SimpleStringProperty(item.courseName());
 		this.className = new SimpleStringProperty(item.className());
@@ -36,26 +40,19 @@ public class ScheduleItemModel {
 		this.date = new SimpleObjectProperty<>(item.date());
 		this.start = new SimpleObjectProperty<>(item.start());
 		this.end = new SimpleObjectProperty<>(item.end());
-		this.isOriginal = new SimpleBooleanProperty(item.isOriginal());
+		this.isOriginal = new SimpleBooleanProperty(isOriginal);
 	}
 	
-	public ScheduleItemModel(ScheduleItemModel model) {
-		this.id = new SimpleLongProperty(model.getId());
-		this.courseName = new SimpleStringProperty(model.getCourseName());
-		this.className = new SimpleStringProperty(model.getClassName());
-		this.professor = new SimpleStringProperty(model.getProfessor());
-		this.classType = new SimpleObjectProperty<>(model.getClassType());
-		this.classroom = new SimpleStringProperty(model.getClassroom());
-		this.note = new SimpleStringProperty(model.getNote());
-		this.group = new SimpleStringProperty(model.getGroup());
-		this.date = new SimpleObjectProperty<>(model.getDate());
-		this.start = new SimpleObjectProperty<>(model.getStart());
-		this.end = new SimpleObjectProperty<>(model.getEnd());
-		this.isOriginal = new SimpleBooleanProperty(model.isOriginal());
+	public static ScheduleItemModel newOriginal(ScheduleItem item) {
+		return new ScheduleItemModel(item, true);
+	}
+	
+	public static ScheduleItemModel newReplacement(ScheduleItem item) {
+		return new ScheduleItemModel(item, false);
 	}
 	
 	public ScheduleItemModel copy() {
-		return new ScheduleItemModel(this);
+		return new ScheduleItemModel(this.toScheduleItem());
 	}
 	
 	public ScheduleItem toScheduleItem() {

@@ -8,9 +8,7 @@ import hr.java.projektnizadatak.presentation.FXUtil;
 import hr.java.projektnizadatak.presentation.models.ScheduleItemModel;
 import hr.java.projektnizadatak.presentation.views.ApplicationScreen;
 import hr.java.projektnizadatak.shared.exceptions.DataNoLongerValidException;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
-import javafx.css.converter.StringConverter;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
@@ -23,7 +21,6 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class EditOverrideController {
 	private final static DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("H:mm");
@@ -47,15 +44,15 @@ public class EditOverrideController {
 
 	@FXML
 	private void initialize() {
-		original = Application.getOverrideManager().getItemBeingEdited();
+		var requestedItem = Application.getOverrideManager().getItemBeingEdited();
 		var manager = Application.getOverrideManager();
 		ScheduleOverride override;
 
 		try {
-			override = storedOverride = manager.getOverrideFor(original);
+			override = storedOverride = manager.getOverrideFor(requestedItem);
 
 			if (override == null) {
-				override = manager.getDefault(original);
+				override = manager.getDefault(requestedItem);
 			}
 		} catch (DataNoLongerValidException e) {
 			FXUtil.showAlert(Alert.AlertType.ERROR, "Data invalid", "The data is no longer relevant, please refresh the view.");
@@ -63,6 +60,7 @@ public class EditOverrideController {
 			return;
 		}
 
+		original = override.original();
 		originalItemTextFlow.getChildren().add(new Text(FXUtil.scheduleItemToString(original)));
 
 		replacementStartTimeColumn.setCellValueFactory(d -> d.getValue().startProperty());
@@ -102,7 +100,7 @@ public class EditOverrideController {
 		var editableReplacements = new ArrayList<>(override
 			.replacements()
 			.stream()
-			.map(ScheduleItemModel::new)
+			.map(ScheduleItemModel::newReplacement)
 			.toList()
 		);
 
@@ -139,7 +137,7 @@ public class EditOverrideController {
 	@FXML
 	private void addRowButtonClick() {
 		replacementsTableView.getItems()
-			.add(new ScheduleItemModel(original));
+			.add(ScheduleItemModel.newReplacement(original));
 	}
 
 	@FXML
@@ -187,10 +185,11 @@ public class EditOverrideController {
 		);
 
 		alert.setTitle("Confirm deletion");
-		alert.show();
+		var clicked = alert.showAndWait();
 
-		if (alert.getResult() == ButtonType.YES) {
+		if (clicked.isPresent() && clicked.get().equals(ButtonType.YES)) {
 			Application.getOverrideManager().deleteOverride(storedOverride);
+			close();
 		}
 	}
 

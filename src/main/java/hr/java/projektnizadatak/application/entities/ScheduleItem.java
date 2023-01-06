@@ -25,6 +25,23 @@ public record ScheduleItem(
 	public String getTimestamp() {
 		return start().format(TIMESTAMP_FORMAT) + " - " + end().format(TIMESTAMP_FORMAT);
 	}
+	
+	public ScheduleItem withOverrides(ScheduleItem overrides) {
+		return new ScheduleItem(
+			this.id,
+			this.courseName,
+			this.className,
+			overrides.professor,
+			overrides.classType,
+			overrides.classroom,
+			overrides.note,
+			overrides.group,
+			this.date,
+			overrides.start,
+			overrides.end,
+			overrides.isOriginal
+		);
+	}
 
 	@Override
 	public boolean equals(Object o) {

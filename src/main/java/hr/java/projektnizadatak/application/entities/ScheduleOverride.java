@@ -19,7 +19,7 @@ public record ScheduleOverride(ScheduleItem original, List<ScheduleItem> replace
 	public ScheduleOverride withOriginal(ScheduleItem newOriginal) {
 		return new ScheduleOverride(newOriginal, replacements);
 	}
-	
+
 	public ScheduleOverride withReplacements(List<ScheduleItem> newReplacements) {
 		return new ScheduleOverride(original, new ArrayList<>(newReplacements));
 	}
@@ -33,12 +33,11 @@ public record ScheduleOverride(ScheduleItem original, List<ScheduleItem> replace
 
 		return new ScheduleOverride(original, newReplacements);
 	}
-	
+
 	public boolean areReplacementsEqual(List<ScheduleItem> other) {
 		return replacements.equals(other);
 	}
-	
-	
+
 	public static Timetable applyOverrides(Timetable timetable, List<ScheduleOverride> overrides) {
 		var mappedItems = timetable.scheduleItems()
 			.stream()
@@ -46,15 +45,18 @@ public record ScheduleOverride(ScheduleItem original, List<ScheduleItem> replace
 				var foundOverride = overrides.stream()
 					.filter(ov -> ov.original().effectivelyEqual(original))
 					.findFirst();
-				
+
 				if (foundOverride.isPresent()) {
-					return foundOverride.get().replacements().stream();
+					return foundOverride.get()
+						.replacements()
+						.stream()
+						.map(original::withOverrides);
 				} else {
 					return Stream.of(original);
 				}
 			})
 			.toList();
-		
+
 		return new Timetable(mappedItems, timetable.holidays());
 	}
 }
