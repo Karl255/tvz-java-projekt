@@ -69,6 +69,6 @@ public record ScheduleOverride(ScheduleItem original, List<ScheduleItem> replace
 	@Override
 	public String displayFull() {
 		// TODO
-		return "TODO";
+		return displayShort();
 	}
 }

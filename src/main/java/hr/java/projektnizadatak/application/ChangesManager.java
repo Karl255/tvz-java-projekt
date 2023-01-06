@@ -5,7 +5,7 @@ import hr.java.projektnizadatak.data.ChangesFileStore;
 
 import java.util.List;
 
-class ChangesManager {
+public class ChangesManager {
 	private static ChangesManager instance = null;
 
 	private final ChangesStore changesStore;
@@ -26,7 +26,7 @@ class ChangesManager {
 		return changesStore.read();
 	}
 
-	public void addChange(Change change) {
+	void addChange(Change change) {
 		changesStore.create(change);
 	}
 }
