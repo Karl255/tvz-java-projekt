@@ -3,12 +3,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
 
-<?import javafx.geometry.Insets?>
-<fx:root type="javafx.scene.layout.VBox" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" styleClass="timetable-item">
-	<Label fx:id="timestampLabel" text="10:00 - 12:00" wrapText="true"/>
-	<Label fx:id="titleLabel" text="Something something" wrapText="true" style="-fx-font-weight: bold;"/>
-
-	<padding>
-		<Insets top="4" bottom="4" left="4" right="4"/>
-	</padding>
+<fx:root type="javafx.scene.layout.VBox" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" styleClass="timetable-item, p-4">
+	<Label fx:id="timestampLabel" text="??:?? - ??:??" wrapText="true"/>
+	<Label fx:id="titleLabel" text="Something something" wrapText="true" styleClass="bold"/>
 </fx:root>

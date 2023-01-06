@@ -18,7 +18,7 @@ public class GlobalMenuController {
 	
 	@FXML
 	private void showChangesScreen() {
-		
+		Application.setScreen(ApplicationScreen.ChangesBrowser);
 	}
 	
 	@FXML

@@ -7,20 +7,14 @@
 <?import javafx.scene.layout.AnchorPane?>
 <fx:root type="javafx.scene.layout.GridPane" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" vgap="4">
 	<columnConstraints>
-		<ColumnConstraints hgrow="ALWAYS" />
+		<ColumnConstraints hgrow="ALWAYS"/>
 	</columnConstraints>
 	<rowConstraints>
-		<RowConstraints minHeight="25.0" vgrow="NEVER" />
-		<RowConstraints vgrow="ALWAYS" />
+		<RowConstraints minHeight="25.0" vgrow="NEVER"/>
+		<RowConstraints vgrow="ALWAYS"/>
 	</rowConstraints>
-	
-	<Label fx:id="titleLabel" GridPane.halignment="CENTER" style="-fx-font-size: 16px; -fx-padding: 16px 0 0 0;" />
-	
-	<AnchorPane fx:id="contentAnchorPane" GridPane.rowIndex="1">
-		<style>
-			-fx-border-color: #b5b5b5;
-			-fx-border-radius: 3px;
-		</style>
-		
-	</AnchorPane>
+
+	<Label fx:id="titleLabel" GridPane.halignment="CENTER" style="-fx-font-size: 16px; -fx-padding: 16px 0 0 0;"/>
+
+	<AnchorPane fx:id="contentAnchorPane" GridPane.rowIndex="1" styleClass="bounded-box"/>
 </fx:root>

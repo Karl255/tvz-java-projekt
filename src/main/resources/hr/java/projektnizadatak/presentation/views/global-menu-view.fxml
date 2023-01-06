@@ -4,17 +4,13 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 
-<?import javafx.geometry.Insets?>
 <MenuBar xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/19" fx:controller="hr.java.projektnizadatak.presentation.controllers.GlobalMenuController">
 	<Menu mnemonicParsing="false" text="User">
 		<MenuItem mnemonicParsing="false" text="Log out" onAction="#logout"/>
 	</Menu>
 	<Menu mnemonicParsing="false" text="Navigation">
 		<MenuItem mnemonicParsing="false" text="Timetable" onAction="#showTimetableScreen"/>
-		<MenuItem mnemonicParsing="false" text="Changes log" onAction="#showChangesScreen"/>
+		<MenuItem mnemonicParsing="false" text="Changes browser" onAction="#showChangesScreen"/>
 		<MenuItem mnemonicParsing="false" text="Manage overrides" onAction="#showManageOverridesScreen"/>
 	</Menu>
-	<padding>
-		<Insets/>
-	</padding>
 </MenuBar>

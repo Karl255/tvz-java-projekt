@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<GridPane prefHeight="768.0" prefWidth="1024.0" hgap="8" vgap="8" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hr.java.projektnizadatak.presentation.controllers.EditOverrideController">
+<GridPane prefHeight="768.0" prefWidth="1024.0" hgap="8" vgap="8" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hr.java.projektnizadatak.presentation.controllers.EditOverrideController" styleClass="p-8">
 	<columnConstraints>
 		<ColumnConstraints percentWidth="50"/>
 		<ColumnConstraints percentWidth="50"/>
@@ -16,18 +16,8 @@
 		<RowConstraints/>
 	</rowConstraints>
 
-	<style>
-		-fx-padding: 8px;
-	</style>
-
 	<Label text="Original" GridPane.columnIndex="0" GridPane.valignment="BOTTOM"/>
-	<TextFlow fx:id="originalItemTextFlow" GridPane.columnIndex="0" GridPane.rowIndex="1">
-		<style>
-			-fx-border-color: #b5b5b5;
-			-fx-border-radius: 3px;
-			-fx-padding: 4px;
-		</style>
-	</TextFlow>
+	<TextFlow fx:id="originalItemTextFlow" GridPane.columnIndex="0" GridPane.rowIndex="1" styleClass="bounded-box"/>
 
 	<TableView fx:id="replacementsTableView" GridPane.columnSpan="3" GridPane.rowIndex="2" editable="true">
 		<columns>
@@ -55,9 +45,8 @@
 			<Button onAction="#duplicateRowButtonClick" text="Duplicate row" fx:id="duplicateRowButton" disable="true"/>
 			<Button onAction="#addRowButtonClick" text="Add row"/>
 		</HBox>
-		
-		<HBox alignment="BOTTOM_RIGHT" spacing="8.0" GridPane.columnIndex="1">
 
+		<HBox alignment="BOTTOM_RIGHT" spacing="8.0" GridPane.columnIndex="1">
 			<Button onAction="#closeButtonClick" text="Close"/>
 			<Button onAction="#deleteAllButtonClick" text="Delete all"/>
 			<Button onAction="#saveButtonClick" text="Save"/>

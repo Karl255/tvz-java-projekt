@@ -1,3 +1,28 @@
+MenuBar {
+	-fx-padding: 0px;
+}
+
+.bounded-box {
+	-fx-border-color: #b5b5b5;
+	-fx-border-radius: 3px;
+}
+
+.p-4 {
+	-fx-padding: 4px;
+}
+
+.p-8 {
+	-fx-padding: 8px;
+}
+
+/* text */
+
+.bold {
+	-fx-font-weight: bold;
+}
+
+/* timetable */
+
 .timetable-item {
 	-fx-background-radius: 3px;
 	-fx-border-radius: 3px;
@@ -16,6 +41,6 @@
 }
 
 .timetable-item.timetable-item-lab {
-	-fx-background-color: #F7F7C8;
-	-fx-border-color: #E2E262;
+	-fx-background-color: #f7f7c8;
+	-fx-border-color: #e2e262;
 }

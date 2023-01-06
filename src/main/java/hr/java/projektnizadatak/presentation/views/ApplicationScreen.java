@@ -3,7 +3,8 @@ package hr.java.projektnizadatak.presentation.views;
 public enum ApplicationScreen {
 	Login("views/login-view.fxml", "Login", false),
 	Timetable("views/timetable-view.fxml", "Timetable", true),
-	EditOverride("views/edit-override-view.fxml", "Edit override", true)
+	EditOverride("views/edit-override-view.fxml", "Edit override", true),
+	ChangesBrowser("views/changes-browser-view.fxml", "Changes browser", true)
 	;
 	
 	private final String fxmlPath;
