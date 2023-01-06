@@ -8,6 +8,6 @@ public class Util {
 	}
 	
 	public static boolean isBetween(LocalTime t, LocalTime start, LocalTime end) {
-		return t.compareTo(start) >= 0 && t.compareTo(end) <= 0;
+		return t.compareTo(start) >= 0 && t.compareTo(end) < 0;
 	}
 }

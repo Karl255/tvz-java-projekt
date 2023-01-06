@@ -2,7 +2,7 @@ package hr.java.projektnizadatak.presentation.controllers;
 
 import hr.java.projektnizadatak.application.entities.ScheduleItem;
 import hr.java.projektnizadatak.presentation.Application;
-import hr.java.projektnizadatak.presentation.models.TimetableItemModel;
+import hr.java.projektnizadatak.presentation.models.TimetableDayItemModel;
 import hr.java.projektnizadatak.shared.exceptions.FxmlLoadingException;
 import hr.java.projektnizadatak.shared.exceptions.UnreachableCodeException;
 import javafx.beans.property.ObjectProperty;
@@ -44,7 +44,7 @@ public class TimetableDay extends GridPane {
 	}
 
 	public void setItems(List<ScheduleItem> items) {
-		var elements = TimetableItemModel.organizeItems(items)
+		var elements = TimetableDayItemModel.organizeItems(items)
 			.stream()
 			.map(model -> {
 				TimetableItem timetableItem = new TimetableItem(model);

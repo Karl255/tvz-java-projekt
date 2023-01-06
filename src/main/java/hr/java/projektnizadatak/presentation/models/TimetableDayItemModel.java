@@ -7,16 +7,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public final class TimetableItemModel {
-	private static final Logger logger = LoggerFactory.getLogger(TimetableItemModel.class);
+public final class TimetableDayItemModel {
+	private static final Logger logger = LoggerFactory.getLogger(TimetableDayItemModel.class);
 
-	private static final double BEGINNING_TIME = Util.toHours(LocalTime.of(7, 0));
-	private static final double ENDING_TIME = Util.toHours(LocalTime.of(22, 0));
-	private static final double TIME_SPAN = ENDING_TIME - BEGINNING_TIME;
+	private static final LocalTime BEGINNING_TIME = LocalTime.of(8, 0);
+	private static final double BEGINNING_HOURS = Util.toHours(BEGINNING_TIME);
+	private static final LocalTime ENDING_TIME = LocalTime.of(22, 0);
+	private static final double ENDING_HOURS = Util.toHours(ENDING_TIME);
+	private static final double TIME_SPAN = ENDING_HOURS - BEGINNING_HOURS;
 
 	private final ScheduleItem scheduleItem;
 	private final LocalTime start;
@@ -26,27 +29,32 @@ public final class TimetableItemModel {
 	private int column;
 	private int columnSpan;
 
-	public TimetableItemModel(ScheduleItem item) {
+	public TimetableDayItemModel(ScheduleItem item) {
 		this.scheduleItem = item;
 		this.start = item.start();
 		this.end = item.end();
 
-		this.relativeStart = (Util.toHours(start) - BEGINNING_TIME) / TIME_SPAN;
-		this.relativeEnd = (ENDING_TIME - Util.toHours(end)) / TIME_SPAN;
+		this.relativeStart = (Util.toHours(start) - BEGINNING_HOURS) / TIME_SPAN;
+		this.relativeEnd = (ENDING_HOURS - Util.toHours(end)) / TIME_SPAN;
 		this.column = 0;
 		this.columnSpan = 1;
+		
+		if (item.start().isBefore(BEGINNING_TIME) || item.end().isAfter(ENDING_TIME)) {
+			var format = DateTimeFormatter.ofPattern("HH:mm");
+			logger.warn(String.format("Item is outside the expected time range: %s - %s", item.start().format(format), item.end().format(format)));
+		}
 	}
 
-	public static List<TimetableItemModel> organizeItems(List<ScheduleItem> items) {
+	public static List<TimetableDayItemModel> organizeItems(List<ScheduleItem> items) {
 		if (items.size() == 0) {
 			return Collections.emptyList();
 		}
 
 		var separated = items.stream()
-			.map(TimetableItemModel::new)
+			.map(TimetableDayItemModel::new)
 			.sorted(Comparator
-				.comparing(TimetableItemModel::start)
-				.thenComparing(TimetableItemModel::end)
+				.comparing(TimetableDayItemModel::start)
+				.thenComparing(TimetableDayItemModel::end)
 			)
 			.toList();
 
@@ -102,7 +110,7 @@ public final class TimetableItemModel {
 		return separated;
 	}
 
-	private static boolean timespanIntersects(TimetableItemModel m1, TimetableItemModel m2) {
+	private static boolean timespanIntersects(TimetableDayItemModel m1, TimetableDayItemModel m2) {
 		return Util.isBetween(m1.start(), m2.start(), m2.end())
 			|| Util.isBetween(m2.start(), m1.start(), m1.end());
 	}
