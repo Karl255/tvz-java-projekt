@@ -33,13 +33,14 @@ public abstract class ObjectStore<T extends Serializable> {
 		var items = new ArrayList<T>();
 
 		try (var in = new ObjectInputStream(new FileInputStream(path.toString()))) {
-			while (in.available() > 0) {
+			while (true) {
 				items.add(type.cast(in.readObject()));
 			}
-
-			return items;
 		} catch (EOFException e) {
-			return Collections.emptyList();
+			String m = String.format("Reached end of objects file after reading %d objects: %s", items.size(), path);
+			logger.info(m);
+			
+			return items;
 		} catch (FileNotFoundException e) {
 			String m = "File not found while reading entries: " + path;
 			logger.error(m);
