@@ -23,7 +23,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
-public class MainScreenController {
+public class TimetableController {
 	private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd.MM.yyyy.");
 	private final int TIMETABLE_DAYS = 5;
 
@@ -51,7 +51,7 @@ public class MainScreenController {
 	@FXML private Label detailsLabel;
 	private final Label[] holidayTexts;
 
-	public MainScreenController() {
+	public TimetableController() {
 		this.timetableDays = new TimetableDay[5];
 		this.holidayTexts = new Label[5];
 		this.weekModel = new WeekModel();

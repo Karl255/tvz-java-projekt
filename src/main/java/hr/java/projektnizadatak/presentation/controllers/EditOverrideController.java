@@ -122,6 +122,17 @@ public class EditOverrideController {
 		return replacementsTableView.getSelectionModel().getSelectedItem();
 	}
 	
+	private boolean wereChangesMade() {
+		var replacements = replacementsTableView
+			.getItems()
+			.stream()
+			.map(ScheduleItemModel::toScheduleItem)
+			.toList();
+
+		return !(storedOverride == null && replacementsTableView.getItems().isEmpty()
+			|| storedOverride != null && storedOverride.areReplacementsEqual(replacements));
+	}
+	
 	@FXML
 	private void deleteRowButtonClick() {
 		replacementsTableView.getItems()
@@ -142,14 +153,7 @@ public class EditOverrideController {
 
 	@FXML
 	private void closeButtonClick() {
-		var replacements = replacementsTableView
-			.getItems()
-			.stream()
-			.map(ScheduleItemModel::toScheduleItem)
-			.toList();
-
-		if (storedOverride == null && replacementsTableView.getItems().isEmpty()
-			|| storedOverride != null && storedOverride.areReplacementsEqual(replacements)) {
+		if (!wereChangesMade()) {
 			close();
 			return;
 		}
@@ -195,7 +199,23 @@ public class EditOverrideController {
 
 	@FXML
 	private void saveButtonClick() {
-		save();
+		if (!wereChangesMade()) {
+			save();
+			return;
+		}
+		
+		var alert = new Alert(
+			Alert.AlertType.CONFIRMATION,
+			"Are you sure you want to save the changes you made?",
+			ButtonType.YES, ButtonType.CANCEL
+		);
+		
+		alert.setTitle("Confirm save");
+		var clicked = alert.showAndWait();
+		
+		if (clicked.isPresent() && clicked.get().equals(ButtonType.YES)) {
+			save();
+		}
 	}
 
 	private void save() {
