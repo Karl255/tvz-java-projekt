@@ -1,39 +1,48 @@
 package hr.java.projektnizadatak.presentation.controllers;
 
+import hr.java.projektnizadatak.application.entities.ClassType;
 import hr.java.projektnizadatak.application.entities.ScheduleItem;
 import hr.java.projektnizadatak.application.entities.ScheduleOverride;
 import hr.java.projektnizadatak.presentation.Application;
 import hr.java.projektnizadatak.presentation.FXUtil;
+import hr.java.projektnizadatak.presentation.models.ScheduleItemModel;
 import hr.java.projektnizadatak.presentation.views.ApplicationScreen;
 import hr.java.projektnizadatak.shared.exceptions.DataNoLongerValidException;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.css.converter.StringConverter;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.ComboBoxTableCell;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.util.converter.LocalTimeStringConverter;
 
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class EditOverrideController {
-	private final static DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("HH:mm");
+	private final static DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("H:mm");
 
 	@FXML private TextFlow originalItemTextFlow;
 	@FXML private TextFlow selectedReplacementTextFlow;
 
-	@FXML private TableView<ScheduleItem> replacementsTableView;
-	@FXML private TableColumn<ScheduleItem, String> replacementStartTimeColumn;
-	@FXML private TableColumn<ScheduleItem, String> replacementEndTimeColumn;
-	@FXML private TableColumn<ScheduleItem, String> replacementClassTypeColumn;
-	@FXML private TableColumn<ScheduleItem, String> replacementClassroomColumn;
-	@FXML private TableColumn<ScheduleItem, String> replacementProfessorColumn;
-	@FXML private TableColumn<ScheduleItem, String> replacementGroupColumn;
-	@FXML private TableColumn<ScheduleItem, String> replacementNoteColumn;
+	@FXML private TableView<ScheduleItemModel> replacementsTableView;
+	@FXML private TableColumn<ScheduleItemModel, LocalTime> replacementStartTimeColumn;
+	@FXML private TableColumn<ScheduleItemModel, LocalTime> replacementEndTimeColumn;
+	@FXML private TableColumn<ScheduleItemModel, ClassType> replacementClassTypeColumn;
+	@FXML private TableColumn<ScheduleItemModel, String> replacementClassroomColumn;
+	@FXML private TableColumn<ScheduleItemModel, String> replacementProfessorColumn;
+	@FXML private TableColumn<ScheduleItemModel, String> replacementGroupColumn;
+	@FXML private TableColumn<ScheduleItemModel, String> replacementNoteColumn;
 
 	private ScheduleOverride storedOverride;
 	private ScheduleItem original;
-	private ScheduleItem selectedReplacement;
+	private ScheduleItemModel selectedReplacement;
 
 	@FXML private Button deleteRowButton;
 
@@ -42,7 +51,7 @@ public class EditOverrideController {
 		original = Application.getOverrideManager().getItemBeingEdited();
 		var manager = Application.getOverrideManager();
 		ScheduleOverride override;
-		
+
 		try {
 			override = storedOverride = manager.getOverrideFor(original);
 
@@ -57,40 +66,52 @@ public class EditOverrideController {
 
 		originalItemTextFlow.getChildren().add(new Text(FXUtil.scheduleItemToString(original)));
 
-		replacementStartTimeColumn.setCellValueFactory(
-			d -> new SimpleStringProperty(d.getValue().start().format(TIME_FORMAT))
+		replacementStartTimeColumn.setCellValueFactory(d -> d.getValue().startProperty());
+		replacementStartTimeColumn.setCellFactory(TextFieldTableCell.forTableColumn(
+			new LocalTimeStringConverter(TIME_FORMAT, TIME_FORMAT)
+		));
+		replacementStartTimeColumn.setOnEditCommit(e -> e.getRowValue().setStart(e.getNewValue()));
+		
+		replacementEndTimeColumn.setCellValueFactory(d -> d.getValue().endProperty());
+		replacementEndTimeColumn.setCellFactory(TextFieldTableCell.forTableColumn(
+			new LocalTimeStringConverter(TIME_FORMAT, TIME_FORMAT)
+		));
+		replacementEndTimeColumn.setOnEditCommit(e -> e.getRowValue().setEnd(e.getNewValue()));
+		
+		replacementClassTypeColumn.setCellValueFactory(d -> d.getValue().classTypeProperty());
+		replacementClassTypeColumn.setCellFactory(ComboBoxTableCell.forTableColumn(
+			FXCollections.observableList(new ArrayList<>(Arrays.asList(ClassType.values())))
+		));
+		replacementClassTypeColumn.setOnEditCommit(e -> e.getRowValue().setClassType(e.getNewValue()));
+		
+		replacementClassroomColumn.setCellValueFactory(d -> d.getValue().classroomProperty());
+		replacementClassroomColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+		replacementClassroomColumn.setOnEditCommit(e -> e.getRowValue().setProfessor(e.getNewValue()));
+		
+		replacementProfessorColumn.setCellValueFactory(d -> d.getValue().professorProperty());
+		replacementProfessorColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+		replacementProfessorColumn.setOnEditCommit(e -> e.getRowValue().setProfessor(e.getNewValue()));
+		
+		replacementGroupColumn.setCellValueFactory(d -> d.getValue().groupProperty());
+		replacementGroupColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+		replacementGroupColumn.setOnEditCommit(e -> e.getRowValue().setGroup(e.getNewValue()));
+		
+		replacementNoteColumn.setCellValueFactory(d -> d.getValue().noteProperty());
+		replacementNoteColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+		replacementNoteColumn.setOnEditCommit(e -> e.getRowValue().setNote(e.getNewValue()));
+		
+		var editableReplacements = new ArrayList<>(override
+			.replacements()
+			.stream()
+			.map(ScheduleItemModel::new)
+			.toList()
 		);
 
-		replacementEndTimeColumn.setCellValueFactory(
-			d -> new SimpleStringProperty(d.getValue().end().format(TIME_FORMAT))
-		);
-
-		replacementClassTypeColumn.setCellValueFactory(
-			d -> new SimpleStringProperty(d.getValue().classType().toString())
-		);
-
-		replacementClassroomColumn.setCellValueFactory(
-			d -> new SimpleStringProperty(d.getValue().classroom())
-		);
-
-		replacementProfessorColumn.setCellValueFactory(
-			d -> new SimpleStringProperty(d.getValue().professor())
-		);
-
-		replacementGroupColumn.setCellValueFactory(
-			d -> new SimpleStringProperty(d.getValue().group())
-		);
-
-		replacementNoteColumn.setCellValueFactory(
-			d -> new SimpleStringProperty(d.getValue().note())
-		);
-
-		var editableReplacements = new ArrayList<>(override.replacements());
 		replacementsTableView.setItems(FXCollections.observableList(editableReplacements));
 		replacementsTableView.getSelectionModel().selectedItemProperty().addListener(this::replacementItemSelected);
 	}
 
-	private void replacementItemSelected(Object source, ScheduleItem previousValue, ScheduleItem value) {
+	private void replacementItemSelected(Object source, ScheduleItemModel previousValue, ScheduleItemModel value) {
 		selectedReplacement = value;
 
 		if (value != null) {
@@ -111,13 +132,19 @@ public class EditOverrideController {
 	@FXML
 	private void addRowButtonClick() {
 		replacementsTableView.getItems()
-			.add(original);
+			.add(new ScheduleItemModel(original));
 	}
 
 	@FXML
 	private void closeButtonClick() {
-		if (storedOverride != null && storedOverride.areReplacementsEqual(replacementsTableView.getItems())
-			|| storedOverride == null && replacementsTableView.getItems().isEmpty()) {
+		var replacements = replacementsTableView
+			.getItems()
+			.stream()
+			.map(ScheduleItemModel::toScheduleItem)
+			.toList();
+
+		if (storedOverride == null && replacementsTableView.getItems().isEmpty()
+			|| storedOverride != null && storedOverride.areReplacementsEqual(replacements)) {
 			close();
 			return;
 		}
@@ -166,7 +193,13 @@ public class EditOverrideController {
 	}
 
 	private void save() {
-		var override = new ScheduleOverride(original, replacementsTableView.getItems());
+		var replacements = replacementsTableView
+			.getItems()
+			.stream()
+			.map(ScheduleItemModel::toScheduleItem)
+			.toList();
+
+		var override = new ScheduleOverride(original, replacements);
 
 		Application.getOverrideManager().updateOverride(storedOverride, override);
 		storedOverride = override;

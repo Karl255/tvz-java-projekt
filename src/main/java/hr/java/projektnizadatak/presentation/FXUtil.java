@@ -1,6 +1,7 @@
 package hr.java.projektnizadatak.presentation;
 
 import hr.java.projektnizadatak.application.entities.ScheduleItem;
+import hr.java.projektnizadatak.presentation.models.ScheduleItemModel;
 import javafx.scene.control.Alert;
 
 public class FXUtil {
@@ -11,6 +12,10 @@ public class FXUtil {
 		alert.show();
 	}
 
+	public static String scheduleItemToString(ScheduleItemModel model) {
+		return scheduleItemToString(model.toScheduleItem());
+	}
+	
 	public static String scheduleItemToString(ScheduleItem item) {
 		var sb = new StringBuilder()
 			.append(item.getTimestamp()).append('\n')
@@ -19,11 +24,11 @@ public class FXUtil {
 			.append(item.classroom()).append('\n')
 			.append(item.professor()).append('\n');
 
-		if (item.group() != null) {
+		if (item.group() != null && !item.group().isBlank()) {
 			sb.append("Grupa: ").append(item.group()).append('\n');
 		}
 
-		if (item.note() != null) {
+		if (item.note() != null && !item.note().isBlank()) {
 			sb.append("Napomena: ").append(item.note()).append('\n');
 		}
 		

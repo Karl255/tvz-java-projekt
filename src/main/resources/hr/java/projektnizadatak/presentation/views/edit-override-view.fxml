@@ -46,9 +46,9 @@
 			-fx-border-radius: 3px;
 			-fx-padding: 4px;
 		</style>
-
 	</TextFlow>
-	<TableView fx:id="replacementsTableView" GridPane.columnSpan="3" GridPane.rowIndex="5">
+
+	<TableView fx:id="replacementsTableView" GridPane.columnSpan="3" GridPane.rowIndex="5" editable="true">
 		<columns>
 			<TableColumn fx:id="replacementStartTimeColumn" prefWidth="75.0" text="Start time"/>
 			<TableColumn fx:id="replacementEndTimeColumn" prefWidth="75.0" text="End time"/>

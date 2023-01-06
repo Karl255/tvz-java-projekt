@@ -1,4 +1,4 @@
-package hr.java.projektnizadatak.presentation.util;
+package hr.java.projektnizadatak.presentation.fx;
 
 import hr.java.projektnizadatak.application.entities.Department;
 import javafx.util.StringConverter;
