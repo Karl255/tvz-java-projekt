@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<GridPane hgap="8" prefHeight="600.0" prefWidth="800.0" vgap="8" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hr.java.projektnizadatak.presentation.controllers.EditOverrideController">
+<GridPane hgap="8" prefHeight="768.0" prefWidth="1024.0" vgap="8" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hr.java.projektnizadatak.presentation.controllers.EditOverrideController">
 	<columnConstraints>
 		<ColumnConstraints percentWidth="20"/>
 		<ColumnConstraints percentWidth="40"/>
@@ -35,28 +35,17 @@
 			-fx-border-radius: 3px;
 			-fx-padding: 4px;
 		</style>
-
-	</TextFlow>
-
-	<Label text="Selected replacement" GridPane.columnIndex="2" GridPane.valignment="BOTTOM"/>
-	<TextFlow fx:id="selectedReplacementTextFlow" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.rowSpan="4">
-		<style>
-			-fx-border-width: 1px;
-			-fx-border-color: #c8c8c8;
-			-fx-border-radius: 3px;
-			-fx-padding: 4px;
-		</style>
 	</TextFlow>
 
 	<TableView fx:id="replacementsTableView" GridPane.columnSpan="3" GridPane.rowIndex="5" editable="true">
 		<columns>
-			<TableColumn fx:id="replacementStartTimeColumn" prefWidth="75.0" text="Start time"/>
-			<TableColumn fx:id="replacementEndTimeColumn" prefWidth="75.0" text="End time"/>
-			<TableColumn fx:id="replacementClassTypeColumn" prefWidth="75.0" text="Class type"/>
-			<TableColumn fx:id="replacementClassroomColumn" prefWidth="75.0" text="Classroom"/>
-			<TableColumn fx:id="replacementProfessorColumn" prefWidth="75.0" text="Professor"/>
-			<TableColumn fx:id="replacementGroupColumn" prefWidth="75.0" text="Group"/>
-			<TableColumn fx:id="replacementNoteColumn" prefWidth="75.0" text="Note"/>
+			<TableColumn fx:id="replacementStartTimeColumn" prefWidth="65.0" text="Start time"/>
+			<TableColumn fx:id="replacementEndTimeColumn" prefWidth="65.0" text="End time"/>
+			<TableColumn fx:id="replacementClassTypeColumn" prefWidth="130.0" text="Class type"/>
+			<TableColumn fx:id="replacementClassroomColumn" prefWidth="190.0" text="Classroom"/>
+			<TableColumn fx:id="replacementProfessorColumn" prefWidth="250.0" text="Professor"/>
+			<TableColumn fx:id="replacementGroupColumn" prefWidth="150.0" text="Group"/>
+			<TableColumn fx:id="replacementNoteColumn" prefWidth="150.0" text="Note"/>
 		</columns>
 	</TableView>
 
@@ -69,15 +58,17 @@
 			<RowConstraints vgrow="SOMETIMES"/>
 		</rowConstraints>
 
-		<HBox alignment="TOP_RIGHT" spacing="8.0" GridPane.columnIndex="1">
+		<HBox alignment="BOTTOM_LEFT" spacing="8.0">
+			<Button onAction="#deleteRowButtonClick" text="Delete row" fx:id="deleteRowButton" disable="true"/>
+			<Button onAction="#duplicateRowButtonClick" text="Duplicate row" fx:id="duplicateRowButton" disable="true"/>
+			<Button onAction="#addRowButtonClick" text="Add row"/>
+		</HBox>
+		
+		<HBox alignment="BOTTOM_RIGHT" spacing="8.0" GridPane.columnIndex="1">
 
 			<Button onAction="#closeButtonClick" text="Close"/>
 			<Button onAction="#deleteAllButtonClick" text="Delete all"/>
 			<Button onAction="#saveButtonClick" text="Save"/>
-		</HBox>
-		<HBox spacing="8.0">
-			<Button onAction="#deleteRowButtonClick" text="Delete row" fx:id="deleteRowButton" disable="true"/>
-			<Button onAction="#addRowButtonClick" text="Add row"/>
 		</HBox>
 	</GridPane>
 </GridPane>

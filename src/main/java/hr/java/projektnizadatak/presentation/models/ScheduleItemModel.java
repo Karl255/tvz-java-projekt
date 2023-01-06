@@ -39,6 +39,25 @@ public class ScheduleItemModel {
 		this.isOriginal = new SimpleBooleanProperty(item.isOriginal());
 	}
 	
+	public ScheduleItemModel(ScheduleItemModel model) {
+		this.id = new SimpleLongProperty(model.getId());
+		this.courseName = new SimpleStringProperty(model.getCourseName());
+		this.className = new SimpleStringProperty(model.getClassName());
+		this.professor = new SimpleStringProperty(model.getProfessor());
+		this.classType = new SimpleObjectProperty<>(model.getClassType());
+		this.classroom = new SimpleStringProperty(model.getClassroom());
+		this.note = new SimpleStringProperty(model.getNote());
+		this.group = new SimpleStringProperty(model.getGroup());
+		this.date = new SimpleObjectProperty<>(model.getDate());
+		this.start = new SimpleObjectProperty<>(model.getStart());
+		this.end = new SimpleObjectProperty<>(model.getEnd());
+		this.isOriginal = new SimpleBooleanProperty(model.isOriginal());
+	}
+	
+	public ScheduleItemModel copy() {
+		return new ScheduleItemModel(this);
+	}
+	
 	public ScheduleItem toScheduleItem() {
 		return new ScheduleItem(
 			id.get(),
@@ -188,7 +207,7 @@ public class ScheduleItemModel {
 		this.end.set(end);
 	}
 
-	public boolean isIsOriginal() {
+	public boolean isOriginal() {
 		return isOriginal.get();
 	}
 

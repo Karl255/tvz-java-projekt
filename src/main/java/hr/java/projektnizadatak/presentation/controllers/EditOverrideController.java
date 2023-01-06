@@ -29,7 +29,6 @@ public class EditOverrideController {
 	private final static DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("H:mm");
 
 	@FXML private TextFlow originalItemTextFlow;
-	@FXML private TextFlow selectedReplacementTextFlow;
 
 	@FXML private TableView<ScheduleItemModel> replacementsTableView;
 	@FXML private TableColumn<ScheduleItemModel, LocalTime> replacementStartTimeColumn;
@@ -42,9 +41,9 @@ public class EditOverrideController {
 
 	private ScheduleOverride storedOverride;
 	private ScheduleItem original;
-	private ScheduleItemModel selectedReplacement;
 
 	@FXML private Button deleteRowButton;
+	@FXML private Button duplicateRowButton;
 
 	@FXML
 	private void initialize() {
@@ -112,21 +111,29 @@ public class EditOverrideController {
 	}
 
 	private void replacementItemSelected(Object source, ScheduleItemModel previousValue, ScheduleItemModel value) {
-		selectedReplacement = value;
-
-		if (value != null) {
-			selectedReplacementTextFlow.getChildren().setAll(new Text(FXUtil.scheduleItemToString(value)));
-			deleteRowButton.setDisable(false);
-		} else {
+		if (value == null) {
+			duplicateRowButton.setDisable(true);
 			deleteRowButton.setDisable(true);
-			selectedReplacementTextFlow.getChildren().clear();
+		} else {
+			duplicateRowButton.setDisable(false);
+			deleteRowButton.setDisable(false);
 		}
 	}
 
+	private ScheduleItemModel getSelected() {
+		return replacementsTableView.getSelectionModel().getSelectedItem();
+	}
+	
 	@FXML
 	private void deleteRowButtonClick() {
 		replacementsTableView.getItems()
-			.remove(selectedReplacement);
+			.remove(getSelected());
+	}
+
+	@FXML
+	private void duplicateRowButtonClick() {
+		replacementsTableView.getItems()
+			.add(getSelected().copy());
 	}
 
 	@FXML
