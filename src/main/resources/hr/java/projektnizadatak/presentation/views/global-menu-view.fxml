@@ -9,16 +9,10 @@
 	<Menu mnemonicParsing="false" text="User">
 		<MenuItem mnemonicParsing="false" text="Log out" onAction="#logout"/>
 	</Menu>
-	<Menu mnemonicParsing="false" text="View">
-		<MenuItem mnemonicParsing="false" text="Main screen" onAction="#showMainScreen"/>
-	</Menu>
-	<Menu mnemonicParsing="false" text="Manage">
-		<Menu mnemonicParsing="false" text="Data">
-			<MenuItem mnemonicParsing="false" text="*Data 1"/>
-			<MenuItem mnemonicParsing="false" text="*Data 2"/>
-			<MenuItem mnemonicParsing="false" text="*Data 3"/>
-		</Menu>
-		<MenuItem mnemonicParsing="false" text="*Changes"/>
+	<Menu mnemonicParsing="false" text="Navigation">
+		<MenuItem mnemonicParsing="false" text="Timetable" onAction="#showTimetableScreen"/>
+		<MenuItem mnemonicParsing="false" text="Changes log" onAction="#showChangesScreen"/>
+		<MenuItem mnemonicParsing="false" text="Manage overrides" onAction="#showManageOverridesScreen"/>
 	</Menu>
 	<padding>
 		<Insets/>

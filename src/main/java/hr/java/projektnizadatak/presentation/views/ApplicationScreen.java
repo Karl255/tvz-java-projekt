@@ -2,7 +2,7 @@ package hr.java.projektnizadatak.presentation.views;
 
 public enum ApplicationScreen {
 	Login("views/login-view.fxml", "Login", false),
-	MainScreen("views/timetable-view.fxml", "Timetable", true),
+	Timetable("views/timetable-view.fxml", "Timetable", true),
 	EditOverride("views/edit-override-view.fxml", "Edit override", true)
 	;
 	

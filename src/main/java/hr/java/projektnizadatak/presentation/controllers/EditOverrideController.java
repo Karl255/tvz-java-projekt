@@ -232,6 +232,6 @@ public class EditOverrideController {
 	}
 
 	private void close() {
-		Application.setScreen(ApplicationScreen.MainScreen);
+		Application.setScreen(ApplicationScreen.Timetable);
 	}
 }

@@ -1,7 +1,9 @@
 package hr.java.projektnizadatak.application;
 
+import hr.java.projektnizadatak.application.entities.Change;
 import hr.java.projektnizadatak.application.entities.ScheduleItem;
 import hr.java.projektnizadatak.application.entities.ScheduleOverride;
+import hr.java.projektnizadatak.presentation.Application;
 import hr.java.projektnizadatak.shared.exceptions.DataNoLongerValidException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,15 +60,32 @@ public class ScheduleOverridesManager {
 	
 	public void updateOverride(ScheduleOverride oldOverride, ScheduleOverride newOverride) {
 		if (oldOverride != null) {
-			store.update(oldOverride, newOverride);
+			if (newOverride != null) {
+				store.update(oldOverride, newOverride);
+			} else {
+				store.delete(oldOverride);
+			}
 		} else {
 			if (newOverride != null) {
 				store.create(newOverride);
+			} else {
+				logger.warn("Tried to update null override to null!");
 			}
+		}
+		
+		if (oldOverride != null && newOverride != null) {
+			logChange(oldOverride, newOverride);
 		}
 	}
 	
 	public void deleteOverride(ScheduleOverride override) {
 		store.delete(override);
+		logChange(override, null);
+	}
+	
+	private void logChange(ScheduleOverride oldValue, ScheduleOverride newValue) {
+		var user = Application.getUserManager().getUser();
+		var change = Change.create(user, oldValue, newValue);
+		ChangesManager.getInstance().addChange(change);
 	}
 }

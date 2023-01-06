@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Stream;
 
-public record ScheduleOverride(ScheduleItem original, List<ScheduleItem> replacements) implements Serializable {
+public record ScheduleOverride(ScheduleItem original, List<ScheduleItem> replacements) implements Serializable, Recordable {
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {return true;}
@@ -58,5 +58,17 @@ public record ScheduleOverride(ScheduleItem original, List<ScheduleItem> replace
 			.toList();
 
 		return new Timetable(mappedItems, timetable.holidays());
+	}
+
+	@Override
+	public String displayShort() {
+		// TODO
+		return original.courseName() + ": " + original.className() + " -> [" + replacements.size() + "]";
+	}
+
+	@Override
+	public String displayFull() {
+		// TODO
+		return "TODO";
 	}
 }

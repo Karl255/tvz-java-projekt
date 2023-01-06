@@ -6,13 +6,23 @@ import javafx.fxml.FXML;
 
 public class GlobalMenuController {
 	@FXML
-	private void showMainScreen() {
-		Application.setScreen(ApplicationScreen.MainScreen);
-	}
-
-	@FXML
 	private void logout() {
 		Application.getUserManager().logout();
 		Application.setScreen(ApplicationScreen.Login);
+	}
+	
+	@FXML
+	private void showTimetableScreen() {
+		Application.setScreen(ApplicationScreen.Timetable);
+	}
+	
+	@FXML
+	private void showChangesScreen() {
+		
+	}
+	
+	@FXML
+	private void showManageOverridesScreen() {
+		
 	}
 }
