@@ -23,7 +23,7 @@ import java.util.List;
 
 public class TimetableDay extends GridPane {
 	private static final Logger logger = LoggerFactory.getLogger(TimetableDay.class);
-	
+
 	@FXML
 	private Label titleLabel;
 	@FXML
@@ -44,6 +44,8 @@ public class TimetableDay extends GridPane {
 	}
 
 	public void setItems(List<ScheduleItem> items) {
+		contentAnchorPane.getChildren().clear();
+
 		var elements = TimetableDayItemModel.organizeItems(items)
 			.stream()
 			.map(model -> {
@@ -53,48 +55,48 @@ public class TimetableDay extends GridPane {
 			})
 			.toList();
 
-		contentAnchorPane.getChildren().setAll(elements);
-		repositionItems();
+		repositionItems(elements);
 	}
 
-	public void repositionItems() {
-		if (contentAnchorPane.getChildren().size() == 0) {
+	public void repositionItems(List<TimetableItem> items) {
+		if (items.size() == 0) {
 			return;
 		}
-		
+
 		double width = contentAnchorPane.getBoundsInLocal().getWidth();
 		double height = contentAnchorPane.getBoundsInLocal().getHeight();
-		
+
+		contentAnchorPane.getChildren().setAll(items);
+
 		int maxColumn = contentAnchorPane.getChildren().stream()
 			.map(item -> (TimetableItem) item)
 			.max(Comparator.comparing(item -> item.getModel().getColumn()))
 			.orElseThrow(() -> {
 				String m = "No maximum found while repositioning items";
 				logger.error(m);
-				
+
 				return new UnreachableCodeException(m);
 			})
 			.getModel().getColumn();
 
 		double columnWidth = width / (maxColumn + 1);
 
-		for (var itemNode : contentAnchorPane.getChildren()) {
-			if (itemNode instanceof TimetableItem item) {
-				var model = item.getModel();
+		for (var item : items) {
+			var model = item.getModel();
 
-				AnchorPane.setTopAnchor(itemNode, height * model.getRelativeStart());
-				AnchorPane.setBottomAnchor(itemNode, height * model.getRelativeEnd());
+			AnchorPane.setTopAnchor(item, height * model.getRelativeStart());
+			AnchorPane.setBottomAnchor(item, height * model.getRelativeEnd());
 
-				int colsFromRight = (maxColumn - (model.getColumn() + model.getColumnSpan() - 1));
-				AnchorPane.setLeftAnchor(itemNode, columnWidth * model.getColumn());
-				AnchorPane.setRightAnchor(itemNode, columnWidth * colsFromRight);
-			}
+			int colsFromRight = (maxColumn - (model.getColumn() + model.getColumnSpan() - 1));
+			AnchorPane.setLeftAnchor(item, columnWidth * model.getColumn());
+			AnchorPane.setRightAnchor(item, columnWidth * colsFromRight);
+
 		}
 	}
 
-	public final ObjectProperty<EventHandler<MouseEvent>> onItemSelectedProperty() { return onItemSelected; }
-	public final void setOnItemSelected(EventHandler<MouseEvent> value) { onItemSelectedProperty().setValue(value); }
-	public final EventHandler<MouseEvent> getOnItemSelected() { return onItemSelectedProperty().get(); }
+	public final ObjectProperty<EventHandler<MouseEvent>> onItemSelectedProperty() {return onItemSelected;}
+	public final EventHandler<MouseEvent> getOnItemSelected() {return onItemSelectedProperty().get();}
+	public final void setOnItemSelected(EventHandler<MouseEvent> value) {onItemSelectedProperty().setValue(value);}
 	private final ObjectProperty<EventHandler<MouseEvent>> onItemSelected = new ObjectPropertyBase<>() {
 		@Override
 		public Object getBean() {
@@ -106,11 +108,11 @@ public class TimetableDay extends GridPane {
 			return "itemSelected";
 		}
 	};
-	
+
 	private void calednarItemClicked(MouseEvent e) {
 		getOnItemSelected().handle(e);
 	}
-	
+
 	public String getTitle() {
 		return titleLabel.getText();
 	}

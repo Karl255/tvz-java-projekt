@@ -1,5 +1,7 @@
 package hr.java.projektnizadatak.application.entities;
 
+import hr.java.projektnizadatak.shared.Util;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -21,11 +23,22 @@ public record ScheduleItem(
 	boolean isOriginal
 ) implements Serializable {
 	private static final DateTimeFormatter TIMESTAMP_FORMAT = DateTimeFormatter.ofPattern("H:mm");
+	private static final DateTimeFormatter TIMESTAMP_FULL_FORMAT = DateTimeFormatter.ofPattern("HH:mm");
 
-	public String getTimestamp() {
-		return start().format(TIMESTAMP_FORMAT) + " - " + end().format(TIMESTAMP_FORMAT);
+	public String getTimestampShort() {
+		return "%s - %s".formatted(
+			start.format(TIMESTAMP_FORMAT),
+			end.format(TIMESTAMP_FORMAT)
+		);
 	}
-	
+
+	public String getTimestampFull() {
+		return "%s - %s".formatted(
+			start.format(TIMESTAMP_FULL_FORMAT),
+			end.format(TIMESTAMP_FULL_FORMAT)
+		);
+	}
+
 	public ScheduleItem withOverrides(ScheduleItem overrides) {
 		return new ScheduleItem(
 			this.id,
@@ -67,7 +80,9 @@ public record ScheduleItem(
 	public boolean effectivelyEqual(ScheduleItem other) {
 		return start.equals(other.start)
 			&& end.equals(other.end)
+			&& date.getDayOfWeek() == other.date.getDayOfWeek()
 			&& classType == other.classType
+			&& className.equals(other.className)
 			&& classroom.equals(other.classroom);
 	}
 }

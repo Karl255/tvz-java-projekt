@@ -170,11 +170,9 @@ public class EditOverrideController {
 
 		if (clicked.isPresent()) {
 			if (clicked.get().equals(ButtonType.YES)) {
-				System.out.println("YES");
 				save();
 				close();
 			} else if (clicked.get().equals(ButtonType.NO)) {
-				System.out.println("NO");
 				close();
 			}
 		}

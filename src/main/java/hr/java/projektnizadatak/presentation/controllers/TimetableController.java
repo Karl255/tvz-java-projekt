@@ -196,9 +196,6 @@ public class TimetableController {
 				timetableDays[i].setItems(itemsByDate.getOrDefault(todaysDate, Collections.emptyList()));
 			}
 		}
-		System.out.println(
-			
-		);
 	}
 
 	@FXML

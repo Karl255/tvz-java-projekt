@@ -73,7 +73,7 @@ public class ScheduleOverridesManager {
 			}
 		}
 		
-		if (oldOverride != null && newOverride != null) {
+		if (oldOverride != null || newOverride != null) {
 			logChange(oldOverride, newOverride);
 		}
 	}

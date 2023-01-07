@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.TextFlow?>
 
-<GridPane prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hr.java.projektnizadatak.presentation.controllers.ChangesBrowserController">
+<GridPane prefHeight="768.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hr.java.projektnizadatak.presentation.controllers.ChangesBrowserController">
 	<columnConstraints>
 		<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
 	</columnConstraints>
@@ -37,10 +37,10 @@
 
 		<TableView GridPane.columnSpan="2" GridPane.rowIndex="2" fx:id="changeTableView">
 			<columns>
-				<TableColumn prefWidth="100.0" text="Username" fx:id="usernameColumn"/>
-				<TableColumn prefWidth="150.0" text="Timestamp" fx:id="timestampColumn"/>
-				<TableColumn prefWidth="300.0" text="Previous value" fx:id="oldValueColumn"/>
-				<TableColumn prefWidth="300.0" text="New value" fx:id="newValueColumn"/>
+				<TableColumn prefWidth="90.0" text="Username" fx:id="usernameColumn"/>
+				<TableColumn prefWidth="120.0" text="Timestamp" fx:id="timestampColumn"/>
+				<TableColumn prefWidth="500.0" text="Previous value" fx:id="oldValueColumn"/>
+				<TableColumn prefWidth="500.0" text="New value" fx:id="newValueColumn"/>
 			</columns>
 		</TableView>
 	</GridPane>

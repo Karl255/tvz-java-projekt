@@ -1,6 +1,9 @@
 package hr.java.projektnizadatak.application.entities;
 
+import hr.java.projektnizadatak.shared.Util;
+
 import java.io.Serializable;
+import java.time.DayOfWeek;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -62,13 +65,33 @@ public record ScheduleOverride(ScheduleItem original, List<ScheduleItem> replace
 
 	@Override
 	public String displayShort() {
-		// TODO
-		return original.courseName() + ": " + original.className() + " -> [" + replacements.size() + "]";
+		return "%s: %s (%s %s) -> [%d]".formatted(
+			original.courseName(),
+			original.className(),
+			Util.dayOfWeekToShortString(original.date().getDayOfWeek()),
+			original.getTimestampFull(),
+			replacements.size()
+		);
 	}
 
 	@Override
 	public String displayFull() {
-		// TODO
-		return displayShort();
+		var sb = new StringBuilder(displayShort())
+			.append('\n');
+		
+		for (var replacement : replacements) {
+			var s = "[%s] %s u %s sa %s; %s; %s\n".formatted(
+				replacement.getTimestampFull(),
+				replacement.classType().toShortString(),
+				replacement.classroom(),
+				replacement.professor(),
+				Util.unlessNull(replacement.group(), "-"),
+				Util.unlessNull(replacement.note(), "-")
+			);
+			
+			sb.append(s);
+		}
+		
+		return sb.toString();
 	}
 }

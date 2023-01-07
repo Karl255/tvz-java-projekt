@@ -30,4 +30,14 @@ public enum ClassType {
 	public String toString() {
 		return name;
 	}
+	
+	public String toShortString() {
+		return switch (name) {
+			case "Predavanja" -> "Pred.";
+			case "Auditorne vježbe" -> "AV";
+			case "Laboratorijske vježbe" -> "LV";
+			case "Ostalo" -> "Ostalo";
+			default -> "?";
+		};
+	}
 }

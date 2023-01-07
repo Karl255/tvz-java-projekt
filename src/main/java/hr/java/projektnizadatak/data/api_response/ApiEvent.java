@@ -3,6 +3,8 @@ package hr.java.projektnizadatak.data.api_response;
 import hr.java.projektnizadatak.application.entities.ClassType;
 import hr.java.projektnizadatak.application.entities.Holiday;
 import hr.java.projektnizadatak.application.entities.ScheduleItem;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -10,6 +12,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.regex.Pattern;
 
 public record ApiEvent(String id, String title, String start, String end, boolean allDay, String color, boolean editable) {
+	private static final Logger logger = LoggerFactory.getLogger(ApiEvent.class);
+	
 	private static final DateTimeFormatter SCHEDULE_ITEM_DATE_TIME_FORMAT = DateTimeFormatter.ISO_DATE_TIME;
 	private static final DateTimeFormatter EVENT_DATE_FORMAT = DateTimeFormatter.ISO_DATE;
 
@@ -34,7 +38,7 @@ public record ApiEvent(String id, String title, String start, String end, boolea
 			.findFirst();
 
 		if (results.isEmpty()) {
-			System.out.println("ERROR");
+			logger.error("Failed to parse title field from API: " + title);
 			
 			return new ScheduleItem(
 				numeric_id,

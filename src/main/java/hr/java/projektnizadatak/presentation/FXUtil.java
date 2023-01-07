@@ -18,7 +18,7 @@ public class FXUtil {
 	
 	public static String scheduleItemToString(ScheduleItem item) {
 		var sb = new StringBuilder()
-			.append(item.getTimestamp()).append('\n')
+			.append(item.getTimestampShort()).append('\n')
 			.append(item.className()).append('\n')
 			.append(item.classType()).append('\n')
 			.append(item.classroom()).append('\n')

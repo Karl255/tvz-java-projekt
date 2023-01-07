@@ -46,7 +46,7 @@ public class TimetableItem extends VBox {
 	@FXML
 	private void initialize() {
 		this.titleLabel.setText(model.getScheduleItem().className());
-		this.timestampLabel.setText(model.getScheduleItem().getTimestamp());
+		this.timestampLabel.setText(model.getScheduleItem().getTimestampShort());
 
 		this.getStyleClass().add(
 			switch (model.getScheduleItem().classType()) {
