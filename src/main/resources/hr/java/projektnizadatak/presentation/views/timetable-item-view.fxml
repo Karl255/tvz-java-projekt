@@ -1,9 +1,3 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
-
-<fx:root type="javafx.scene.layout.VBox" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" styleClass="timetable-item, p-4">
-	<Label fx:id="timestampLabel" text="??:?? - ??:??" wrapText="true"/>
-	<Label fx:id="titleLabel" text="Something something" wrapText="true" styleClass="bold"/>
-</fx:root>
+<fx:root type="javafx.scene.text.TextFlow" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" styleClass="timetable-item, p-4" />

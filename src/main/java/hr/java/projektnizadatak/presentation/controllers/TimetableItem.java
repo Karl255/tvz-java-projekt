@@ -6,22 +6,17 @@ import hr.java.projektnizadatak.presentation.models.TimetableDayItemModel;
 import hr.java.projektnizadatak.shared.exceptions.FxmlLoadingException;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Label;
-import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-public class TimetableItem extends VBox {
+public class TimetableItem extends TextFlow {
 	private static final Logger logger = LoggerFactory.getLogger(TimetableItem.class);
 	private final TimetableDayItemModel model;
 	
-	@FXML
-	private Label timestampLabel;
-	@FXML
-	private Label titleLabel;
-
 	public TimetableItem(ScheduleItem item) {
 		this(new TimetableDayItemModel(item));
 	}
@@ -45,10 +40,13 @@ public class TimetableItem extends VBox {
 
 	@FXML
 	private void initialize() {
-		this.titleLabel.setText(model.getScheduleItem().className());
-		this.timestampLabel.setText(model.getScheduleItem().getTimestampShort());
+		var timestamp = new Text(model.getScheduleItem().getTimestampShort());
+		var label = new Text(model.getScheduleItem().className());
+		label.getStyleClass().add("bold");
+		
+		getChildren().setAll(timestamp, new Text("   "), label);
 
-		this.getStyleClass().add(
+		getStyleClass().add(
 			switch (model.getScheduleItem().classType()) {
 				case LECTURES -> "timetable-item-lecture";
 				case AUDITORY_EXERCISES -> "timetable-item-auditory";
