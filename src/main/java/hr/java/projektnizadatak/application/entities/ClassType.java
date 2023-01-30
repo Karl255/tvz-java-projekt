@@ -6,6 +6,7 @@ public enum ClassType {
 	LECTURES("Predavanja"),
 	AUDITORY_EXERCISES("Auditorne vježbe"),
 	LAB("Laboratorijske vježbe"),
+	SPORTS_ACTIVITY("Tjelesna aktivnost"),
 	OTHER("Ostalo"),
 	;
 

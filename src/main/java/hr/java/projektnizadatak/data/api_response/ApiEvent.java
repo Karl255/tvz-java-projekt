@@ -28,7 +28,6 @@ public record ApiEvent(String id, String title, String start, String end, boolea
 	);
 	
 	public ScheduleItem toScheduleItem() {
-		long numeric_id = Long.parseLong(id);
 		var startTime = LocalDateTime.parse(start, SCHEDULE_ITEM_DATE_TIME_FORMAT);
 		var endTime = LocalDateTime.parse(end, SCHEDULE_ITEM_DATE_TIME_FORMAT);
 		
@@ -41,7 +40,7 @@ public record ApiEvent(String id, String title, String start, String end, boolea
 			logger.error("Failed to parse title field from API: " + title);
 			
 			return new ScheduleItem(
-				numeric_id,
+				null,
 				"ERROR",
 				"ERROR",
 				"ERROR",
@@ -49,7 +48,7 @@ public record ApiEvent(String id, String title, String start, String end, boolea
 				"ERROR",
 				"ERROR",
 				"ERROR",
-				startTime.toLocalDate(),
+				startTime.getDayOfWeek(),
 				startTime.toLocalTime(),
 				endTime.toLocalTime(),
 				true
@@ -59,7 +58,7 @@ public record ApiEvent(String id, String title, String start, String end, boolea
 		var matches = results.get();
 		
 		return new ScheduleItem(
-			numeric_id,
+			null,
 			matches.group(5).trim(),
 			matches.group(1).trim(),
 			matches.group(3).trim(),
@@ -67,7 +66,7 @@ public record ApiEvent(String id, String title, String start, String end, boolea
 			matches.group(4).trim(),
 			trimOrNull(matches.group(6)),
 			trimOrNull(matches.group(7)),
-			startTime.toLocalDate(),
+			startTime.getDayOfWeek(),
 			startTime.toLocalTime(),
 			endTime.toLocalTime(),
 			true

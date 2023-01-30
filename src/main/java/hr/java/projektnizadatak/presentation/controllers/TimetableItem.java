@@ -48,9 +48,10 @@ public class TimetableItem extends TextFlow {
 
 		getStyleClass().add(
 			switch (model.getScheduleItem().classType()) {
-				case LECTURES -> "timetable-item-lecture";
-				case AUDITORY_EXERCISES -> "timetable-item-auditory";
-				case LAB -> "timetable-item-lab";
+				case LECTURES -> "timetable-item--lecture";
+				case AUDITORY_EXERCISES -> "timetable-item--auditory";
+				case LAB -> "timetable-item--lab";
+				case SPORTS_ACTIVITY -> "timetable-item--sports";
 				case OTHER -> "";
 			}
 		);

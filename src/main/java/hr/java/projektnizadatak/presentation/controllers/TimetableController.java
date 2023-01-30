@@ -163,29 +163,30 @@ public class TimetableController {
 		}
 	}
 
-	private void getTimetable(String subdepartment, int semester, LocalDate monday) {
+	private void getTimetable(String subdepartment, int semester, LocalDate mondayDate) {
 		var scheduleSource = Application.getScheduleSource();
 
 		var timetable = scheduleSource.getTimetable(
 			subdepartment,
 			semester,
-			Util.getAcademicYear(monday),
-			monday,
-			TIMETABLE_DAYS);
+			Util.getAcademicYear(mondayDate),
+			mondayDate,
+			TIMETABLE_DAYS
+		);
 		
-		var overrides = Application.getOverrideManager().getAllOverrides();
-
+		var overrides = Application.getOverrideManager().getAllOverrides(subdepartment, semester);
+		
 		timetable = ScheduleOverride.applyOverrides(timetable, overrides);
 		
-		var itemsByDate = timetable.scheduleItems().stream()
-			.collect(Collectors.groupingBy(ScheduleItem::date));
+		var itemsByWeekday = timetable.scheduleItems().stream()
+			.collect(Collectors.groupingBy(ScheduleItem::weekday));
 
 		for (int i = 0; i < 5; i++) {
-			var todaysDate = monday.plusDays(i);
+			var todaysWeekday = mondayDate.getDayOfWeek().plus(i);
 
 			var holiday = timetable.holidays()
 				.stream()
-				.filter(h -> h.date().equals(todaysDate))
+				.filter(h -> h.date().equals(todaysWeekday))
 				.findFirst();
 
 			if (holiday.isPresent()) {
@@ -193,7 +194,7 @@ public class TimetableController {
 				timetableDays[i].setItems(Collections.emptyList());
 			} else {
 				holidayTexts[i].setText("");
-				timetableDays[i].setItems(itemsByDate.getOrDefault(todaysDate, Collections.emptyList()));
+				timetableDays[i].setItems(itemsByWeekday.getOrDefault(todaysWeekday, Collections.emptyList()));
 			}
 		}
 	}

@@ -1,13 +1,11 @@
 package hr.java.projektnizadatak.presentation.controllers;
 
 import hr.java.projektnizadatak.application.entities.ClassType;
-import hr.java.projektnizadatak.application.entities.ScheduleItem;
-import hr.java.projektnizadatak.application.entities.ScheduleOverride;
 import hr.java.projektnizadatak.presentation.Application;
 import hr.java.projektnizadatak.presentation.FXUtil;
-import hr.java.projektnizadatak.presentation.models.ScheduleItemModel;
+import hr.java.projektnizadatak.presentation.models.EditOverrideModel;
+import hr.java.projektnizadatak.presentation.models.OverrideDataModel;
 import hr.java.projektnizadatak.presentation.views.ApplicationScreen;
-import hr.java.projektnizadatak.shared.exceptions.DataNoLongerValidException;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -24,44 +22,31 @@ import java.util.Arrays;
 
 public class EditOverrideController {
 	private final static DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("H:mm");
-
+	private final EditOverrideModel model;
+	
 	@FXML private TextFlow originalItemTextFlow;
 
-	@FXML private TableView<ScheduleItemModel> replacementsTableView;
-	@FXML private TableColumn<ScheduleItemModel, LocalTime> replacementStartTimeColumn;
-	@FXML private TableColumn<ScheduleItemModel, LocalTime> replacementEndTimeColumn;
-	@FXML private TableColumn<ScheduleItemModel, ClassType> replacementClassTypeColumn;
-	@FXML private TableColumn<ScheduleItemModel, String> replacementClassroomColumn;
-	@FXML private TableColumn<ScheduleItemModel, String> replacementProfessorColumn;
-	@FXML private TableColumn<ScheduleItemModel, String> replacementGroupColumn;
-	@FXML private TableColumn<ScheduleItemModel, String> replacementNoteColumn;
-
-	private ScheduleOverride storedOverride;
-	private ScheduleItem original;
+	@FXML private TableView<OverrideDataModel> replacementsTableView;
+	@FXML private TableColumn<OverrideDataModel, LocalTime> replacementStartTimeColumn;
+	@FXML private TableColumn<OverrideDataModel, LocalTime> replacementEndTimeColumn;
+	@FXML private TableColumn<OverrideDataModel, ClassType> replacementClassTypeColumn;
+	@FXML private TableColumn<OverrideDataModel, String> replacementClassroomColumn;
+	@FXML private TableColumn<OverrideDataModel, String> replacementProfessorColumn;
+	@FXML private TableColumn<OverrideDataModel, String> replacementGroupColumn;
+	@FXML private TableColumn<OverrideDataModel, String> replacementNoteColumn;
 
 	@FXML private Button deleteRowButton;
 	@FXML private Button duplicateRowButton;
 
+	public EditOverrideController() {
+		model = new EditOverrideModel();
+	}
+
 	@FXML
 	private void initialize() {
-		var requestedItem = Application.getOverrideManager().getItemBeingEdited();
-		var manager = Application.getOverrideManager();
-		ScheduleOverride override;
-
-		try {
-			override = storedOverride = manager.getOverrideFor(requestedItem);
-
-			if (override == null) {
-				override = manager.getDefault(requestedItem);
-			}
-		} catch (DataNoLongerValidException e) {
-			FXUtil.showAlert(Alert.AlertType.ERROR, "Data invalid", "The data is no longer relevant, please refresh the view.");
-			close();
-			return;
-		}
-
-		original = override.original();
-		originalItemTextFlow.getChildren().add(new Text(FXUtil.scheduleItemToString(original)));
+		model.initialize();
+		
+		originalItemTextFlow.getChildren().add(new Text(FXUtil.scheduleItemToString(model.getOriginalScheduleOverride().original())));
 
 		replacementStartTimeColumn.setCellValueFactory(d -> d.getValue().startProperty());
 		replacementStartTimeColumn.setCellFactory(TextFieldTableCell.forTableColumn(
@@ -96,19 +81,12 @@ public class EditOverrideController {
 		replacementNoteColumn.setCellValueFactory(d -> d.getValue().noteProperty());
 		replacementNoteColumn.setCellFactory(TextFieldTableCell.forTableColumn());
 		replacementNoteColumn.setOnEditCommit(e -> e.getRowValue().setNote(e.getNewValue()));
-		
-		var editableReplacements = new ArrayList<>(override
-			.replacements()
-			.stream()
-			.map(ScheduleItemModel::newReplacement)
-			.toList()
-		);
 
-		replacementsTableView.setItems(FXCollections.observableList(editableReplacements));
+		replacementsTableView.setItems(model.getReplacements());
 		replacementsTableView.getSelectionModel().selectedItemProperty().addListener(this::replacementItemSelected);
 	}
 
-	private void replacementItemSelected(Object source, ScheduleItemModel previousValue, ScheduleItemModel value) {
+	private void replacementItemSelected(Object source, OverrideDataModel previousValue, OverrideDataModel value) {
 		if (value == null) {
 			duplicateRowButton.setDisable(true);
 			deleteRowButton.setDisable(true);
@@ -118,45 +96,38 @@ public class EditOverrideController {
 		}
 	}
 
-	private ScheduleItemModel getSelected() {
+	private OverrideDataModel getSelected() {
 		return replacementsTableView.getSelectionModel().getSelectedItem();
-	}
-	
-	private boolean wereChangesMade() {
-		var replacements = replacementsTableView
-			.getItems()
-			.stream()
-			.map(ScheduleItemModel::toScheduleItem)
-			.toList();
-
-		return !(storedOverride == null && replacementsTableView.getItems().isEmpty()
-			|| storedOverride != null && storedOverride.areReplacementsEqual(replacements));
 	}
 	
 	@FXML
 	private void deleteRowButtonClick() {
-		replacementsTableView.getItems()
-			.remove(getSelected());
+		// TODO
+		showNotImplementedAlert();
 	}
 
 	@FXML
 	private void duplicateRowButtonClick() {
-		replacementsTableView.getItems()
-			.add(getSelected().copy());
+		// TODO
+		showNotImplementedAlert();
 	}
 
 	@FXML
 	private void addRowButtonClick() {
-		replacementsTableView.getItems()
-			.add(ScheduleItemModel.newReplacement(original));
+		// TODO
+		showNotImplementedAlert();
 	}
 
 	@FXML
 	private void closeButtonClick() {
+		// TODO
+		
+		/*
 		if (!wereChangesMade()) {
 			close();
 			return;
 		}
+		*/
 
 		var alert = new Alert(
 			Alert.AlertType.CONFIRMATION,
@@ -170,7 +141,7 @@ public class EditOverrideController {
 
 		if (clicked.isPresent()) {
 			if (clicked.get().equals(ButtonType.YES)) {
-				save();
+				//save();
 				close();
 			} else if (clicked.get().equals(ButtonType.NO)) {
 				close();
@@ -180,6 +151,10 @@ public class EditOverrideController {
 
 	@FXML
 	private void deleteAllButtonClick() {
+		// TODO
+		showNotImplementedAlert();
+		if (true) return;
+		
 		var alert = new Alert(
 			Alert.AlertType.CONFIRMATION,
 			"Are you sure you want to delete this override and exit?",
@@ -190,17 +165,23 @@ public class EditOverrideController {
 		var clicked = alert.showAndWait();
 
 		if (clicked.isPresent() && clicked.get().equals(ButtonType.YES)) {
-			Application.getOverrideManager().deleteOverride(storedOverride);
+			//Application.getOverrideManager().deleteOverride(storedOverride);
 			close();
 		}
 	}
 
 	@FXML
 	private void saveButtonClick() {
+		// TODO
+		showNotImplementedAlert();
+		if (true) return;
+		
+		/*
 		if (!wereChangesMade()) {
 			save();
 			return;
 		}
+		*/
 		
 		var alert = new Alert(
 			Alert.AlertType.CONFIRMATION,
@@ -212,24 +193,18 @@ public class EditOverrideController {
 		var clicked = alert.showAndWait();
 		
 		if (clicked.isPresent() && clicked.get().equals(ButtonType.YES)) {
-			save();
+			//save();
 		}
 	}
 
-	private void save() {
-		var replacements = replacementsTableView
-			.getItems()
-			.stream()
-			.map(ScheduleItemModel::toScheduleItem)
-			.toList();
-
-		var override = new ScheduleOverride(original, replacements);
-
-		Application.getOverrideManager().updateOverride(storedOverride, override);
-		storedOverride = override;
-	}
-
 	private void close() {
+		Application.getOverrideManager().setItemBeingEdited(null);
 		Application.setScreen(ApplicationScreen.Timetable);
+	}
+	
+	@Deprecated
+	private void showNotImplementedAlert() {
+		var alert = new Alert(Alert.AlertType.INFORMATION, "Not implemented");
+		alert.show();
 	}
 }

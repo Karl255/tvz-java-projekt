@@ -2,6 +2,8 @@ package hr.java.projektnizadatak.shared;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class Util {
 	public static double toHours(LocalTime time) {
@@ -16,6 +18,16 @@ public class Util {
 		return value != null
 			? value
 			: def;
+	}
+	
+	public static <T> T unlessNullGet(T value, Supplier<T> def) {
+		return value != null
+			? value
+			: def.get();
+	}
+	
+	public static <T, R> R nullCoalesc(T value, Function<T, R> mapper) {
+		return value != null ? mapper.apply(value) : null;
 	}
 
 	public static String dayOfWeekToShortString(DayOfWeek dow) {

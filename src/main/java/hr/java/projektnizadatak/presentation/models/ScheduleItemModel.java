@@ -3,15 +3,14 @@ package hr.java.projektnizadatak.presentation.models;
 import hr.java.projektnizadatak.application.entities.ClassType;
 import hr.java.projektnizadatak.application.entities.ScheduleItem;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 
-import java.time.LocalDate;
+import java.time.DayOfWeek;
 import java.time.LocalTime;
 
 public class ScheduleItemModel {
-	private final SimpleLongProperty id;
+	private final Long dbId;
 	private final SimpleStringProperty courseName;
 	private final SimpleStringProperty className;
 	private final SimpleStringProperty professor;
@@ -19,7 +18,7 @@ public class ScheduleItemModel {
 	private final SimpleStringProperty classroom;
 	private final SimpleStringProperty note;
 	private final SimpleStringProperty group;
-	private final SimpleObjectProperty<LocalDate> date;
+	private final SimpleObjectProperty<DayOfWeek> weekday;
 	private final SimpleObjectProperty<LocalTime> start;
 	private final SimpleObjectProperty<LocalTime> end;
 	private final SimpleBooleanProperty isOriginal;
@@ -29,7 +28,7 @@ public class ScheduleItemModel {
 	}
 	
 	private ScheduleItemModel(ScheduleItem item, boolean isOriginal) {
-		this.id = new SimpleLongProperty(item.id());
+		this.dbId = item.dbId();
 		this.courseName = new SimpleStringProperty(item.courseName());
 		this.className = new SimpleStringProperty(item.className());
 		this.professor = new SimpleStringProperty(item.professor());
@@ -37,7 +36,7 @@ public class ScheduleItemModel {
 		this.classroom = new SimpleStringProperty(item.classroom());
 		this.note = new SimpleStringProperty(item.note());
 		this.group = new SimpleStringProperty(item.group());
-		this.date = new SimpleObjectProperty<>(item.date());
+		this.weekday = new SimpleObjectProperty<>(item.weekday());
 		this.start = new SimpleObjectProperty<>(item.start());
 		this.end = new SimpleObjectProperty<>(item.end());
 		this.isOriginal = new SimpleBooleanProperty(isOriginal);
@@ -57,7 +56,7 @@ public class ScheduleItemModel {
 	
 	public ScheduleItem toScheduleItem() {
 		return new ScheduleItem(
-			id.get(),
+			dbId,
 			courseName.get(),
 			className.get(),
 			professor.get(),
@@ -65,23 +64,11 @@ public class ScheduleItemModel {
 			classroom.get(),
 			note.get(), 
 			group.get(),
-			date.get(),
+			weekday.get(),
 			start.get(),
 			end.get(),
 			isOriginal.get()
 		);
-	}
-
-	public long getId() {
-		return id.get();
-	}
-
-	public SimpleLongProperty idProperty() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id.set(id);
 	}
 
 	public String getCourseName() {
@@ -168,16 +155,16 @@ public class ScheduleItemModel {
 		this.group.set(group);
 	}
 
-	public LocalDate getDate() {
-		return date.get();
+	public DayOfWeek getWeekday() {
+		return weekday.get();
 	}
 
-	public SimpleObjectProperty<LocalDate> dateProperty() {
-		return date;
+	public SimpleObjectProperty<DayOfWeek> weekdayProperty() {
+		return weekday;
 	}
 
-	public void setDate(LocalDate date) {
-		this.date.set(date);
+	public void setWeekday(DayOfWeek weekday) {
+		this.weekday.set(weekday);
 	}
 
 	public LocalTime getStart() {

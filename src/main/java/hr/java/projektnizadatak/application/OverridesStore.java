@@ -7,7 +7,9 @@ import java.util.List;
 public interface OverridesStore {
 	void createSigle(ScheduleOverride scheduleOverride);
 
-	List<ScheduleOverride> readAll();
+	ScheduleOverride readOverride(long id);
+	
+	List<ScheduleOverride> readAllOverridesFor(String subdepartment, int semester);
 
 	void updateSingle(ScheduleOverride oldScheduleOverride, ScheduleOverride newScheduleOverride);
 

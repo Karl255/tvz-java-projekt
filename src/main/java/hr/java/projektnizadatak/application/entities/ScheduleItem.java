@@ -3,13 +3,13 @@ package hr.java.projektnizadatak.application.entities;
 import hr.java.projektnizadatak.shared.Util;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public record ScheduleItem(
-	long id,
+	Long dbId,
 	String courseName,
 	String className,
 	String professor,
@@ -17,7 +17,7 @@ public record ScheduleItem(
 	String classroom,
 	String note,
 	String group,
-	LocalDate date,
+	DayOfWeek weekday,
 	LocalTime start,
 	LocalTime end,
 	boolean isOriginal
@@ -39,23 +39,6 @@ public record ScheduleItem(
 		);
 	}
 
-	public ScheduleItem withOverrides(ScheduleItem overrides) {
-		return new ScheduleItem(
-			this.id,
-			this.courseName,
-			this.className,
-			overrides.professor,
-			overrides.classType,
-			overrides.classroom,
-			overrides.note,
-			overrides.group,
-			this.date,
-			overrides.start,
-			overrides.end,
-			overrides.isOriginal
-		);
-	}
-
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {return true;}
@@ -63,8 +46,7 @@ public record ScheduleItem(
 
 		ScheduleItem that = (ScheduleItem) o;
 
-		return id == that.id
-			&& classType == that.classType
+		return classType == that.classType
 			&& isOriginal == that.isOriginal
 			&& Objects.equals(courseName, that.courseName)
 			&& Objects.equals(className, that.className)
@@ -72,15 +54,15 @@ public record ScheduleItem(
 			&& Objects.equals(classroom, that.classroom)
 			&& Objects.equals(note, that.note)
 			&& Objects.equals(group, that.group)
-			&& Objects.equals(date, that.date)
+			&& Objects.equals(weekday, that.weekday)
 			&& Objects.equals(start, that.start)
 			&& Objects.equals(end, that.end);
 	}
 
-	public boolean effectivelyEqual(ScheduleItem other) {
+	public boolean matches(ScheduleItem other) {
 		return start.equals(other.start)
 			&& end.equals(other.end)
-			&& date.getDayOfWeek() == other.date.getDayOfWeek()
+			&& weekday == other.weekday
 			&& classType == other.classType
 			&& className.equals(other.className)
 			&& classroom.equals(other.classroom);

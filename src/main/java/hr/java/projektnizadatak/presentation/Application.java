@@ -4,7 +4,7 @@ import hr.java.projektnizadatak.application.ScheduleOverridesManager;
 import hr.java.projektnizadatak.application.ScheduleSource;
 import hr.java.projektnizadatak.application.UserManager;
 import hr.java.projektnizadatak.data.ScheduleApiSource;
-import hr.java.projektnizadatak.data.ScheduleOverridesFileStore;
+import hr.java.projektnizadatak.data.ScheduleOverridesDBStore;
 import hr.java.projektnizadatak.data.UsersFileStore;
 import hr.java.projektnizadatak.presentation.views.ApplicationScreen;
 import hr.java.projektnizadatak.shared.exceptions.FxmlLoadingException;
@@ -26,7 +26,7 @@ public class Application extends javafx.application.Application {
 
 	private static UserManager userManager = new UserManager(new UsersFileStore());
 	private static ScheduleSource scheduleSource = new ScheduleApiSource();
-	private static ScheduleOverridesManager scheduleOverridesManager = new ScheduleOverridesManager(new ScheduleOverridesFileStore());
+	private static ScheduleOverridesManager scheduleOverridesManager = new ScheduleOverridesManager(new ScheduleOverridesDBStore());
 
 	public static void main(String[] args) {
 		launch();

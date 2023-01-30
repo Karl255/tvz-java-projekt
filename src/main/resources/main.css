@@ -30,17 +30,23 @@ MenuBar {
 	-fx-border-color: #cccccc;
 }
 
-.timetable-item.timetable-item-lecture {
+.timetable-item.timetable-item--lecture {
 	-fx-background-color: #d4e8f3;
 	-fx-border-color: #9fc1d4;
 }
 
-.timetable-item.timetable-item-auditory {
+.timetable-item.timetable-item--auditory {
 	-fx-background-color: #f2cbcb;
 	-fx-border-color: #cc8b8b;
 }
 
-.timetable-item.timetable-item-lab {
+.timetable-item.timetable-item--lab {
 	-fx-background-color: #f7f7c8;
 	-fx-border-color: #e2e262;
+}
+
+.timetable-item.timetable-item--sports {
+	/* TODO */
+	-fx-background-color: #00ff00;
+	-fx-border-color: #008800;
 }
