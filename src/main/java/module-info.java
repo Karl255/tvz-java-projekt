@@ -4,6 +4,8 @@ module hr.java.projektnizadatak {
 	requires java.net.http;
 	requires com.google.gson;
 	requires org.slf4j;
+	requires java.sql;
+	requires com.h2database;
 
 	exports hr.java.projektnizadatak.application;
 	exports hr.java.projektnizadatak.application.entities;
@@ -12,6 +14,8 @@ module hr.java.projektnizadatak {
 	opens hr.java.projektnizadatak.presentation to javafx.fxml;
 	exports hr.java.projektnizadatak.presentation.controllers;
 	opens hr.java.projektnizadatak.presentation.controllers to javafx.fxml;
+	exports hr.java.projektnizadatak.presentation.fx;
+	opens hr.java.projektnizadatak.presentation.fx to javafx.fxml;
 	exports hr.java.projektnizadatak.presentation.models;
 	exports hr.java.projektnizadatak.presentation.views;
 	
@@ -20,7 +24,5 @@ module hr.java.projektnizadatak {
 	
 	exports hr.java.projektnizadatak.data;
 	exports hr.java.projektnizadatak.data.api_response;
-	exports hr.java.projektnizadatak.presentation.fx;
-	opens hr.java.projektnizadatak.presentation.fx to javafx.fxml;
 	exports hr.java.projektnizadatak.shared;
 }

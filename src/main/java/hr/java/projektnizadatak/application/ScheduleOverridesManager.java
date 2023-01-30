@@ -34,11 +34,11 @@ public class ScheduleOverridesManager {
 	}
 
 	public List<ScheduleOverride> getAllOverrides() {
-		return store.read();
+		return store.readAll();
 	}
 
 	public ScheduleOverride getOverrideFor(ScheduleItem item) throws DataNoLongerValidException {
-		var items = store.read();
+		var items = store.readAll();
 
 		if (item.isOriginal()) {
 			return items.stream()
@@ -61,13 +61,13 @@ public class ScheduleOverridesManager {
 	public void updateOverride(ScheduleOverride oldOverride, ScheduleOverride newOverride) {
 		if (oldOverride != null) {
 			if (newOverride != null) {
-				store.update(oldOverride, newOverride);
+				store.updateSingle(oldOverride, newOverride);
 			} else {
-				store.delete(oldOverride);
+				store.deleteSingle(oldOverride);
 			}
 		} else {
 			if (newOverride != null) {
-				store.create(newOverride);
+				store.createSigle(newOverride);
 			} else {
 				logger.warn("Tried to update null override to null!");
 			}
@@ -79,7 +79,7 @@ public class ScheduleOverridesManager {
 	}
 	
 	public void deleteOverride(ScheduleOverride override) {
-		store.delete(override);
+		store.deleteSingle(override);
 		logChange(override, null);
 	}
 	

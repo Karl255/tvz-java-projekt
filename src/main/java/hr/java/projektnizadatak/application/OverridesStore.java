@@ -5,11 +5,11 @@ import hr.java.projektnizadatak.application.entities.ScheduleOverride;
 import java.util.List;
 
 public interface OverridesStore {
-	void create(ScheduleOverride scheduleOverride);
+	void createSigle(ScheduleOverride scheduleOverride);
 
-	List<ScheduleOverride> read();
+	List<ScheduleOverride> readAll();
 
-	void update(ScheduleOverride oldScheduleOverride, ScheduleOverride newScheduleOverride);
+	void updateSingle(ScheduleOverride oldScheduleOverride, ScheduleOverride newScheduleOverride);
 
-	void delete(ScheduleOverride scheduleOverride);
+	void deleteSingle(ScheduleOverride scheduleOverride);
 }
