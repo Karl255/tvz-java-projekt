@@ -1,5 +1,6 @@
 package hr.java.projektnizadatak.presentation.models;
 
+import hr.java.projektnizadatak.application.Util;
 import hr.java.projektnizadatak.application.entities.*;
 import hr.java.projektnizadatak.presentation.Application;
 import hr.java.projektnizadatak.presentation.util.WeekSwitcher;
@@ -13,25 +14,32 @@ import java.time.format.DateTimeFormatter;
 import java.util.function.Consumer;
 
 public class TimetableModel {
+	private final int timetableDays;
 	private final WeekSwitcher week;
-	private final Runnable onWeekChanged;
 
 	private Department selectedDepartment = null;
 	private final ObservableList<Department> departmentList = FXCollections.observableArrayList();
 	private final Consumer<Department> selectDepartmentSync;
-	
+
 	private Semester selectedSemester = null;
 	private final ObservableList<Semester> semesterList = FXCollections.observableArrayList();
 	private final Consumer<Semester> selectSemesterSync;
-	
-	private final ObservableValue<Timetable> timetable = new SimpleObjectProperty<>(null);
-	
+
+	private Timetable timetable = null;
+	private final Consumer<Timetable> setTimetableSync;
+
 	private ScheduleItem selectedItem = null;
 
-	public TimetableModel(Runnable onWeekChanged, Consumer<Department> selectDepartmentSync, Consumer<Semester> selectSemesterSync) {
-		this.onWeekChanged = onWeekChanged;
+	public TimetableModel(
+		int timetableDays,
+		Consumer<Department> selectDepartmentSync,
+		Consumer<Semester> selectSemesterSync,
+		Consumer<Timetable> setTimetableSync
+	) {
+		this.timetableDays = timetableDays;
 		this.selectDepartmentSync = selectDepartmentSync;
 		this.selectSemesterSync = selectSemesterSync;
+		this.setTimetableSync = setTimetableSync;
 
 		week = new WeekSwitcher(LocalDate.now());
 	}
@@ -41,22 +49,24 @@ public class TimetableModel {
 			var api = Application.getScheduleSource();
 			var deps = api.getAvailableDepartments();
 			departmentList.setAll(deps);
-			
+
 			var user = Application.getUserManager().getUser();
-			var firstDep = departmentList.get(0);
-			
+			var firstDep = departmentList.stream()
+				.findFirst()
+				.orElse(null);
+
 			if (user.defaultDepartmentCode() != null) {
 				var dep = departmentList.stream()
 					.filter(d -> d.code().equals(user.defaultDepartmentCode()))
 					.findFirst()
 					.orElse(firstDep);
-				
+
 				selectDepartmentSync.accept(dep);
 			} else {
 				selectDepartmentSync.accept(firstDep);
 			}
 		});
-		
+
 		thread.setDaemon(true);
 		thread.start();
 	}
@@ -67,26 +77,44 @@ public class TimetableModel {
 		return selectedDepartment;
 	}
 
-	public void setSelectedDepartment(Department selectedDepartment) {
-		this.selectedDepartment = selectedDepartment;
-		// TODO: fetch semesters and select default or first
-		
-		if (false) {
-			selectDepartmentSync.accept(null);
-		}
+	public void setSelectedDepartment(Department department) {
+		this.selectedDepartment = department;
+
+		var thread = new Thread(() -> {
+			if (department == null) {
+				return;
+			}
+
+			var sems = Application.getScheduleSource().getAvailableSemesters(
+				department.code(),
+				Util.getAcademicYear(week.getThisMonday())
+			);
+
+			semesterList.setAll(sems);
+
+			var user = Application.getUserManager().getUser();
+
+			if (user.defaultSemester() != null) {
+				selectSemesterSync.accept(user.defaultSemester());
+			} else {
+				selectSemesterSync.accept(
+					sems.stream().findFirst().orElse(null)
+				);
+			}
+		});
+
+		thread.setDaemon(true);
+		thread.start();
 	}
 
 	public Semester getSelectedSemester() {
 		return selectedSemester;
 	}
 
-	public void setSelectedSemester(Semester selectedSemester) {
-		this.selectedSemester = selectedSemester;
-		// TODO: fetch timetable
-		
-		if (false) {
-			selectSemesterSync.accept(null);
-		}
+	public void setSelectedSemester(Semester semester) {
+		this.selectedSemester = semester;
+
+		loadTimetable();
 	}
 
 	public ObservableList<Department> getDepartmentList() {
@@ -96,15 +124,40 @@ public class TimetableModel {
 	public ObservableList<Semester> getSemesterList() {
 		return semesterList;
 	}
-	
+
 	// timetable
 
 	public Timetable getTimetable() {
-		return timetable.getValue();
+		return timetable;
 	}
 
-	public ObservableValue<Timetable> timetableProperty() {
-		return timetable;
+	public void loadTimetable() {
+		var thread = new Thread(() -> {
+			var semester = selectedSemester;
+
+			if (semester == null) {
+				return;
+			}
+
+			var fetchedTimetable = Application.getScheduleSource().getTimetable(
+				semester.subdepartment(),
+				semester.semester(),
+				Util.getAcademicYear(week.getThisMonday()),
+				week.getThisMonday(),
+				timetableDays
+			);
+
+			var overrides = Application.getOverrideManager().getAllOverrides(
+				semester.subdepartment(),
+				semester.semester()
+			);
+
+			timetable = ScheduleOverride.applyOverrides(fetchedTimetable, overrides);
+			setTimetableSync.accept(timetable);
+		});
+
+		thread.setDaemon(true);
+		thread.start();
 	}
 
 	// selected item
@@ -121,17 +174,17 @@ public class TimetableModel {
 
 	public void switchToCurrentWeek() {
 		week.setWeek(LocalDate.now());
-		onWeekChanged.run();
+		loadTimetable();
 	}
 
 	public void previousWeek() {
 		week.setToPreviousWeek();
-		onWeekChanged.run();
+		loadTimetable();
 	}
 
 	public void nextWeek() {
 		week.setToNextWeek();
-		onWeekChanged.run();
+		loadTimetable();
 	}
 
 	public String getCurrentWeekTimestamp(DateTimeFormatter format) {

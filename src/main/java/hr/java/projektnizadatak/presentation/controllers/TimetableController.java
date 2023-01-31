@@ -49,9 +49,10 @@ public class TimetableController {
 
 	public TimetableController() {
 		model = new TimetableModel(
-			this::onWeekChanged,
+			TIMETABLE_DAYS,
 			this::selectDepartmentSync,
-			this::selectSemesterSync
+			this::selectSemesterSync,
+			this::setTimetableSync
 		);
 
 		timetableDays = new TimetableDay[5];
@@ -125,31 +126,7 @@ public class TimetableController {
 		Platform.runLater(() -> semesterComboBox.setValue(semester));
 	}
 
-	/*
-	// move to model
-	private void loadTimetableAsync(String subdepartment, int semester, LocalDate mondayDate) {
-		var thread = new Thread(() -> {
-			var scheduleSource = Application.getScheduleSource();
-
-			var timetable = ScheduleOverride.applyOverrides(
-				scheduleSource.getTimetable(
-					subdepartment,
-					semester,
-					Util.getAcademicYear(mondayDate),
-					mondayDate,
-					TIMETABLE_DAYS
-				),
-				Application.getOverrideManager().getAllOverrides(subdepartment, semester));
-
-			Platform.runLater(() -> applyTimetable(timetable));
-		});
-
-		thread.setDaemon(true);
-		thread.start();
-	}
-	*/
-
-	private void applyTimetableSync(Timetable timetable) {
+	private void setTimetableSync(Timetable timetable) {
 		Platform.runLater(() -> {
 			var itemsByWeekday = timetable.scheduleItems().stream()
 				.collect(Collectors.groupingBy(ScheduleItem::weekday));
@@ -173,7 +150,6 @@ public class TimetableController {
 		});
 	}
 
-
 	@FXML
 	private void setToCurrentWeek() {
 		model.switchToCurrentWeek();
@@ -190,12 +166,6 @@ public class TimetableController {
 	private void nextWeek() {
 		model.nextWeek();
 		currentWeekButton.setText(model.getCurrentWeekTimestamp(TIMESTAMP_DATE_FORMAT));
-	}
-
-	private void onWeekChanged() {
-		System.out.println(model.getCurrentWeekTimestamp(TIMESTAMP_DATE_FORMAT));
-		// TODO
-		// what...?
 	}
 
 	@FXML
