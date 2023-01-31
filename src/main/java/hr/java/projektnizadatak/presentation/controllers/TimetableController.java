@@ -1,9 +1,13 @@
 package hr.java.projektnizadatak.presentation.controllers;
 
 import hr.java.projektnizadatak.application.entities.*;
+import hr.java.projektnizadatak.presentation.Application;
+import hr.java.projektnizadatak.presentation.FXUtil;
 import hr.java.projektnizadatak.presentation.models.TimetableModel;
 import hr.java.projektnizadatak.presentation.fx.DepartmentStringConverter;
 import hr.java.projektnizadatak.presentation.fx.SemesterStringConverter;
+import hr.java.projektnizadatak.presentation.views.ApplicationScreen;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -12,6 +16,8 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
+import java.util.stream.Collectors;
 
 public class TimetableController {
 	private static final DateTimeFormatter TIMESTAMP_DATE_FORMAT = DateTimeFormatter.ofPattern("dd.MM.yyyy.");
@@ -42,7 +48,12 @@ public class TimetableController {
 	private final Label[] holidayTexts;
 
 	public TimetableController() {
-		model = new TimetableModel();
+		model = new TimetableModel(
+			this::onWeekChanged,
+			this::selectDepartmentSync,
+			this::selectSemesterSync
+		);
+
 		timetableDays = new TimetableDay[5];
 		holidayTexts = new Label[5];
 	}
@@ -62,10 +73,15 @@ public class TimetableController {
 		holidayTexts[4] = fridayHolidayText;
 
 		departmentComboBox.setConverter(new DepartmentStringConverter());
+		departmentComboBox.setItems(model.getDepartmentList());
 		semesterComboBox.setConverter(new SemesterStringConverter());
-		
+		semesterComboBox.setItems(model.getSemesterList());
+
 		currentWeekButton.setText(model.getCurrentWeekTimestamp(TIMESTAMP_DATE_FORMAT));
+
+		model.initialize();
 		
+		// TODO
 		/*
 		loadDepartments();
 		loadDefaults();
@@ -74,12 +90,14 @@ public class TimetableController {
 
 	@FXML
 	private void clickLoadDefaults() {
+		// TODO
 		showNotImplementedAlert();
 		//loadDefaults();
 	}
 
 	@FXML
 	private void clickSaveDefaults() {
+		// TODO
 		showNotImplementedAlert();
 		/*
 		var department = departmentComboBox.getValue();
@@ -90,31 +108,25 @@ public class TimetableController {
 	}
 
 	@FXML
-	private void departmentSelectedFromCombobox() {
-		showNotImplementedAlert();
-		/*
-		var scheduleSource = Application.getScheduleSource();
-		var department = departmentComboBox.getValue();
-
-		if (department != null) {
-			semesterComboBox.setItems(FXCollections.observableList(scheduleSource.getAvailableSemesters(department.code(), 2022)));
-		}
-		*/
+	private void departmentSelected() {
+		model.setSelectedDepartment(departmentComboBox.getValue());
 	}
 
 	@FXML
-	private void semesterSelectedFromCombobox() {
-		showNotImplementedAlert();
-		/*
-		var semester = semesterComboBox.getValue();
+	private void semesterSelected() {
+		model.setSelectedSemester(semesterComboBox.getValue());
+	}
 
-		if (semester != null) {
-			loadTimetableAsync(semester.subdepartment(), semester.semester(), weekModel.getThisMonday());
-		}
-		*/
+	private void selectDepartmentSync(Department department) {
+		Platform.runLater(() -> departmentComboBox.setValue(department));
+	}
+
+	private void selectSemesterSync(Semester semester) {
+		Platform.runLater(() -> semesterComboBox.setValue(semester));
 	}
 
 	/*
+	// move to model
 	private void loadTimetableAsync(String subdepartment, int semester, LocalDate mondayDate) {
 		var thread = new Thread(() -> {
 			var scheduleSource = Application.getScheduleSource();
@@ -135,31 +147,32 @@ public class TimetableController {
 		thread.setDaemon(true);
 		thread.start();
 	}
-
-	private void applyTimetable(Timetable timetable) {
-		var itemsByWeekday = timetable.scheduleItems().stream()
-			.collect(Collectors.groupingBy(ScheduleItem::weekday));
-
-		for (int i = 0; i < 5; i++) {
-			var today = timetable.forWeekMonday().plusDays(i);
-
-			var holiday = timetable.holidays()
-				.stream()
-				.filter(h -> h.date().equals(today))
-				.findFirst();
-
-			if (holiday.isPresent()) {
-				holidayTexts[i].setText(holiday.get().title());
-				timetableDays[i].setItems(Collections.emptyList());
-			} else {
-				holidayTexts[i].setText("");
-				timetableDays[i].setItems(itemsByWeekday.getOrDefault(today.getDayOfWeek(), Collections.emptyList()));
-			}
-		}
-
-		loadedTimetable = timetable;
-	}
 	*/
+
+	private void applyTimetableSync(Timetable timetable) {
+		Platform.runLater(() -> {
+			var itemsByWeekday = timetable.scheduleItems().stream()
+				.collect(Collectors.groupingBy(ScheduleItem::weekday));
+
+			for (int i = 0; i < 5; i++) {
+				var today = timetable.forWeekMonday().plusDays(i);
+
+				var holiday = timetable.holidays()
+					.stream()
+					.filter(h -> h.date().equals(today))
+					.findFirst();
+
+				if (holiday.isPresent()) {
+					holidayTexts[i].setText(holiday.get().title());
+					timetableDays[i].setItems(Collections.emptyList());
+				} else {
+					holidayTexts[i].setText("");
+					timetableDays[i].setItems(itemsByWeekday.getOrDefault(today.getDayOfWeek(), Collections.emptyList()));
+				}
+			}
+		});
+	}
+
 
 	@FXML
 	private void setToCurrentWeek() {
@@ -179,28 +192,31 @@ public class TimetableController {
 		currentWeekButton.setText(model.getCurrentWeekTimestamp(TIMESTAMP_DATE_FORMAT));
 	}
 
+	private void onWeekChanged() {
+		System.out.println(model.getCurrentWeekTimestamp(TIMESTAMP_DATE_FORMAT));
+		// TODO
+		// what...?
+	}
+
 	@FXML
 	private void showItemDetails(MouseEvent e) {
-		showNotImplementedAlert();
-		/*
 		if (e.getSource() instanceof TimetableItem timetableItem) {
-			selectedItem = timetableItem.getScheduleItem();
+			var item = timetableItem.getScheduleItem();
 
-			detailsLabel.setText(FXUtil.scheduleItemToString(selectedItem));
+			detailsLabel.setText(FXUtil.scheduleItemToString(item));
 			manageOverridesButton.setDisable(false);
+			model.setSelectedItem(item);
 		}
-		*/
 	}
 
 	@FXML
 	private void openEditOverride() {
-		showNotImplementedAlert();
-		/*
-		if (selectedItem != null) {
-			Application.getOverrideManager().setItemBeingEdited(selectedItem, loadedTimetable.forSubdepartment(), loadedTimetable.forSemester());
+		var item = model.getSelectedItem();
+
+		if (item != null) {
+			Application.getOverrideManager().setItemBeingEdited(item, model.getTimetable().forSubdepartment(), model.getTimetable().forSemester());
 			Application.setScreen(ApplicationScreen.EditOverride);
 		}
-		*/
 	}
 
 	@Deprecated
