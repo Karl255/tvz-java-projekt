@@ -11,7 +11,8 @@ public class UserManager {
 	private static final Logger logger = LoggerFactory.getLogger(UserManager.class);
 	
 	private final UsersStore usersStore;
-	private User loggedInUser = null;
+	private String loggedInUsername = null;
+	private User loggedInUserFallback = null;
 
 	public UserManager(UsersStore usersStore) {
 		this.usersStore = usersStore;
@@ -26,14 +27,16 @@ public class UserManager {
 			.findFirst();
 
 		if (found.isPresent()) {
-			loggedInUser = found.get();
+			var user = found.get();
+			loggedInUsername = user.username();
+			loggedInUserFallback = user;
 		}
 
 		return found.isPresent();
 	}
 
 	public void logout() {
-		loggedInUser = null;
+		loggedInUsername = null;
 	}
 
 	public User createUser(String username, String password) throws InvalidUsernameException, UsernameTakenException {
@@ -66,7 +69,7 @@ public class UserManager {
 	}
 
 	public User updateLoggedInSettings(String departmentCode, Semester semester) {
-		return updateUserSettings(loggedInUser, departmentCode, semester);
+		return updateUserSettings(getUser(), departmentCode, semester);
 	}
 	
 	public User updateUserSettings(User user, String departmentCode, Semester semester) {
@@ -81,6 +84,9 @@ public class UserManager {
 	}
 
 	public User getUser() {
-		return loggedInUser;
+		return usersStore.read().stream()
+			.filter(u -> u.username().equals(loggedInUsername))
+			.findFirst()
+			.orElse(loggedInUserFallback);
 	}
 }

@@ -84,7 +84,11 @@ public class TimetableModel {
 
 		if (user.defaultDepartmentCode() != null) {
 			var dep = departmentList.stream()
-				.filter(d -> d.code().equals(user.defaultDepartmentCode()))
+				.filter(d -> {
+					boolean r = d.code().equals(user.defaultDepartmentCode());
+					if (r) System.out.println("FOUND");
+					return r;
+				})
 				.findFirst()
 				.orElse(firstDep);
 
@@ -165,8 +169,10 @@ public class TimetableModel {
 	}
 
 	public void saveUserDefaultChoices() {
-		// TODO
-
+		Application.getUserManager().updateLoggedInSettings(
+			selectedDepartment.code(),
+			selectedSemester
+		);
 	}
 
 	// timetable
