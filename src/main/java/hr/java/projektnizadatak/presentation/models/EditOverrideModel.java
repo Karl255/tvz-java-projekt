@@ -12,7 +12,7 @@ public class EditOverrideModel {
 	private ScheduleOverride originalScheduleOverride;
 	private ObservableList<OverrideDataModel> replacements;
 	private OverrideDataModel selected = null;
-	private ArrayList<Long> removedReplacementIds = new ArrayList<>();
+	private final ArrayList<Long> removedReplacementIds = new ArrayList<>();
 
 	public ScheduleOverride getOriginalScheduleOverride() {
 		return originalScheduleOverride;
@@ -23,12 +23,15 @@ public class EditOverrideModel {
 	}
 
 	public void initialize() {
+		loadFromStore(Application.getOverrideManager().getItemBeingEdited().originalId());
+	}
+	
+	private void loadFromStore(Long id) {
 		var manager = Application.getOverrideManager();
-
-		originalScheduleOverride = Util.unlessNullGet(
-			manager.getOverrideForOriginalId(manager.getItemBeingEdited().originalId()),
-			() -> manager.getDefault(manager.getItemBeingEdited())
-		);
+		
+		originalScheduleOverride = id != null
+			? manager.getOverrideForOriginalId(id)
+			: manager.getDefault(manager.getItemBeingEdited());
 
 		replacements = FXCollections.observableArrayList(
 			originalScheduleOverride.replacements().stream()
@@ -43,7 +46,6 @@ public class EditOverrideModel {
 
 	public void setSelected(OverrideDataModel overrideDataModel) {
 		selected = overrideDataModel;
-		System.out.printf("Selected id = %d%n", selected.getDbId());
 	}
 
 	public void addReplacement(OverrideDataModel replacement) {
@@ -57,16 +59,17 @@ public class EditOverrideModel {
 			.map(OverrideDataModel::toOverrideData)
 			.toList();
 
-		originalScheduleOverride = Application.getOverrideManager()
-			.saveOverride(
-				originalScheduleOverride.withReplacements(newReplacements),
-				removedReplacementIds,
-				manager.getForSubdepartment(),
-				manager.getForSemester(),
-				Application.getUserManager().getUser().username()
-			);
+		var id = manager.saveOverride(
+			originalScheduleOverride.withReplacements(newReplacements),
+			removedReplacementIds,
+			manager.getForSubdepartment(),
+			manager.getForSemester(),
+			Application.getUserManager().getUser().username()
+		);
 		
 		removedReplacementIds.clear();
+		
+		loadFromStore(id);
 	}
 
 	public void deleteSelected() {
@@ -79,5 +82,22 @@ public class EditOverrideModel {
 
 	public void deleteAll() {
 		Application.getOverrideManager().deleteOverride(originalScheduleOverride);
+	}
+	
+	public boolean needsToSave() {
+		return !existsInStore()
+			|| removedReplacementIds.size() > 0
+			|| replacementsChanged();
+	}
+	
+	public boolean existsInStore() {
+		return originalScheduleOverride.original().originalId() != null;
+	}
+	
+	public boolean replacementsChanged() {
+		return replacements.stream().anyMatch(r -> r.getDbId() == null) // not in store
+			|| replacements.stream().anyMatch(r -> r.getDbId() != null // in store and not in stored data
+				&& originalScheduleOverride.replacements().stream().noneMatch(r::equals)
+			);
 	}
 }

@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface OverridesStore {
 	long createOriginal(ScheduleItem original, String forSubdepartment, int forSemester, String forUsername);
-	void createReplacements(List<OverrideData> replacements, long forOriginalId);
+	List<Long> createReplacements(List<OverrideData> replacements, long forOriginalId);
 	
 	ScheduleOverride readOverride(long id);
 	List<ScheduleOverride> readAllOverridesFor(String subdepartment, int semester);

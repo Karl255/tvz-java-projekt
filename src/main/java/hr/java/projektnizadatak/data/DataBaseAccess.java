@@ -63,6 +63,42 @@ class DataBaseAccess {
 			}
 		});
 	}
+
+	public List<Long> createManyGeneric(String query, Stream<PreparedStatementModifier> psmStream) {
+		return runOnConnection(conn -> {
+			conn.setAutoCommit(false);
+			try {
+				var ids = psmStream
+					.map(psm -> {
+						try (var ps = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+							if (psm != null) {
+								psm.modify(ps);
+							}
+
+							ps.execute();
+							
+							var keys = ps.getGeneratedKeys();
+							keys.next();
+							return keys.getLong(1);
+						} catch (SQLException e) {
+							// propagating the SQLException through the stream lambda
+							throw new RuntimeException(e);
+						}
+					}).toList();
+
+				conn.commit();
+
+				return ids;
+			} catch (RuntimeException e) {
+				if (e.getCause() instanceof SQLException sqlException) {
+					// re-throw propagated SQLException
+					throw sqlException;
+				}
+
+				throw e;
+			}
+		});
+	}
 	
 	public <T> T selectSingleGeneric(String query, PreparedStatementModifier psm, QueryResultMapper<T> resultMapper) {
 		return runOnConnection(conn -> {

@@ -7,6 +7,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 import java.time.LocalTime;
+import java.util.Objects;
 
 public class OverrideDataModel {
 	private final Long dbId;
@@ -143,5 +144,16 @@ public class OverrideDataModel {
 
 	public void setEnd(LocalTime end) {
 		this.end.set(end);
+	}
+	
+	public boolean equals(OverrideData other) {
+		return Objects.equals(dbId, other.id())
+			&& Objects.equals(professor.get(), other.professor())
+			&& classType.get() == other.classType()
+			&& Objects.equals(classroom.get(), other.classroom())
+			&& Objects.equals(note.get(), other.note())
+			&& Objects.equals(group.get(), other.group())
+			&& Objects.equals(start.get(), other.start())
+			&& Objects.equals(end.get(), other.end());
 	}
 }

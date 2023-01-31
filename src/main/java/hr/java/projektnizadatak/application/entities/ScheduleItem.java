@@ -23,7 +23,7 @@ public record ScheduleItem(
 ) implements Serializable {
 	private static final DateTimeFormatter TIMESTAMP_FORMAT = DateTimeFormatter.ofPattern("H:mm");
 	private static final DateTimeFormatter TIMESTAMP_FULL_FORMAT = DateTimeFormatter.ofPattern("HH:mm");
-
+	
 	public String getTimestampShort() {
 		return "%s - %s".formatted(
 			start.format(TIMESTAMP_FORMAT),

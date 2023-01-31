@@ -58,7 +58,7 @@ public class ScheduleOverridesDBStore implements OverridesStore {
 	}
 
 	@Override
-	public void createReplacements(List<OverrideData> replacements, long forOriginalId) {
+	public List<Long> createReplacements(List<OverrideData> replacements, long forOriginalId) {
 		final String query = """
 			INSERT INTO override_replacement(
 				identifier_id,
@@ -72,7 +72,7 @@ public class ScheduleOverridesDBStore implements OverridesStore {
 			) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
 			""";
 
-		DataBaseAccess.getInstance().updateManyGeneric(
+		return DataBaseAccess.getInstance().createManyGeneric(
 			query,
 			replacements.stream().map(replacement -> ps -> {
 				ps.setLong(1, forOriginalId);

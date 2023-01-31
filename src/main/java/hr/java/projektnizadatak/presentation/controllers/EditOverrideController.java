@@ -2,7 +2,6 @@ package hr.java.projektnizadatak.presentation.controllers;
 
 import hr.java.projektnizadatak.application.entities.ClassType;
 import hr.java.projektnizadatak.application.entities.OverrideData;
-import hr.java.projektnizadatak.application.entities.ScheduleOverride;
 import hr.java.projektnizadatak.presentation.Application;
 import hr.java.projektnizadatak.presentation.FXUtil;
 import hr.java.projektnizadatak.presentation.models.EditOverrideModel;
@@ -22,7 +21,6 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.function.Function;
 
 public class EditOverrideController {
 	private final static DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("H:mm");
@@ -124,14 +122,10 @@ public class EditOverrideController {
 
 	@FXML
 	private void closeButtonClick() {
-		// TODO
-		
-		/*
-		if (!wereChangesMade()) {
+		if (!model.needsToSave()) {
 			close();
 			return;
 		}
-		*/
 
 		var alert = new Alert(
 			Alert.AlertType.CONFIRMATION,
@@ -145,7 +139,7 @@ public class EditOverrideController {
 
 		if (clicked.isPresent()) {
 			if (clicked.get().equals(ButtonType.YES)) {
-				//save();
+				model.save();
 				close();
 			} else if (clicked.get().equals(ButtonType.NO)) {
 				close();
@@ -172,12 +166,10 @@ public class EditOverrideController {
 
 	@FXML
 	private void saveButtonClick() {
-		/*
-		if (!wereChangesMade()) {
-			save();
+		if (!model.needsToSave()) {
+			model.save();
 			return;
 		}
-		*/
 
 		var alert = new Alert(
 			Alert.AlertType.CONFIRMATION,
@@ -196,11 +188,5 @@ public class EditOverrideController {
 	private void close() {
 		Application.getOverrideManager().setItemBeingEdited(null, null, 0);
 		Application.setScreen(ApplicationScreen.Timetable);
-	}
-
-	@Deprecated
-	private void showNotImplementedAlert() {
-		var alert = new Alert(Alert.AlertType.INFORMATION, "Not implemented");
-		alert.show();
 	}
 }
