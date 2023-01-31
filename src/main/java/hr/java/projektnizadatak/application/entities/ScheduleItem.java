@@ -1,7 +1,5 @@
 package hr.java.projektnizadatak.application.entities;
 
-import hr.java.projektnizadatak.shared.Util;
-
 import java.io.Serializable;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
@@ -9,7 +7,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public record ScheduleItem(
-	Long dbId,
+	Long originalId,
+	Long replacementId,
 	String courseName,
 	String className,
 	String professor,

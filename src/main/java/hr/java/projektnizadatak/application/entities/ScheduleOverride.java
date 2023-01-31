@@ -7,17 +7,11 @@ import java.util.*;
 import java.util.stream.Stream;
 
 public record ScheduleOverride(ScheduleItem original, List<OverrideData> replacements) implements Serializable, Recordable {
-	public static ScheduleOverride createDefault(ScheduleItem item) {
-		return new ScheduleOverride(
-			item,
-			List.of(OverrideData.fromOriginal(item))
-		);
-	}
-	
 	public List<ScheduleItem> getOverridden() {
 		return replacements.stream()
 			.map(replacement -> new ScheduleItem(
-				original.dbId(),
+				original.originalId(),
+				replacement.id(),
 				original.courseName(),
 				original.className(),
 				Util.unlessNull(replacement.professor(), original.professor()),
@@ -30,6 +24,10 @@ public record ScheduleOverride(ScheduleItem original, List<OverrideData> replace
 				Util.unlessNull(replacement.end(), original.end()),
 				false
 			)).toList();
+	}
+	
+	public ScheduleOverride withReplacements(List<OverrideData> replacements) {
+		return new ScheduleOverride(original, replacements);
 	}
 
 	public static Timetable applyOverrides(Timetable timetable, List<ScheduleOverride> overrides) {
@@ -48,7 +46,7 @@ public record ScheduleOverride(ScheduleItem original, List<OverrideData> replace
 			})
 			.toList();
 
-		return new Timetable(mappedItems, timetable.holidays());
+		return new Timetable(mappedItems, timetable.holidays(), timetable.forSubdepartment(), timetable.forSemester());
 	}
 	
 	@Override

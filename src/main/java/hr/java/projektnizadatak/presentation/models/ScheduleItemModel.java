@@ -10,7 +10,8 @@ import java.time.DayOfWeek;
 import java.time.LocalTime;
 
 public class ScheduleItemModel {
-	private final Long dbId;
+	private final Long originalId;
+	private final Long replacementId;
 	private final SimpleStringProperty courseName;
 	private final SimpleStringProperty className;
 	private final SimpleStringProperty professor;
@@ -28,7 +29,8 @@ public class ScheduleItemModel {
 	}
 	
 	private ScheduleItemModel(ScheduleItem item, boolean isOriginal) {
-		this.dbId = item.dbId();
+		this.originalId = item.originalId();
+		this.replacementId = item.replacementId();
 		this.courseName = new SimpleStringProperty(item.courseName());
 		this.className = new SimpleStringProperty(item.className());
 		this.professor = new SimpleStringProperty(item.professor());
@@ -56,7 +58,8 @@ public class ScheduleItemModel {
 	
 	public ScheduleItem toScheduleItem() {
 		return new ScheduleItem(
-			dbId,
+			originalId,
+			replacementId,
 			courseName.get(),
 			className.get(),
 			professor.get(),

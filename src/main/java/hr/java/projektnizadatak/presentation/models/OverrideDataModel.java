@@ -19,7 +19,7 @@ public class OverrideDataModel {
 	private final SimpleObjectProperty<LocalTime> end;
 
 	public OverrideDataModel(OverrideData overrideData) {
-		this.dbId = overrideData.dbId();
+		this.dbId = overrideData.id();
 		this.professor = new SimpleStringProperty(overrideData.professor());
 		this.classType = new SimpleObjectProperty<>(overrideData.classType());
 		this.classroom = new SimpleStringProperty(overrideData.classroom());

@@ -1,11 +1,14 @@
 package hr.java.projektnizadatak.presentation.controllers;
 
 import hr.java.projektnizadatak.application.entities.ClassType;
+import hr.java.projektnizadatak.application.entities.OverrideData;
+import hr.java.projektnizadatak.application.entities.ScheduleOverride;
 import hr.java.projektnizadatak.presentation.Application;
 import hr.java.projektnizadatak.presentation.FXUtil;
 import hr.java.projektnizadatak.presentation.models.EditOverrideModel;
 import hr.java.projektnizadatak.presentation.models.OverrideDataModel;
 import hr.java.projektnizadatak.presentation.views.ApplicationScreen;
+import hr.java.projektnizadatak.shared.Pipe;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -19,11 +22,12 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.function.Function;
 
 public class EditOverrideController {
 	private final static DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("H:mm");
 	private final EditOverrideModel model;
-	
+
 	@FXML private TextFlow originalItemTextFlow;
 
 	@FXML private TableView<OverrideDataModel> replacementsTableView;
@@ -45,7 +49,7 @@ public class EditOverrideController {
 	@FXML
 	private void initialize() {
 		model.initialize();
-		
+
 		originalItemTextFlow.getChildren().add(new Text(FXUtil.scheduleItemToString(model.getOriginalScheduleOverride().original())));
 
 		replacementStartTimeColumn.setCellValueFactory(d -> d.getValue().startProperty());
@@ -53,31 +57,31 @@ public class EditOverrideController {
 			new LocalTimeStringConverter(TIME_FORMAT, TIME_FORMAT)
 		));
 		replacementStartTimeColumn.setOnEditCommit(e -> e.getRowValue().setStart(e.getNewValue()));
-		
+
 		replacementEndTimeColumn.setCellValueFactory(d -> d.getValue().endProperty());
 		replacementEndTimeColumn.setCellFactory(TextFieldTableCell.forTableColumn(
 			new LocalTimeStringConverter(TIME_FORMAT, TIME_FORMAT)
 		));
 		replacementEndTimeColumn.setOnEditCommit(e -> e.getRowValue().setEnd(e.getNewValue()));
-		
+
 		replacementClassTypeColumn.setCellValueFactory(d -> d.getValue().classTypeProperty());
 		replacementClassTypeColumn.setCellFactory(ComboBoxTableCell.forTableColumn(
 			FXCollections.observableList(new ArrayList<>(Arrays.asList(ClassType.values())))
 		));
 		replacementClassTypeColumn.setOnEditCommit(e -> e.getRowValue().setClassType(e.getNewValue()));
-		
+
 		replacementClassroomColumn.setCellValueFactory(d -> d.getValue().classroomProperty());
 		replacementClassroomColumn.setCellFactory(TextFieldTableCell.forTableColumn());
 		replacementClassroomColumn.setOnEditCommit(e -> e.getRowValue().setProfessor(e.getNewValue()));
-		
+
 		replacementProfessorColumn.setCellValueFactory(d -> d.getValue().professorProperty());
 		replacementProfessorColumn.setCellFactory(TextFieldTableCell.forTableColumn());
 		replacementProfessorColumn.setOnEditCommit(e -> e.getRowValue().setProfessor(e.getNewValue()));
-		
+
 		replacementGroupColumn.setCellValueFactory(d -> d.getValue().groupProperty());
 		replacementGroupColumn.setCellFactory(TextFieldTableCell.forTableColumn());
 		replacementGroupColumn.setOnEditCommit(e -> e.getRowValue().setGroup(e.getNewValue()));
-		
+
 		replacementNoteColumn.setCellValueFactory(d -> d.getValue().noteProperty());
 		replacementNoteColumn.setCellFactory(TextFieldTableCell.forTableColumn());
 		replacementNoteColumn.setOnEditCommit(e -> e.getRowValue().setNote(e.getNewValue()));
@@ -94,12 +98,10 @@ public class EditOverrideController {
 			duplicateRowButton.setDisable(false);
 			deleteRowButton.setDisable(false);
 		}
+
+		model.setSelected(value);
 	}
 
-	private OverrideDataModel getSelected() {
-		return replacementsTableView.getSelectionModel().getSelectedItem();
-	}
-	
 	@FXML
 	private void deleteRowButtonClick() {
 		// TODO
@@ -108,14 +110,17 @@ public class EditOverrideController {
 
 	@FXML
 	private void duplicateRowButtonClick() {
-		// TODO
-		showNotImplementedAlert();
+		model.addReplacement(model.getSelected().copy());
 	}
 
 	@FXML
 	private void addRowButtonClick() {
-		// TODO
-		showNotImplementedAlert();
+		var item = Pipe.apply(model.getOriginalScheduleOverride().original())
+			.pipe(OverrideData::fromOriginal)
+			.pipe(OverrideDataModel::new)
+			.value;
+
+		model.addReplacement(item);
 	}
 
 	@FXML
@@ -153,8 +158,8 @@ public class EditOverrideController {
 	private void deleteAllButtonClick() {
 		// TODO
 		showNotImplementedAlert();
-		if (true) return;
-		
+		if (true) {return;}
+
 		var alert = new Alert(
 			Alert.AlertType.CONFIRMATION,
 			"Are you sure you want to delete this override and exit?",
@@ -172,36 +177,32 @@ public class EditOverrideController {
 
 	@FXML
 	private void saveButtonClick() {
-		// TODO
-		showNotImplementedAlert();
-		if (true) return;
-		
 		/*
 		if (!wereChangesMade()) {
 			save();
 			return;
 		}
 		*/
-		
+
 		var alert = new Alert(
 			Alert.AlertType.CONFIRMATION,
 			"Are you sure you want to save the changes you made?",
 			ButtonType.YES, ButtonType.CANCEL
 		);
-		
+
 		alert.setTitle("Confirm save");
 		var clicked = alert.showAndWait();
-		
+
 		if (clicked.isPresent() && clicked.get().equals(ButtonType.YES)) {
-			//save();
+			model.save();
 		}
 	}
 
 	private void close() {
-		Application.getOverrideManager().setItemBeingEdited(null);
+		Application.getOverrideManager().setItemBeingEdited(null, null, 0);
 		Application.setScreen(ApplicationScreen.Timetable);
 	}
-	
+
 	@Deprecated
 	private void showNotImplementedAlert() {
 		var alert = new Alert(Alert.AlertType.INFORMATION, "Not implemented");

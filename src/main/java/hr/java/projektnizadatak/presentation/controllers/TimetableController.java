@@ -1,10 +1,7 @@
 package hr.java.projektnizadatak.presentation.controllers;
 
 import hr.java.projektnizadatak.application.Util;
-import hr.java.projektnizadatak.application.entities.Department;
-import hr.java.projektnizadatak.application.entities.ScheduleItem;
-import hr.java.projektnizadatak.application.entities.ScheduleOverride;
-import hr.java.projektnizadatak.application.entities.Semester;
+import hr.java.projektnizadatak.application.entities.*;
 import hr.java.projektnizadatak.presentation.Application;
 import hr.java.projektnizadatak.presentation.FXUtil;
 import hr.java.projektnizadatak.presentation.models.WeekModel;
@@ -51,6 +48,8 @@ public class TimetableController {
 	@FXML private Label detailsLabel;
 	private final Label[] holidayTexts;
 
+	private Timetable loadedTimetable = null;
+	
 	public TimetableController() {
 		this.timetableDays = new TimetableDay[5];
 		this.holidayTexts = new Label[5];
@@ -197,6 +196,8 @@ public class TimetableController {
 				timetableDays[i].setItems(itemsByWeekday.getOrDefault(todaysWeekday, Collections.emptyList()));
 			}
 		}
+		
+		loadedTimetable = timetable;
 	}
 
 	@FXML
@@ -245,7 +246,7 @@ public class TimetableController {
 	@FXML
 	private void openEditOverride() {
 		if (selectedItem != null) {
-			Application.getOverrideManager().setItemBeingEdited(selectedItem);
+			Application.getOverrideManager().setItemBeingEdited(selectedItem, loadedTimetable.forSubdepartment(), loadedTimetable.forSemester());
 			Application.setScreen(ApplicationScreen.EditOverride);
 		}
 	}

@@ -41,6 +41,7 @@ public record ApiEvent(String id, String title, String start, String end, boolea
 			
 			return new ScheduleItem(
 				null,
+				null,
 				"ERROR",
 				"ERROR",
 				"ERROR",
@@ -58,6 +59,7 @@ public record ApiEvent(String id, String title, String start, String end, boolea
 		var matches = results.get();
 		
 		return new ScheduleItem(
+			null,
 			null,
 			matches.group(5).trim(),
 			matches.group(1).trim(),

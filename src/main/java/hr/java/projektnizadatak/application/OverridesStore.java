@@ -1,17 +1,18 @@
 package hr.java.projektnizadatak.application;
 
+import hr.java.projektnizadatak.application.entities.OverrideData;
+import hr.java.projektnizadatak.application.entities.ScheduleItem;
 import hr.java.projektnizadatak.application.entities.ScheduleOverride;
 
 import java.util.List;
 
 public interface OverridesStore {
-	void createSigle(ScheduleOverride scheduleOverride);
-
-	ScheduleOverride readOverride(long id);
+	long createOriginal(ScheduleItem original, String forSubdepartment, int forSemester, String forUsername);
+	void createReplacements(List<OverrideData> replacements, long forOriginalId);
 	
+	ScheduleOverride readOverride(long id);
 	List<ScheduleOverride> readAllOverridesFor(String subdepartment, int semester);
 
-	void updateSingle(ScheduleOverride oldScheduleOverride, ScheduleOverride newScheduleOverride);
-
-	void deleteSingle(ScheduleOverride scheduleOverride);
+	void updateOriginal(ScheduleItem original);
+	void updateReplacements(List<OverrideData> replacements);
 }

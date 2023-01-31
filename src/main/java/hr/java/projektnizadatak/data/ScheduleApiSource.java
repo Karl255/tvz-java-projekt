@@ -66,6 +66,6 @@ public class ScheduleApiSource implements ScheduleSource {
 			.map(ApiEvent::toHoliday)
 			.toList();
 		
-		return new Timetable(scheduleItems, holidays);
+		return new Timetable(scheduleItems, holidays, subdepartment, semester);
 	}
 }
