@@ -15,4 +15,8 @@ public interface OverridesStore {
 
 	void updateOriginal(ScheduleItem original);
 	void updateReplacements(List<OverrideData> replacements);
+
+	void deleteReplacements(List<Long> replacementIds);
+
+	void deleteOriginal(Long id);
 }

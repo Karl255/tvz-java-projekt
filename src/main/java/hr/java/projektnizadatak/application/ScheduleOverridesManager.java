@@ -67,10 +67,23 @@ public class ScheduleOverridesManager {
 	}
 
 	// update
+	
+	// delete
+
+	public void deleteOverride(ScheduleOverride scheduleOverride) {
+		store.deleteReplacements(
+			scheduleOverride
+			.replacements()
+			.stream()
+			.map(OverrideData::id).toList()
+		);
+		
+		store.deleteOriginal(scheduleOverride.original().originalId());
+	}
 
 	// mixed
 
-	public ScheduleOverride saveOverride(ScheduleOverride scheduleOverride, String forSubdepartment, int forSemester, String forUsername) {
+	public ScheduleOverride saveOverride(ScheduleOverride scheduleOverride, List<Long> removedReplacementIds, String forSubdepartment, int forSemester, String forUsername) {
 		if (scheduleOverride.original().originalId() != null) {
 			// edited override
 
@@ -86,6 +99,8 @@ public class ScheduleOverridesManager {
 			if (exists.containsKey(false)) {
 				store.createReplacements(exists.get(false), scheduleOverride.original().originalId());
 			}
+			
+			store.deleteReplacements(removedReplacementIds);
 		} else {
 			// new override
 

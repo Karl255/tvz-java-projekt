@@ -199,6 +199,23 @@ public class ScheduleOverridesDBStore implements OverridesStore {
 	
 	// delete
 
+
+	@Override
+	public void deleteOriginal(Long id) {
+		DataBaseAccess.getInstance().updateGeneric(
+			"DELETE FROM override_original WHERE id = ?;",
+			ps -> ps.setLong(1, id)
+		);
+	}
+
+	@Override
+	public void deleteReplacements(List<Long> replacementIds) {
+		DataBaseAccess.getInstance().updateManyGeneric(
+			"DELETE FROM override_replacement WHERE id = ?;",
+			replacementIds.stream().map(id -> ps -> ps.setLong(1, id))
+		);
+	}
+
 	// util
 	
 	private static ScheduleItem toOverrideOriginal(ResultSet rs) throws SQLException {

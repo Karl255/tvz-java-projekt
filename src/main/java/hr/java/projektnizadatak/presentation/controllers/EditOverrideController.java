@@ -104,8 +104,7 @@ public class EditOverrideController {
 
 	@FXML
 	private void deleteRowButtonClick() {
-		// TODO
-		showNotImplementedAlert();
+		model.deleteSelected();
 	}
 
 	@FXML
@@ -156,10 +155,6 @@ public class EditOverrideController {
 
 	@FXML
 	private void deleteAllButtonClick() {
-		// TODO
-		showNotImplementedAlert();
-		if (true) {return;}
-
 		var alert = new Alert(
 			Alert.AlertType.CONFIRMATION,
 			"Are you sure you want to delete this override and exit?",
@@ -170,7 +165,7 @@ public class EditOverrideController {
 		var clicked = alert.showAndWait();
 
 		if (clicked.isPresent() && clicked.get().equals(ButtonType.YES)) {
-			//Application.getOverrideManager().deleteOverride(storedOverride);
+			model.deleteAll();
 			close();
 		}
 	}

@@ -30,7 +30,7 @@ public class OverrideDataModel {
 	}
 
 	public OverrideDataModel(OverrideDataModel overrideDataModel) {
-		this.dbId = overrideDataModel.getDbId();
+		this.dbId = null;
 		this.professor = new SimpleStringProperty(overrideDataModel.getProfessor());
 		this.classType = new SimpleObjectProperty<>(overrideDataModel.getClassType());
 		this.classroom = new SimpleStringProperty(overrideDataModel.getClassroom());
