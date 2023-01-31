@@ -46,7 +46,7 @@ public record ScheduleOverride(ScheduleItem original, List<OverrideData> replace
 			})
 			.toList();
 
-		return new Timetable(mappedItems, timetable.holidays(), timetable.forSubdepartment(), timetable.forSemester());
+		return timetable.withScheduleItems(mappedItems);
 	}
 	
 	@Override
