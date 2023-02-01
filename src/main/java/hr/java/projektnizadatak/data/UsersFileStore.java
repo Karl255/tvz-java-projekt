@@ -1,9 +1,12 @@
 package hr.java.projektnizadatak.data;
 
+import hr.java.projektnizadatak.application.ChangesManager;
 import hr.java.projektnizadatak.application.UsersStore;
+import hr.java.projektnizadatak.application.entities.Change;
 import hr.java.projektnizadatak.application.entities.Semester;
 import hr.java.projektnizadatak.application.entities.User;
 import hr.java.projektnizadatak.application.entities.UserRole;
+import hr.java.projektnizadatak.presentation.Application;
 import hr.java.projektnizadatak.shared.exceptions.ReadOrWriteErrorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +32,7 @@ public class UsersFileStore implements UsersStore {
 		users.add(user);
 
 		storeAll(users);
+		logChange(null, user);
 	}
 
 	@Override
@@ -54,11 +58,31 @@ public class UsersFileStore implements UsersStore {
 			.map(u -> u.equals(oldUser) ? newUser : u)
 			.toList()
 		);
+		
+		logChange(oldUser, newUser);
 	}
 
 	@Override
 	public void overrideAll(List<User> users) {
+		var oldUsers = read();
 		storeAll(users);
+		
+		// new users
+		users.stream()
+			.filter(u -> oldUsers.stream().noneMatch(ou -> ou.username().equals(u.username())))
+			.forEach(u -> logChange(null, u));
+		
+		// modified and deleted users
+		for (var oldUser : oldUsers) {
+			var modifiedUser = users.stream()
+				.filter(u -> u.username().equals(oldUser.username()))
+				.findFirst()
+				.orElse(null);
+			
+			if (!oldUser.equals(modifiedUser)) {
+				logChange(oldUser, modifiedUser);
+			}
+		}
 	}
 
 	private User parseUser(String line) {
@@ -118,5 +142,13 @@ public class UsersFileStore implements UsersStore {
 		return semester != null
 			? semester.semester() + "-" + semester.subdepartment()
 			: "";
+	}
+
+	// logging
+
+	private void logChange(User oldValue, User newValue) {
+		var user = Application.getUserManager().getLoggedInUser();
+		var change = Change.create(user, oldValue, newValue);
+		ChangesManager.getInstance().addChange(change);
 	}
 }

@@ -12,7 +12,7 @@ public class GlobalMenuController {
 	
 	@FXML
 	private void initialize() {
-		var user = Application.getUserManager().getUser();
+		var user = Application.getUserManager().getLoggedInUser();
 		
 		if (user.role() == UserRole.ADMIN) {
 			showManageUsersMenuItem.setDisable(false);

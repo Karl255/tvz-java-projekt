@@ -4,13 +4,14 @@ import hr.java.projektnizadatak.shared.exceptions.UnsupportedAlgorithmException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-public final class User {
+public final class User implements Serializable, Recordable {
 	private static final Logger logger = LoggerFactory.getLogger(User.class);
 
 	private static final Pattern VALID_USERNAME_PATTERN = Pattern.compile("^[A-Za-z0-9\\-_ ]{4,32}$");
@@ -64,7 +65,7 @@ public final class User {
 		if (obj == this) {return true;}
 		if (obj == null || obj.getClass() != this.getClass()) {return false;}
 		var that = (User) obj;
-		return Objects.equals(this.username, that.username) && Objects.equals(this.passwordHash, that.passwordHash);
+		return role == that.role && Objects.equals(this.username, that.username) && Objects.equals(this.passwordHash, that.passwordHash);
 	}
 
 	@Override
@@ -80,6 +81,30 @@ public final class User {
 			", defaultDepartmentCode=" + defaultDepartmentCode +
 			", defaultSemester=" + defaultSemester +
 			'}';
+	}
+
+	@Override
+	public String displayShort() {
+		var sb = new StringBuilder(username)
+			.append(" (").append(role.getName()).append("); ");
+
+		if (defaultDepartmentCode != null) {
+			sb.append(defaultDepartmentCode)
+				.append("; ");
+		}
+
+		if (defaultSemester != null) {
+			sb.append(defaultSemester.semester())
+				.append("-")
+				.append(defaultSemester.subdepartment());
+		}
+
+		return sb.toString();
+	}
+
+	@Override
+	public String displayFull() {
+		return displayShort() + "; " + passwordHash;
 	}
 
 	public static class UserBuilder {

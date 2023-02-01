@@ -77,7 +77,7 @@ public class TimetableModel {
 	}
 
 	private void selectDefaultDepartment() {
-		var user = Application.getUserManager().getUser();
+		var user = Application.getUserManager().getLoggedInUser();
 		var firstDep = departmentList.stream()
 			.findFirst()
 			.orElse(null);
@@ -132,7 +132,7 @@ public class TimetableModel {
 	}
 	
 	private void selectDefaultSemester() {
-		var user = Application.getUserManager().getUser();
+		var user = Application.getUserManager().getLoggedInUser();
 		var firstSem = semesterList.stream()
 			.findFirst()
 			.orElse(null);
@@ -178,7 +178,7 @@ public class TimetableModel {
 	}
 
 	public Thread loadTimetableAsync() {
-		var user = Application.getUserManager().getUser();
+		var user = Application.getUserManager().getLoggedInUser();
 		
 		var thread = new Thread(() -> {
 			var semester = selectedSemester;

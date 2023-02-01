@@ -1,8 +1,7 @@
 package hr.java.projektnizadatak.application;
 
-import hr.java.projektnizadatak.application.entities.Semester;
-import hr.java.projektnizadatak.application.entities.User;
-import hr.java.projektnizadatak.application.entities.UserRole;
+import hr.java.projektnizadatak.application.entities.*;
+import hr.java.projektnizadatak.presentation.Application;
 import hr.java.projektnizadatak.shared.exceptions.InvalidUsernameException;
 import hr.java.projektnizadatak.shared.exceptions.UsernameTakenException;
 import org.slf4j.Logger;
@@ -42,6 +41,8 @@ public class UserManager {
 		loggedInUsername = null;
 	}
 
+	// create
+	
 	public User createUser(String username, String password) throws InvalidUsernameException, UsernameTakenException {
 		if (!User.isUsernameValid(username)) {
 			String m = "Invalid username: " + username;
@@ -64,7 +65,6 @@ public class UserManager {
 
 		var user = new User.UserBuilder(username, UserRole.USER)
 			.withPassword(password)
-			
 			.build();
 
 		usersStore.create(user);
@@ -72,8 +72,23 @@ public class UserManager {
 		return user;
 	}
 
+	// read
+
+	public User getLoggedInUser() {
+		return usersStore.read().stream()
+			.filter(u -> u.username().equals(loggedInUsername))
+			.findFirst()
+			.orElse(loggedInUserFallback);
+	}
+	
+	public List<User> getAllUsers() {
+		return usersStore.read();
+	}
+
+	// update
+	
 	public User updateLoggedInSettings(String departmentCode, Semester semester) {
-		return updateUserSettings(getUser(), departmentCode, semester);
+		return updateUserSettings(getLoggedInUser(), departmentCode, semester);
 	}
 	
 	public User updateUserSettings(User user, String departmentCode, Semester semester) {
@@ -87,20 +102,11 @@ public class UserManager {
 		return newUser;
 	}
 
-	public User getUser() {
-		return usersStore.read().stream()
-			.filter(u -> u.username().equals(loggedInUsername))
-			.findFirst()
-			.orElse(loggedInUserFallback);
-	}
-	
-	public List<User> getAllUsers() {
-		return usersStore.read();
-	}
-	
 	public void overrideUsers(List<User> users) {
 		if (loggedInUserFallback.role() == UserRole.ADMIN) {
 			usersStore.overrideAll(users);
 		}
 	}
+	
+	// delete
 }

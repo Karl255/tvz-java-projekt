@@ -130,8 +130,7 @@ public class ScheduleOverridesManager {
 	}
 
 	private void logChange(ScheduleOverride oldValue, ScheduleOverride newValue) {
-		// TODO
-		var user = Application.getUserManager().getUser();
+		var user = Application.getUserManager().getLoggedInUser();
 		var change = Change.create(user, oldValue, newValue);
 		ChangesManager.getInstance().addChange(change);
 	}

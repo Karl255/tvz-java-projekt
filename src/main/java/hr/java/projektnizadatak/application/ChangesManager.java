@@ -26,7 +26,7 @@ public class ChangesManager {
 		return changesStore.read();
 	}
 
-	void addChange(Change change) {
+	public void addChange(Change change) {
 		changesStore.create(change);
 	}
 }

@@ -15,7 +15,7 @@ public class AllOverridesModel {
 	private ScheduleOverride selected;
 
 	public void initialize() {
-		var username = Application.getUserManager().getUser().username();
+		var username = Application.getUserManager().getLoggedInUser().username();
 		allOverrides = Application.getOverrideManager().getAllUserOverrides(username);
 
 		overridesList.setAll(allOverrides);

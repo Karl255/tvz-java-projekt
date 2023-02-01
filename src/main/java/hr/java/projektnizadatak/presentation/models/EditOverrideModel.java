@@ -63,7 +63,7 @@ public class EditOverrideModel {
 			removedReplacementIds,
 			manager.getForSubdepartment(),
 			manager.getForSemester(),
-			Application.getUserManager().getUser().username()
+			Application.getUserManager().getLoggedInUser().username()
 		);
 
 		removedReplacementIds.clear();

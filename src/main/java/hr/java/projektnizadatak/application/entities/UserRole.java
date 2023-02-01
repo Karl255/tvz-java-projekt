@@ -1,8 +1,9 @@
 package hr.java.projektnizadatak.application.entities;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
-public enum UserRole {
+public enum UserRole implements Serializable {
 	ADMIN("ADMIN"),
 	USER("USER");
 	
