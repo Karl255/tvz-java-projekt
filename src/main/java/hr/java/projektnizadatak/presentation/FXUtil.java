@@ -5,6 +5,8 @@ import hr.java.projektnizadatak.application.entities.ScheduleItem;
 import hr.java.projektnizadatak.presentation.models.ScheduleItemModel;
 import javafx.scene.control.Alert;
 
+import java.time.DayOfWeek;
+
 public class FXUtil {
 	public static void showAlert(Alert.AlertType alertType, String title, String body) {
 		var alert = new Alert(alertType);
@@ -42,5 +44,17 @@ public class FXUtil {
 			.append(overrideData.classType().getName()).append("; ")
 			.append(overrideData.classroom())
 			.toString();
+	}
+	
+	public static String weekdayName(DayOfWeek dow) {
+		return switch (dow) {
+			case MONDAY -> "Monday";
+			case TUESDAY -> "Tuesday";
+			case WEDNESDAY -> "Wednesday";
+			case THURSDAY -> "Thursday";
+			case FRIDAY -> "Friday";
+			case SATURDAY -> "Saturday";
+			case SUNDAY -> "Sunday";
+		};
 	}
 }

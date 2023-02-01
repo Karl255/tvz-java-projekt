@@ -4,8 +4,10 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
@@ -27,6 +29,7 @@
 		<rowConstraints>
 			<RowConstraints vgrow="NEVER"/>
 			<RowConstraints minHeight="140.0" vgrow="SOMETIMES"/>
+			<RowConstraints vgrow="SOMETIMES"/>
 			<RowConstraints vgrow="ALWAYS"/>
 		</rowConstraints>
 		<VBox styleClass="bounded-box, p-4" GridPane.rowIndex="1">
@@ -36,7 +39,7 @@
 		<Label text="Replacements" GridPane.columnIndex="1"/>
 		<VBox fx:id="replacementsVBox" styleClass="bounded-box, p-4" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
-		<TableView fx:id="originalsTableView" GridPane.columnSpan="2" GridPane.rowIndex="2">
+		<TableView fx:id="originalsTableView" GridPane.columnSpan="2" GridPane.rowIndex="3">
 			<columns>
 				<TableColumn fx:id="courseNameColumn" prefWidth="150.0" text="Course"/>
 				<TableColumn fx:id="classNameColumn" prefWidth="180.0" text="Class"/>
@@ -47,7 +50,7 @@
 				<TableColumn fx:id="noteColumn" prefWidth="200.0" text="Note"/>
 			</columns>
 		</TableView>
-		<GridPane>
+		<GridPane hgap="8.0" vgap="8.0" GridPane.columnSpan="2" GridPane.rowIndex="2">
 			<columnConstraints>
 				<ColumnConstraints hgrow="SOMETIMES"/>
 				<ColumnConstraints hgrow="SOMETIMES"/>
@@ -55,8 +58,15 @@
 			<rowConstraints>
 				<RowConstraints vgrow="SOMETIMES"/>
 			</rowConstraints>
-			<Label text="Original"/>
-			<Button text="Edit" fx:id="editButton" onAction="#editSelected" GridPane.columnIndex="1" GridPane.halignment="RIGHT"/>
+			<HBox spacing="8.0">
+					<TextField minWidth="300.0" fx:id="filterTextInput" onAction="#setFilter"/>
+					<Button text="Search" onAction="#setFilter"/>
+			</HBox>
+			<HBox alignment="CENTER_RIGHT" spacing="8.0" GridPane.columnIndex="1">
+					<Button fx:id="editButton" disable="true" onAction="#editSelected" text="Edit selected"/>
+					<Button fx:id="deleteButton" disable="true" onAction="#deleteSelected" text="Delete selected"/>
+			</HBox>
 		</GridPane>
+		<Label text="Original"/>
 	</GridPane>
 </GridPane>
