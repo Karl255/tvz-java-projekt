@@ -11,7 +11,8 @@ public interface OverridesStore {
 	List<Long> createReplacements(List<OverrideData> replacements, long forOriginalId);
 	
 	ScheduleOverride readOverride(long id);
-	List<ScheduleOverride> readAllOverridesFor(String subdepartment, int semester);
+	List<ScheduleOverride> readAllUserOverrides(String username);
+	List<ScheduleOverride> readAllUserOverridesFor(String username, String subdepartment, int semester);
 
 	void updateOriginal(ScheduleItem original);
 	void updateReplacements(List<OverrideData> replacements);

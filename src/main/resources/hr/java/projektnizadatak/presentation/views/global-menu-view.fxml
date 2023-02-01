@@ -10,7 +10,7 @@
 	</Menu>
 	<Menu mnemonicParsing="false" text="Navigation">
 		<MenuItem mnemonicParsing="false" text="Timetable" onAction="#showTimetableScreen"/>
-		<MenuItem mnemonicParsing="false" text="Changes browser" onAction="#showChangesScreen"/>
 		<MenuItem mnemonicParsing="false" text="Manage overrides" onAction="#showManageOverridesScreen"/>
+		<MenuItem mnemonicParsing="false" text="View change log" onAction="#showChangeLogScreen"/>
 	</Menu>
 </MenuBar>

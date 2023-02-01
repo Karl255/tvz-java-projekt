@@ -9,7 +9,7 @@ import javafx.beans.property.SimpleStringProperty;
 import java.time.LocalTime;
 import java.util.Objects;
 
-public class OverrideDataModel {
+public class OverrideDataItemModel {
 	private final Long dbId;
 	private final SimpleStringProperty professor;
 	private final SimpleObjectProperty<ClassType> classType;
@@ -19,7 +19,7 @@ public class OverrideDataModel {
 	private final SimpleObjectProperty<LocalTime> start;
 	private final SimpleObjectProperty<LocalTime> end;
 
-	public OverrideDataModel(OverrideData overrideData) {
+	public OverrideDataItemModel(OverrideData overrideData) {
 		this.dbId = overrideData.id();
 		this.professor = new SimpleStringProperty(overrideData.professor());
 		this.classType = new SimpleObjectProperty<>(overrideData.classType());
@@ -30,15 +30,15 @@ public class OverrideDataModel {
 		this.end = new SimpleObjectProperty<>(overrideData.end());
 	}
 
-	public OverrideDataModel(OverrideDataModel overrideDataModel) {
+	public OverrideDataItemModel(OverrideDataItemModel overrideDataItemModel) {
 		this.dbId = null;
-		this.professor = new SimpleStringProperty(overrideDataModel.getProfessor());
-		this.classType = new SimpleObjectProperty<>(overrideDataModel.getClassType());
-		this.classroom = new SimpleStringProperty(overrideDataModel.getClassroom());
-		this.note = new SimpleStringProperty(overrideDataModel.getNote());
-		this.group = new SimpleStringProperty(overrideDataModel.getGroup());
-		this.start = new SimpleObjectProperty<>(overrideDataModel.getStart());
-		this.end = new SimpleObjectProperty<>(overrideDataModel.getEnd());
+		this.professor = new SimpleStringProperty(overrideDataItemModel.getProfessor());
+		this.classType = new SimpleObjectProperty<>(overrideDataItemModel.getClassType());
+		this.classroom = new SimpleStringProperty(overrideDataItemModel.getClassroom());
+		this.note = new SimpleStringProperty(overrideDataItemModel.getNote());
+		this.group = new SimpleStringProperty(overrideDataItemModel.getGroup());
+		this.start = new SimpleObjectProperty<>(overrideDataItemModel.getStart());
+		this.end = new SimpleObjectProperty<>(overrideDataItemModel.getEnd());
 	}
 
 	public OverrideData toOverrideData() {
@@ -54,8 +54,8 @@ public class OverrideDataModel {
 		);
 	}
 	
-	public OverrideDataModel copy() {
-		return new OverrideDataModel(this);
+	public OverrideDataItemModel copy() {
+		return new OverrideDataItemModel(this);
 	}
 	
 	public Long getDbId() {

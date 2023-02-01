@@ -8,21 +8,21 @@ public class GlobalMenuController {
 	@FXML
 	private void logout() {
 		Application.getUserManager().logout();
-		Application.setScreen(ApplicationScreen.Login);
+		Application.switchToScreen(ApplicationScreen.Login);
 	}
 	
 	@FXML
 	private void showTimetableScreen() {
-		Application.setScreen(ApplicationScreen.Timetable);
+		Application.switchToScreen(ApplicationScreen.Timetable);
 	}
-	
-	@FXML
-	private void showChangesScreen() {
-		Application.setScreen(ApplicationScreen.ChangesBrowser);
-	}
-	
+
 	@FXML
 	private void showManageOverridesScreen() {
-		
+		Application.switchToScreen(ApplicationScreen.AllOverrides);
+	}
+	
+	@FXML
+	private void showChangeLogScreen() {
+		Application.switchToScreen(ApplicationScreen.ChangeLog);
 	}
 }

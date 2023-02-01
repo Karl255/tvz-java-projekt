@@ -20,7 +20,7 @@ public class LoginController {
 	@FXML
 	private void login() {
 		if (Application.getUserManager().tryLoginUser(usernameInput.getText(), passwordInput.getText())) {
-			Application.setScreen(ApplicationScreen.Timetable);
+			Application.switchToScreen(ApplicationScreen.Timetable);
 		} else {
 			FXUtil.showAlert(Alert.AlertType.ERROR, "Couldn't log in", "Invalid user or password!");
 		}

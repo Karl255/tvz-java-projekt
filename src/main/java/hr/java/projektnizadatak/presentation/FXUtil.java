@@ -1,5 +1,6 @@
 package hr.java.projektnizadatak.presentation;
 
+import hr.java.projektnizadatak.application.entities.OverrideData;
 import hr.java.projektnizadatak.application.entities.ScheduleItem;
 import hr.java.projektnizadatak.presentation.models.ScheduleItemModel;
 import javafx.scene.control.Alert;
@@ -33,5 +34,13 @@ public class FXUtil {
 		}
 		
 		return sb.toString();
+	}
+	
+	public static String overrideDataToOnelineString(OverrideData overrideData) {
+		return new StringBuilder()
+			.append(overrideData.getTimestampFull()).append("; ")
+			.append(overrideData.classType().getName()).append("; ")
+			.append(overrideData.classroom())
+			.toString();
 	}
 }

@@ -7,7 +7,6 @@ import hr.java.projektnizadatak.presentation.models.TimetableModel;
 import hr.java.projektnizadatak.presentation.fx.DepartmentStringConverter;
 import hr.java.projektnizadatak.presentation.fx.SemesterStringConverter;
 import hr.java.projektnizadatak.presentation.views.ApplicationScreen;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -22,7 +21,7 @@ public class TimetableController {
 	private static final DateTimeFormatter TIMESTAMP_DATE_FORMAT = DateTimeFormatter.ofPattern("dd.MM.yyyy.");
 	private final int TIMETABLE_DAYS = 5;
 
-	private TimetableModel model;
+	private final TimetableModel model;
 
 	@FXML private Button currentWeekButton;
 
@@ -167,7 +166,7 @@ public class TimetableController {
 
 		if (item != null) {
 			Application.getOverrideManager().setItemBeingEdited(item, model.getTimetable().forSubdepartment(), model.getTimetable().forSemester());
-			Application.setScreen(ApplicationScreen.EditOverride);
+			Application.pushScreen(ApplicationScreen.EditOverride);
 		}
 	}
 }

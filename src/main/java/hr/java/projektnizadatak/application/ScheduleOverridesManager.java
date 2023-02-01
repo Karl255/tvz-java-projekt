@@ -8,7 +8,6 @@ import hr.java.projektnizadatak.presentation.Application;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,7 +18,7 @@ public class ScheduleOverridesManager {
 
 	private ScheduleItem itemBeingEdited;
 	private String forSubdepartment;
-	private int forSemester;
+	private Integer forSemester;
 
 	public ScheduleOverridesManager(OverridesStore store) {
 		this.store = store;
@@ -33,11 +32,11 @@ public class ScheduleOverridesManager {
 		return forSubdepartment;
 	}
 
-	public int getForSemester() {
+	public Integer getForSemester() {
 		return forSemester;
 	}
 
-	public void setItemBeingEdited(ScheduleItem item, String onSubdepartment, int onSemester) {
+	public void setItemBeingEdited(ScheduleItem item, String onSubdepartment, Integer onSemester) {
 		itemBeingEdited = item;
 		this.forSubdepartment = onSubdepartment;
 		this.forSemester = onSemester;
@@ -54,8 +53,12 @@ public class ScheduleOverridesManager {
 
 	// read
 
-	public List<ScheduleOverride> getAllOverrides(String subdepartment, int semester) {
-		return store.readAllOverridesFor(subdepartment, semester);
+	public List<ScheduleOverride> getAllUserOverrides(String username) {
+		return store.readAllUserOverrides(username);
+	}
+
+	public List<ScheduleOverride> getAllUserOverridesFor(String username, String subdepartment, int semester) {
+		return store.readAllUserOverridesFor(username, subdepartment, semester);
 	}
 
 	public ScheduleOverride getOverrideForOriginalId(Long id) {
@@ -67,26 +70,26 @@ public class ScheduleOverridesManager {
 	}
 
 	// update
-	
+
 	// delete
 
 	public void deleteOverride(ScheduleOverride scheduleOverride) {
 		store.deleteReplacements(
 			scheduleOverride
-			.replacements()
-			.stream()
-			.map(OverrideData::id).toList()
+				.replacements()
+				.stream()
+				.map(OverrideData::id).toList()
 		);
-		
+
 		store.deleteOriginal(scheduleOverride.original().originalId());
 	}
 
 	// mixed
 
-	public long saveOverride(ScheduleOverride scheduleOverride, List<Long> removedReplacementIds, String forSubdepartment, int forSemester, String forUsername) {
+	public long saveOverride(ScheduleOverride scheduleOverride, List<Long> removedReplacementIds, String forSubdepartment, Integer forSemester, String forUsername) {
 		if (scheduleOverride.original().originalId() != null) {
 			// edited override
-			
+
 			var exists = scheduleOverride.replacements().stream()
 				.collect(Collectors.groupingBy(replacement -> replacement.id() != null));
 
@@ -99,16 +102,21 @@ public class ScheduleOverridesManager {
 			if (exists.containsKey(false)) {
 				store.createReplacements(exists.get(false), scheduleOverride.original().originalId());
 			}
-			
+
 			store.deleteReplacements(removedReplacementIds);
-			
+
 			return scheduleOverride.original().originalId();
 		} else {
 			// new override
 
+			if (forSubdepartment == null || forSemester == null) {
+				// TODO
+				throw new RuntimeException();
+			}
+
 			long originalId = store.createOriginal(scheduleOverride.original(), forSubdepartment, forSemester, forUsername);
 			store.createReplacements(scheduleOverride.replacements(), originalId);
-			
+
 			return originalId;
 		}
 	}

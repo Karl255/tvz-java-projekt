@@ -108,13 +108,37 @@ public class ScheduleOverridesDBStore implements OverridesStore {
 	}
 
 	@Override
-	public List<ScheduleOverride> readAllOverridesFor(String subdepartment, int semester) {
+	public List<ScheduleOverride> readAllUserOverrides(String username) {
 		var db = DataBaseAccess.getInstance();
 		var originals = db.selectGeneric(
-			"SELECT * FROM override_original WHERE subdepartment = ? AND semester = ?;",
+			"SELECT * FROM override_original WHERE username = ?;",
 			ps -> {
-				ps.setString(1, subdepartment);
-				ps.setLong(2, semester);
+				ps.setString(1, username);
+			},
+			ScheduleOverridesDBStore::toOverrideOriginal);
+
+		return originals.stream()
+			.map(original ->
+				new ScheduleOverride(
+					original,
+					db.selectGeneric(
+						"SELECT * FROM override_replacement WHERE identifier_id = ?;",
+						ps -> ps.setLong(1, original.originalId()),
+						ScheduleOverridesDBStore::toOverrideReplacement
+					)
+				)
+			).toList();
+	}
+
+	@Override
+	public List<ScheduleOverride> readAllUserOverridesFor(String username, String subdepartment, int semester) {
+		var db = DataBaseAccess.getInstance();
+		var originals = db.selectGeneric(
+			"SELECT * FROM override_original WHERE username = ? AND subdepartment = ? AND semester = ?;",
+			ps -> {
+				ps.setString(1, username);
+				ps.setString(2, subdepartment);
+				ps.setLong(3, semester);
 			},
 			ScheduleOverridesDBStore::toOverrideOriginal);
 

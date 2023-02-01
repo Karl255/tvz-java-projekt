@@ -5,7 +5,7 @@ import hr.java.projektnizadatak.application.entities.OverrideData;
 import hr.java.projektnizadatak.presentation.Application;
 import hr.java.projektnizadatak.presentation.FXUtil;
 import hr.java.projektnizadatak.presentation.models.EditOverrideModel;
-import hr.java.projektnizadatak.presentation.models.OverrideDataModel;
+import hr.java.projektnizadatak.presentation.models.OverrideDataItemModel;
 import hr.java.projektnizadatak.presentation.views.ApplicationScreen;
 import hr.java.projektnizadatak.shared.Pipe;
 import javafx.collections.FXCollections;
@@ -28,14 +28,14 @@ public class EditOverrideController {
 
 	@FXML private TextFlow originalItemTextFlow;
 
-	@FXML private TableView<OverrideDataModel> replacementsTableView;
-	@FXML private TableColumn<OverrideDataModel, LocalTime> replacementStartTimeColumn;
-	@FXML private TableColumn<OverrideDataModel, LocalTime> replacementEndTimeColumn;
-	@FXML private TableColumn<OverrideDataModel, ClassType> replacementClassTypeColumn;
-	@FXML private TableColumn<OverrideDataModel, String> replacementClassroomColumn;
-	@FXML private TableColumn<OverrideDataModel, String> replacementProfessorColumn;
-	@FXML private TableColumn<OverrideDataModel, String> replacementGroupColumn;
-	@FXML private TableColumn<OverrideDataModel, String> replacementNoteColumn;
+	@FXML private TableView<OverrideDataItemModel> replacementsTableView;
+	@FXML private TableColumn<OverrideDataItemModel, LocalTime> replacementStartTimeColumn;
+	@FXML private TableColumn<OverrideDataItemModel, LocalTime> replacementEndTimeColumn;
+	@FXML private TableColumn<OverrideDataItemModel, ClassType> replacementClassTypeColumn;
+	@FXML private TableColumn<OverrideDataItemModel, String> replacementClassroomColumn;
+	@FXML private TableColumn<OverrideDataItemModel, String> replacementProfessorColumn;
+	@FXML private TableColumn<OverrideDataItemModel, String> replacementGroupColumn;
+	@FXML private TableColumn<OverrideDataItemModel, String> replacementNoteColumn;
 
 	@FXML private Button deleteRowButton;
 	@FXML private Button duplicateRowButton;
@@ -88,7 +88,7 @@ public class EditOverrideController {
 		replacementsTableView.getSelectionModel().selectedItemProperty().addListener(this::replacementItemSelected);
 	}
 
-	private void replacementItemSelected(Object source, OverrideDataModel previousValue, OverrideDataModel value) {
+	private void replacementItemSelected(Object source, OverrideDataItemModel previousValue, OverrideDataItemModel value) {
 		if (value == null) {
 			duplicateRowButton.setDisable(true);
 			deleteRowButton.setDisable(true);
@@ -114,7 +114,7 @@ public class EditOverrideController {
 	private void addRowButtonClick() {
 		var item = Pipe.apply(model.getOriginalScheduleOverride().original())
 			.pipe(OverrideData::fromOriginal)
-			.pipe(OverrideDataModel::new)
+			.pipe(OverrideDataItemModel::new)
 			.value;
 
 		model.addReplacement(item);
@@ -187,6 +187,6 @@ public class EditOverrideController {
 
 	private void close() {
 		Application.getOverrideManager().setItemBeingEdited(null, null, 0);
-		Application.setScreen(ApplicationScreen.Timetable);
+		Application.popScreen();
 	}
 }

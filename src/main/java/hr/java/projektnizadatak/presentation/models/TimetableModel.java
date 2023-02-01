@@ -84,11 +84,7 @@ public class TimetableModel {
 
 		if (user.defaultDepartmentCode() != null) {
 			var dep = departmentList.stream()
-				.filter(d -> {
-					boolean r = d.code().equals(user.defaultDepartmentCode());
-					if (r) System.out.println("FOUND");
-					return r;
-				})
+				.filter(d -> d.code().equals(user.defaultDepartmentCode()))
 				.findFirst()
 				.orElse(firstDep);
 
@@ -182,6 +178,8 @@ public class TimetableModel {
 	}
 
 	public Thread loadTimetableAsync() {
+		var user = Application.getUserManager().getUser();
+		
 		var thread = new Thread(() -> {
 			var semester = selectedSemester;
 
@@ -197,7 +195,8 @@ public class TimetableModel {
 				timetableDays
 			);
 
-			var overrides = Application.getOverrideManager().getAllOverrides(
+			var overrides = Application.getOverrideManager().getAllUserOverridesFor(
+				user.username(),
 				semester.subdepartment(),
 				semester.semester()
 			);

@@ -2,7 +2,6 @@ package hr.java.projektnizadatak.presentation.models;
 
 import hr.java.projektnizadatak.application.entities.ScheduleOverride;
 import hr.java.projektnizadatak.presentation.Application;
-import hr.java.projektnizadatak.shared.Util;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -10,20 +9,20 @@ import java.util.ArrayList;
 
 public class EditOverrideModel {
 	private ScheduleOverride originalScheduleOverride;
-	private ObservableList<OverrideDataModel> replacements;
-	private OverrideDataModel selected = null;
+	private ObservableList<OverrideDataItemModel> replacements;
+	private OverrideDataItemModel selected = null;
 	private final ArrayList<Long> removedReplacementIds = new ArrayList<>();
+
+	public void initialize() {
+		loadFromStore(Application.getOverrideManager().getItemBeingEdited().originalId());
+	}
 
 	public ScheduleOverride getOriginalScheduleOverride() {
 		return originalScheduleOverride;
 	}
 
-	public ObservableList<OverrideDataModel> getReplacements() {
+	public ObservableList<OverrideDataItemModel> getReplacements() {
 		return replacements;
-	}
-
-	public void initialize() {
-		loadFromStore(Application.getOverrideManager().getItemBeingEdited().originalId());
 	}
 	
 	private void loadFromStore(Long id) {
@@ -35,20 +34,20 @@ public class EditOverrideModel {
 
 		replacements = FXCollections.observableArrayList(
 			originalScheduleOverride.replacements().stream()
-				.map(OverrideDataModel::new)
+				.map(OverrideDataItemModel::new)
 				.toList()
 		);
 	}
 
-	public OverrideDataModel getSelected() {
+	public OverrideDataItemModel getSelected() {
 		return selected;
 	}
 
-	public void setSelected(OverrideDataModel overrideDataModel) {
-		selected = overrideDataModel;
+	public void setSelected(OverrideDataItemModel overrideDataItemModel) {
+		selected = overrideDataItemModel;
 	}
 
-	public void addReplacement(OverrideDataModel replacement) {
+	public void addReplacement(OverrideDataItemModel replacement) {
 		replacements.add(replacement);
 	}
 
@@ -56,7 +55,7 @@ public class EditOverrideModel {
 		var manager = Application.getOverrideManager();
 
 		var newReplacements = replacements.stream()
-			.map(OverrideDataModel::toOverrideData)
+			.map(OverrideDataItemModel::toOverrideData)
 			.toList();
 
 		var id = manager.saveOverride(
