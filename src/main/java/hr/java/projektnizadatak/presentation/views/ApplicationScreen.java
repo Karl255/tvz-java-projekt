@@ -5,8 +5,8 @@ public enum ApplicationScreen {
 	Timetable("Timetable", "views/timetable-view.fxml", true),
 	EditOverride("Edit override", "views/edit-override-view.fxml", true),
 	AllOverrides("Overrides", "views/all-overrides-view.fxml", true),
-	ChangeLog("Change log", "views/changes-browser-view.fxml", true)
-	;
+	ChangeLog("Change log", "views/changes-browser-view.fxml", true),
+	ManageUsers("Manage users", "views/manage-users-view.fxml", true);
 	
 	private final String title;
 	private final String fxmlPath;

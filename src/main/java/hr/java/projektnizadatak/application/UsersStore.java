@@ -12,4 +12,6 @@ public interface UsersStore {
 	void update(User oldUser, User newUser);
 	
 	// no delete (for now)
+	
+	void overrideAll(List<User> users);
 }

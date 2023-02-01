@@ -3,6 +3,7 @@ package hr.java.projektnizadatak.data;
 import hr.java.projektnizadatak.application.UsersStore;
 import hr.java.projektnizadatak.application.entities.Semester;
 import hr.java.projektnizadatak.application.entities.User;
+import hr.java.projektnizadatak.application.entities.UserRole;
 import hr.java.projektnizadatak.shared.exceptions.ReadOrWriteErrorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,7 +37,7 @@ public class UsersFileStore implements UsersStore {
 			return Files.readAllLines(USERS_FILE_PATH)
 				.stream()
 				.map(this::parseUser)
-				.toList();
+				.collect(Collectors.toCollection(ArrayList::new));
 		} catch (IOException e) {
 			String m = "Reading file: " + USERS_FILE_PATH;
 			logger.error(m);
@@ -54,17 +56,22 @@ public class UsersFileStore implements UsersStore {
 		);
 	}
 
+	@Override
+	public void overrideAll(List<User> users) {
+		storeAll(users);
+	}
+
 	private User parseUser(String line) {
 		var s = line.split(":", -1);
-		var ub = new User.UserBuilder(s[0])
+		var ub = new User.UserBuilder(s[0], UserRole.parse(s[2]))
 			.withPasswordHash(s[1]);
 
-		if (!s[2].equals("")) {
-			ub.withDefaultDepartmentCode(s[2]);
+		if (!s[3].equals("")) {
+			ub.withDefaultDepartmentCode(s[3]);
 		}
 
-		if (!s[3].equals("")) {
-			ub.withDefaultSemester(parseSemester(s[3]));
+		if (!s[4].equals("")) {
+			ub.withDefaultSemester(parseSemester(s[4]));
 		}
 
 		return ub.build();
@@ -97,6 +104,8 @@ public class UsersFileStore implements UsersStore {
 			.append(user.username())
 			.append(':')
 			.append(user.passwordHash())
+			.append(':')
+			.append(user.role().getName())
 			.append(':')
 			.append(user.defaultDepartmentCode() != null ? user.defaultDepartmentCode() : "")
 			.append(':')

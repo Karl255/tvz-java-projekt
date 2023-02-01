@@ -16,13 +16,6 @@ public enum ClassType {
 		this.name = name;
 	}
 
-	public static ClassType parse(String string) {
-		return Arrays.stream(values())
-			.filter(t -> t.getName().equals(string))
-			.findFirst()
-			.orElse(ClassType.OTHER);
-	}
-
 	public String getName() {
 		return name;
 	}
@@ -30,6 +23,13 @@ public enum ClassType {
 	@Override
 	public String toString() {
 		return name;
+	}
+
+	public static ClassType parse(String string) {
+		return Arrays.stream(values())
+			.filter(t -> t.getName().equals(string))
+			.findFirst()
+			.orElse(ClassType.OTHER);
 	}
 	
 	public String toShortString() {

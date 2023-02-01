@@ -17,12 +17,14 @@ public final class User {
 
 	private final String username;
 	private final String passwordHash;
+	private final UserRole role;
 	private final String defaultDepartmentCode;
 	private final Semester defaultSemester;
 
-	private User(String username, String passwordHash, String defaultDepartmentCode, Semester defaultSemester) {
+	private User(String username, String passwordHash, UserRole role, String defaultDepartmentCode, Semester defaultSemester) {
 		this.username = username;
 		this.passwordHash = passwordHash;
+		this.role = role;
 		this.defaultDepartmentCode = defaultDepartmentCode;
 		this.defaultSemester = defaultSemester;
 	}
@@ -50,6 +52,8 @@ public final class User {
 	public String username() {return username;}
 
 	public String passwordHash() {return passwordHash;}
+
+	public UserRole role() {return role;}
 
 	public String defaultDepartmentCode() {return defaultDepartmentCode;}
 
@@ -81,16 +85,19 @@ public final class User {
 	public static class UserBuilder {
 		private final String username;
 		private String passwordHash;
+		private final UserRole role;
 		private String defaultDepartmentCode = null;
 		private Semester defaultSemester = null;
 
-		public UserBuilder(String username) {
+		public UserBuilder(String username, UserRole role) {
 			this.username = username;
+			this.role = role;
 		}
 
 		public UserBuilder(User original) {
 			this.username = original.username;
 			this.passwordHash = original.passwordHash;
+			this.role = original.role;
 			this.defaultDepartmentCode = original.defaultDepartmentCode;
 			this.defaultSemester = original.defaultSemester;
 		}
@@ -116,7 +123,7 @@ public final class User {
 		}
 
 		public User build() {
-			return new User(username, passwordHash, defaultDepartmentCode, defaultSemester);
+			return new User(username, passwordHash, role, defaultDepartmentCode, defaultSemester);
 		}
 	}
 }

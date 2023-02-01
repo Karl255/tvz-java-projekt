@@ -6,6 +6,8 @@
 
 <MenuBar xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/19" fx:controller="hr.java.projektnizadatak.presentation.controllers.GlobalMenuController">
 	<Menu mnemonicParsing="false" text="User">
+		<MenuItem mnemonicParsing="false" text="Manage users" onAction="#showManageUsers" fx:id="showManageUsersMenuItem" disable="true"/>
+		<MenuItem mnemonicParsing="false" text="Switch user" onAction="#switchUser"/>
 		<MenuItem mnemonicParsing="false" text="Log out" onAction="#logout"/>
 	</Menu>
 	<Menu mnemonicParsing="false" text="Navigation">

@@ -2,10 +2,13 @@ package hr.java.projektnizadatak.application;
 
 import hr.java.projektnizadatak.application.entities.Semester;
 import hr.java.projektnizadatak.application.entities.User;
+import hr.java.projektnizadatak.application.entities.UserRole;
 import hr.java.projektnizadatak.shared.exceptions.InvalidUsernameException;
 import hr.java.projektnizadatak.shared.exceptions.UsernameTakenException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 public class UserManager {
 	private static final Logger logger = LoggerFactory.getLogger(UserManager.class);
@@ -59,8 +62,9 @@ public class UserManager {
 			throw new UsernameTakenException(m);
 		}
 
-		var user = new User.UserBuilder(username)
+		var user = new User.UserBuilder(username, UserRole.USER)
 			.withPassword(password)
+			
 			.build();
 
 		usersStore.create(user);
@@ -88,5 +92,15 @@ public class UserManager {
 			.filter(u -> u.username().equals(loggedInUsername))
 			.findFirst()
 			.orElse(loggedInUserFallback);
+	}
+	
+	public List<User> getAllUsers() {
+		return usersStore.read();
+	}
+	
+	public void overrideUsers(List<User> users) {
+		if (loggedInUserFallback.role() == UserRole.ADMIN) {
+			usersStore.overrideAll(users);
+		}
 	}
 }

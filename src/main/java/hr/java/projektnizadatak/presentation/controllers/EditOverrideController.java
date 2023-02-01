@@ -63,9 +63,7 @@ public class EditOverrideController {
 		replacementEndTimeColumn.setOnEditCommit(e -> e.getRowValue().setEnd(e.getNewValue()));
 
 		replacementClassTypeColumn.setCellValueFactory(d -> d.getValue().classTypeProperty());
-		replacementClassTypeColumn.setCellFactory(ComboBoxTableCell.forTableColumn(
-			FXCollections.observableList(new ArrayList<>(Arrays.asList(ClassType.values())))
-		));
+		replacementClassTypeColumn.setCellFactory(ComboBoxTableCell.forTableColumn(ClassType.values()));
 		replacementClassTypeColumn.setOnEditCommit(e -> e.getRowValue().setClassType(e.getNewValue()));
 
 		replacementClassroomColumn.setCellValueFactory(d -> d.getValue().classroomProperty());
