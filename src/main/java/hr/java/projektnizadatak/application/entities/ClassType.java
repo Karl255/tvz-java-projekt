@@ -1,8 +1,9 @@
 package hr.java.projektnizadatak.application.entities;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
-public enum ClassType {
+public enum ClassType implements Serializable {
 	LECTURES("Predavanja"),
 	AUDITORY_EXERCISES("Auditorne vježbe"),
 	LAB("Laboratorijske vježbe"),

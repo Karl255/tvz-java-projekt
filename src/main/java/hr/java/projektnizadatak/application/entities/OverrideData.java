@@ -1,5 +1,6 @@
 package hr.java.projektnizadatak.application.entities;
 
+import java.io.Serializable;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
@@ -12,7 +13,7 @@ public record OverrideData(
 	String group,
 	LocalTime start,
 	LocalTime end
-) {
+) implements Serializable {
 	private static final DateTimeFormatter TIMESTAMP_FORMAT = DateTimeFormatter.ofPattern("H:mm");
 	private static final DateTimeFormatter TIMESTAMP_FULL_FORMAT = DateTimeFormatter.ofPattern("HH:mm");
 

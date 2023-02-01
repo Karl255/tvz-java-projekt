@@ -61,8 +61,6 @@ public class AllOverridesModel {
 			return;
 		}
 		
-		selected = null;
-		
 		Application.getOverrideManager().deleteOverride(selected);
 
 		allOverrides = allOverrides.stream()
@@ -70,5 +68,7 @@ public class AllOverridesModel {
 			.toList();
 
 		overridesList.remove(selected);
+		
+		selected = null;
 	}
 }

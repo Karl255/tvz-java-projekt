@@ -25,12 +25,12 @@
 		</columnConstraints>
 		<rowConstraints>
 			<RowConstraints vgrow="NEVER"/>
-			<RowConstraints minHeight="200" vgrow="SOMETIMES"/>
+			<RowConstraints minHeight="175" vgrow="SOMETIMES"/>
 			<RowConstraints vgrow="ALWAYS"/>
 		</rowConstraints>
 
 		<Label text="Previous value"/>
-		<TextFlow styleClass="bounded-box" GridPane.rowIndex="1" fx:id="oldValueDetails"/>
+		<TextFlow styleClass="bounded-box, p-4" GridPane.rowIndex="1" fx:id="oldValueDetails"/>
 
 		<Label text="New value" GridPane.columnIndex="1"/>
 		<TextFlow styleClass="bounded-box, p-4" GridPane.columnIndex="1" GridPane.rowIndex="1" fx:id="newValueDetails"/>

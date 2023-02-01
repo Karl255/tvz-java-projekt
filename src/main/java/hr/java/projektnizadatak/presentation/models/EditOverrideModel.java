@@ -24,10 +24,10 @@ public class EditOverrideModel {
 	public ObservableList<OverrideDataItemModel> getReplacements() {
 		return replacements;
 	}
-	
+
 	private void loadFromStore(Long id) {
 		var manager = Application.getOverrideManager();
-		
+
 		originalScheduleOverride = id != null
 			? manager.getOverrideForOriginalId(id)
 			: manager.getDefault(manager.getItemBeingEdited());
@@ -65,38 +65,41 @@ public class EditOverrideModel {
 			manager.getForSemester(),
 			Application.getUserManager().getUser().username()
 		);
-		
+
 		removedReplacementIds.clear();
-		
+
 		loadFromStore(id);
 	}
 
 	public void deleteSelected() {
 		if (selected != null) {
 			var toRemove = selected;
-			removedReplacementIds.add(toRemove.getDbId());
+			if (selected.getDbId() != null) {
+				removedReplacementIds.add(toRemove.getDbId());
+			}
 			replacements.remove(toRemove);
+			selected = null;
 		}
 	}
 
 	public void deleteAll() {
 		Application.getOverrideManager().deleteOverride(originalScheduleOverride);
 	}
-	
+
 	public boolean needsToSave() {
 		return !existsInStore()
 			|| removedReplacementIds.size() > 0
 			|| replacementsChanged();
 	}
-	
+
 	public boolean existsInStore() {
 		return originalScheduleOverride.original().originalId() != null;
 	}
-	
+
 	public boolean replacementsChanged() {
 		return replacements.stream().anyMatch(r -> r.getDbId() == null) // not in store
 			|| replacements.stream().anyMatch(r -> r.getDbId() != null // in store and not in stored data
 				&& originalScheduleOverride.replacements().stream().noneMatch(r::equals)
-			);
+		);
 	}
 }
