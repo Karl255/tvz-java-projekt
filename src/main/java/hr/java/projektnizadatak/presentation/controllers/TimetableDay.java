@@ -28,6 +28,8 @@ public class TimetableDay extends GridPane {
 	private Label titleLabel;
 	@FXML
 	private AnchorPane contentAnchorPane;
+	
+	private List<TimetableItem> timetableItems;
 
 	public TimetableDay() {
 		FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("views/timetable-day-view.fxml"));
@@ -46,7 +48,7 @@ public class TimetableDay extends GridPane {
 	public void setItems(List<ScheduleItem> items) {
 		contentAnchorPane.getChildren().clear();
 
-		var elements = TimetableDayItemModel.organizeItems(items)
+		timetableItems = TimetableDayItemModel.organizeItems(items)
 			.stream()
 			.map(model -> {
 				TimetableItem timetableItem = new TimetableItem(model);
@@ -55,18 +57,22 @@ public class TimetableDay extends GridPane {
 			})
 			.toList();
 
-		repositionItems(elements);
+		repositionItems();
 	}
 
-	public void repositionItems(List<TimetableItem> items) {
-		if (items.size() == 0) {
+	public void repositionItems() {
+		if (timetableItems == null) {
+			return;
+		}
+		
+		if (timetableItems.size() == 0) {
 			return;
 		}
 
 		double width = contentAnchorPane.getBoundsInLocal().getWidth();
 		double height = contentAnchorPane.getBoundsInLocal().getHeight();
 
-		contentAnchorPane.getChildren().setAll(items);
+		contentAnchorPane.getChildren().setAll(timetableItems);
 
 		int maxColumn = contentAnchorPane.getChildren().stream()
 			.map(item -> (TimetableItem) item)
@@ -81,7 +87,7 @@ public class TimetableDay extends GridPane {
 
 		double columnWidth = width / (maxColumn + 1);
 
-		for (var item : items) {
+		for (var item : timetableItems) {
 			var model = item.getModel();
 
 			AnchorPane.setTopAnchor(item, height * model.getRelativeStart());

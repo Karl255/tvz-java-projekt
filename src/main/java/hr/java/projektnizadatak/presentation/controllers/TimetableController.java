@@ -79,6 +79,13 @@ public class TimetableController {
 		currentWeekButton.setText(model.getCurrentWeekTimestamp(TIMESTAMP_DATE_FORMAT));
 
 		model.initialize();
+		Application.setOnWindowResizeHandler(this::onWindowResize);
+	}
+	
+	private void onWindowResize(double w, double h) {
+		for (var day : timetableDays) {
+			day.repositionItems();
+		}
 	}
 
 	@FXML

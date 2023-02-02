@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Stack;
+import java.util.function.BiConsumer;
 
 @SuppressWarnings("FieldMayBeFinal")
 public class Application extends javafx.application.Application {
@@ -30,6 +31,8 @@ public class Application extends javafx.application.Application {
 	private static ScheduleSource scheduleSource = new ScheduleApiSource();
 	private static ScheduleOverridesManager scheduleOverridesManager = new ScheduleOverridesManager(new ScheduleOverridesDBStore());
 
+	private static BiConsumer<Double, Double> onWindowResizeHandler = null;
+	
 	public static void main(String[] args) {
 		launch();
 	}
@@ -56,12 +59,14 @@ public class Application extends javafx.application.Application {
 	}
 	
 	private static void setScreen(ApplicationScreen screen) {
+		onWindowResizeHandler = null;
+
 		try {
 			var fxmlPath = screen.getFxmlPath();
 			var window = (Parent) FXMLLoader.load(Objects.requireNonNull(Application.class.getResource(fxmlPath)));
 			var scene = new Scene(window);
 			scene.getStylesheets().add("main.css");
-
+			
 			stage.setResizable(screen.canResize());
 			stage.setScene(scene);
 			stage.setTitle(screen.getTitle());
@@ -85,10 +90,22 @@ public class Application extends javafx.application.Application {
 	public static ScheduleOverridesManager getOverrideManager() {
 		return scheduleOverridesManager;
 	}
+	
+	private static void onWindowResize() {
+		if (onWindowResizeHandler != null) {
+			onWindowResizeHandler.accept(stage.getWidth(), stage.getHeight());
+		}
+	}
+
+	public static void setOnWindowResizeHandler(BiConsumer<Double, Double> onWindowResizeHandler) {
+		Application.onWindowResizeHandler = onWindowResizeHandler;
+	}
 
 	@Override
 	public void start(Stage stage) {
 		Application.stage = stage;
+		Application.stage.widthProperty().addListener(obs -> onWindowResize());
+		Application.stage.heightProperty().addListener(obs -> onWindowResize());
 		Application.screenStack = new Stack<>();
 
 		pushScreen(ApplicationScreen.Login);
