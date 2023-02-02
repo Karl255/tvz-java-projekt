@@ -6,6 +6,7 @@ import hr.java.projektnizadatak.application.entities.OverrideData;
 import hr.java.projektnizadatak.application.entities.ScheduleItem;
 import hr.java.projektnizadatak.application.entities.ScheduleOverride;
 import hr.java.projektnizadatak.shared.Util;
+import hr.java.projektnizadatak.shared.exceptions.DataStoreException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,7 +19,7 @@ public class ScheduleOverridesDBStore implements OverridesStore {
 	// create
 
 	@Override
-	public long createOriginal(ScheduleItem original, String forSubdepartment, int forSemester, String forUsername) {
+	public long createOriginal(ScheduleItem original, String forSubdepartment, int forSemester, String forUsername) throws DataStoreException {
 		final String query = """
 			INSERT INTO override_original(
 				subdepartment,
@@ -36,7 +37,7 @@ public class ScheduleOverridesDBStore implements OverridesStore {
 				end_
 			) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 			""";
-		
+
 		return DataBaseAccess.getInstance().createGeneric(
 			query,
 			ps -> {
@@ -58,7 +59,7 @@ public class ScheduleOverridesDBStore implements OverridesStore {
 	}
 
 	@Override
-	public List<Long> createReplacements(List<OverrideData> replacements, long forOriginalId) {
+	public List<Long> createReplacements(List<OverrideData> replacements, long forOriginalId) throws DataStoreException {
 		final String query = """
 			INSERT INTO override_replacement(
 				identifier_id,
@@ -88,9 +89,9 @@ public class ScheduleOverridesDBStore implements OverridesStore {
 	}
 
 	// read
-	
+
 	@Override
-	public ScheduleOverride readOverride(long id) {
+	public ScheduleOverride readOverride(long id) throws DataStoreException {
 		var db = DataBaseAccess.getInstance();
 		var original = db.selectSingleGeneric(
 			"SELECT * FROM override_original WHERE id = ?;",
@@ -108,7 +109,7 @@ public class ScheduleOverridesDBStore implements OverridesStore {
 	}
 
 	@Override
-	public List<ScheduleOverride> readAllUserOverrides(String username) {
+	public List<ScheduleOverride> readAllUserOverrides(String username) throws DataStoreException {
 		var db = DataBaseAccess.getInstance();
 		var originals = db.selectGeneric(
 			"SELECT * FROM override_original WHERE username = ?;",
@@ -117,21 +118,32 @@ public class ScheduleOverridesDBStore implements OverridesStore {
 			},
 			ScheduleOverridesDBStore::toOverrideOriginal);
 
-		return originals.stream()
-			.map(original ->
-				new ScheduleOverride(
-					original,
-					db.selectGeneric(
-						"SELECT * FROM override_replacement WHERE identifier_id = ?;",
-						ps -> ps.setLong(1, original.originalId()),
-						ScheduleOverridesDBStore::toOverrideReplacement
-					)
-				)
-			).toList();
+		try {
+			return originals.stream().map(original -> {
+				try {
+					return new ScheduleOverride(
+						original,
+						db.selectGeneric(
+							"SELECT * FROM override_replacement WHERE identifier_id = ?;",
+							ps -> ps.setLong(1, original.originalId()),
+							ScheduleOverridesDBStore::toOverrideReplacement
+						)
+					);
+				} catch (DataStoreException e) {
+					throw new RuntimeException(e);
+				}
+			}).toList();
+		} catch (RuntimeException e) {
+			if (e.getCause() instanceof DataStoreException dataStoreException) {
+				throw dataStoreException;
+			}
+
+			throw e;
+		}
 	}
 
 	@Override
-	public List<ScheduleOverride> readAllUserOverridesFor(String username, String subdepartment, int semester) {
+	public List<ScheduleOverride> readAllUserOverridesFor(String username, String subdepartment, int semester) throws DataStoreException {
 		var db = DataBaseAccess.getInstance();
 		var originals = db.selectGeneric(
 			"SELECT * FROM override_original WHERE username = ? AND subdepartment = ? AND semester = ?;",
@@ -142,22 +154,33 @@ public class ScheduleOverridesDBStore implements OverridesStore {
 			},
 			ScheduleOverridesDBStore::toOverrideOriginal);
 
-		return originals.stream()
-			.map(original ->
-				new ScheduleOverride(
-					original,
-					db.selectGeneric(
-						"SELECT * FROM override_replacement WHERE identifier_id = ?;",
-						ps -> ps.setLong(1, original.originalId()),
-						ScheduleOverridesDBStore::toOverrideReplacement
-					)
-				)
-			).toList();
+		try {
+			return originals.stream().map(original -> {
+				try {
+					return new ScheduleOverride(
+						original,
+						db.selectGeneric(
+							"SELECT * FROM override_replacement WHERE identifier_id = ?;",
+							ps -> ps.setLong(1, original.originalId()),
+							ScheduleOverridesDBStore::toOverrideReplacement
+						)
+					);
+				} catch (DataStoreException e) {
+					throw new RuntimeException(e);
+				}
+			}).toList();
+		} catch (RuntimeException e) {
+			if (e.getCause() instanceof DataStoreException dataStoreException) {
+				throw dataStoreException;
+			}
+
+			throw e;
+		}
 	}
 
 	// update
 
-	public void updateOriginal(ScheduleItem origianl) {
+	public void updateOriginal(ScheduleItem origianl) throws DataStoreException {
 		final String query = """
 			UPDATE override_original SET
 			courseName = ?,
@@ -172,7 +195,7 @@ public class ScheduleOverridesDBStore implements OverridesStore {
 			end_ = ?
 			WHERE id = ?;
 			""";
-		
+
 		DataBaseAccess.getInstance().updateGeneric(
 			query,
 			ps -> {
@@ -190,9 +213,9 @@ public class ScheduleOverridesDBStore implements OverridesStore {
 			}
 		);
 	}
-	
+
 	@Override
-	public void updateReplacements(List<OverrideData> replacements) {
+	public void updateReplacements(List<OverrideData> replacements) throws DataStoreException {
 		final String query = """
 			UPDATE override_replacement
 			SET
@@ -205,7 +228,7 @@ public class ScheduleOverridesDBStore implements OverridesStore {
 			end_ = ?
 			WHERE id = ?;
 			""";
-		
+
 		DataBaseAccess.getInstance().updateManyGeneric(
 			query,
 			replacements.stream().map(replacement -> ps -> {
@@ -220,12 +243,12 @@ public class ScheduleOverridesDBStore implements OverridesStore {
 			})
 		);
 	}
-	
+
 	// delete
 
 
 	@Override
-	public void deleteOriginal(Long id) {
+	public void deleteOriginal(Long id) throws DataStoreException {
 		DataBaseAccess.getInstance().updateGeneric(
 			"DELETE FROM override_original WHERE id = ?;",
 			ps -> ps.setLong(1, id)
@@ -233,7 +256,7 @@ public class ScheduleOverridesDBStore implements OverridesStore {
 	}
 
 	@Override
-	public void deleteReplacements(List<Long> replacementIds) {
+	public void deleteReplacements(List<Long> replacementIds) throws DataStoreException {
 		DataBaseAccess.getInstance().updateManyGeneric(
 			"DELETE FROM override_replacement WHERE id = ?;",
 			replacementIds.stream().map(id -> ps -> ps.setLong(1, id))
@@ -241,7 +264,7 @@ public class ScheduleOverridesDBStore implements OverridesStore {
 	}
 
 	// util
-	
+
 	private static ScheduleItem toOverrideOriginal(ResultSet rs) throws SQLException {
 		return new ScheduleItem(
 			rs.getLong("id"),

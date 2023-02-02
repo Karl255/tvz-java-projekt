@@ -43,7 +43,7 @@ public class UsersFileStore implements UsersStore {
 				.map(this::parseUser)
 				.collect(Collectors.toCollection(ArrayList::new));
 		} catch (IOException e) {
-			String m = "Reading file: " + USERS_FILE_PATH;
+			String m = "Error while reading file: " + USERS_FILE_PATH;
 			logger.error(m);
 
 			throw new ReadOrWriteErrorException(m, e);
@@ -116,7 +116,7 @@ public class UsersFileStore implements UsersStore {
 		try {
 			Files.writeString(USERS_FILE_PATH, serialized);
 		} catch (IOException e) {
-			String m = "Writing file: " + USERS_FILE_PATH;
+			String m = "Error while writing file: " + USERS_FILE_PATH;
 			logger.error(m);
 
 			throw new ReadOrWriteErrorException(m, e);

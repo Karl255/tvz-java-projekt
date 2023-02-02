@@ -3,7 +3,9 @@ package hr.java.projektnizadatak.presentation;
 import hr.java.projektnizadatak.application.entities.OverrideData;
 import hr.java.projektnizadatak.application.entities.ScheduleItem;
 import hr.java.projektnizadatak.presentation.models.ScheduleItemModel;
+import hr.java.projektnizadatak.shared.exceptions.DataStoreException;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 
 import java.time.DayOfWeek;
 
@@ -56,5 +58,17 @@ public class FXUtil {
 			case SATURDAY -> "Saturday";
 			case SUNDAY -> "Sunday";
 		};
+	}
+	
+	public static void showDataStoreExceptionAlert(DataStoreException e) {
+		var alert = new Alert(
+			Alert.AlertType.ERROR,
+			e.getMessage(),
+			ButtonType.OK
+		);
+		
+		alert.setTitle("Data access error");
+		alert.setHeaderText("An error occured while trying to read or write data. Details are below.");
+		alert.showAndWait();
 	}
 }

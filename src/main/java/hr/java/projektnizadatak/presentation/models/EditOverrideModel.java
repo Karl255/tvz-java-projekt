@@ -2,6 +2,7 @@ package hr.java.projektnizadatak.presentation.models;
 
 import hr.java.projektnizadatak.application.entities.ScheduleOverride;
 import hr.java.projektnizadatak.presentation.Application;
+import hr.java.projektnizadatak.shared.exceptions.DataStoreException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -9,11 +10,15 @@ import java.util.ArrayList;
 
 public class EditOverrideModel {
 	private ScheduleOverride originalScheduleOverride;
-	private ObservableList<OverrideDataItemModel> replacements;
+	private final ObservableList<OverrideDataItemModel> replacements;
 	private OverrideDataItemModel selected = null;
 	private final ArrayList<Long> removedReplacementIds = new ArrayList<>();
 
-	public void initialize() {
+	public EditOverrideModel() {
+		replacements = FXCollections.observableArrayList();
+	}
+
+	public void initialize() throws DataStoreException {
 		loadFromStore(Application.getOverrideManager().getItemBeingEdited().originalId());
 	}
 
@@ -25,14 +30,14 @@ public class EditOverrideModel {
 		return replacements;
 	}
 
-	private void loadFromStore(Long id) {
+	private void loadFromStore(Long id) throws DataStoreException {
 		var manager = Application.getOverrideManager();
 
 		originalScheduleOverride = id != null
 			? manager.getOverrideForOriginalId(id)
 			: manager.getDefault(manager.getItemBeingEdited());
 
-		replacements = FXCollections.observableArrayList(
+		replacements.setAll(
 			originalScheduleOverride.replacements().stream()
 				.map(OverrideDataItemModel::new)
 				.toList()
@@ -51,7 +56,7 @@ public class EditOverrideModel {
 		replacements.add(replacement);
 	}
 
-	public void save() {
+	public void save() throws DataStoreException {
 		var manager = Application.getOverrideManager();
 
 		var newReplacements = replacements.stream()
@@ -82,7 +87,7 @@ public class EditOverrideModel {
 		}
 	}
 
-	public void deleteAll() {
+	public void deleteAll() throws DataStoreException {
 		Application.getOverrideManager().deleteOverride(originalScheduleOverride);
 	}
 

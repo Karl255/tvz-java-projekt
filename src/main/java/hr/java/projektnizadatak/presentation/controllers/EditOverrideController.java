@@ -6,9 +6,8 @@ import hr.java.projektnizadatak.presentation.Application;
 import hr.java.projektnizadatak.presentation.FXUtil;
 import hr.java.projektnizadatak.presentation.models.EditOverrideModel;
 import hr.java.projektnizadatak.presentation.models.OverrideDataItemModel;
-import hr.java.projektnizadatak.presentation.views.ApplicationScreen;
 import hr.java.projektnizadatak.shared.Pipe;
-import javafx.collections.FXCollections;
+import hr.java.projektnizadatak.shared.exceptions.DataStoreException;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
@@ -19,8 +18,6 @@ import javafx.util.converter.LocalTimeStringConverter;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class EditOverrideController {
 	private final static DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("H:mm");
@@ -46,10 +43,6 @@ public class EditOverrideController {
 
 	@FXML
 	private void initialize() {
-		model.initialize();
-
-		originalItemTextFlow.getChildren().add(new Text(FXUtil.scheduleItemToString(model.getOriginalScheduleOverride().original())));
-
 		replacementStartTimeColumn.setCellValueFactory(d -> d.getValue().startProperty());
 		replacementStartTimeColumn.setCellFactory(TextFieldTableCell.forTableColumn(
 			new LocalTimeStringConverter(TIME_FORMAT, TIME_FORMAT)
@@ -84,6 +77,14 @@ public class EditOverrideController {
 
 		replacementsTableView.setItems(model.getReplacements());
 		replacementsTableView.getSelectionModel().selectedItemProperty().addListener(this::replacementItemSelected);
+
+		try {
+			model.initialize();
+		} catch (DataStoreException e) {
+			FXUtil.showDataStoreExceptionAlert(e);
+		}
+
+		originalItemTextFlow.getChildren().add(new Text(FXUtil.scheduleItemToString(model.getOriginalScheduleOverride().original())));
 	}
 
 	private void replacementItemSelected(Object source, OverrideDataItemModel previousValue, OverrideDataItemModel value) {
@@ -105,7 +106,10 @@ public class EditOverrideController {
 
 	@FXML
 	private void duplicateRowButtonClick() {
-		model.addReplacement(model.getSelected().copy());
+		var selected = model.getSelected();
+		if (selected != null) {
+			model.addReplacement(selected.copy());
+		}
 	}
 
 	@FXML
@@ -137,8 +141,12 @@ public class EditOverrideController {
 
 		if (clicked.isPresent()) {
 			if (clicked.get().equals(ButtonType.YES)) {
-				model.save();
-				close();
+				try {
+					model.save();
+					close();
+				} catch (DataStoreException e) {
+					FXUtil.showDataStoreExceptionAlert(e);
+				}
 			} else if (clicked.get().equals(ButtonType.NO)) {
 				close();
 			}
@@ -157,15 +165,18 @@ public class EditOverrideController {
 		var clicked = alert.showAndWait();
 
 		if (clicked.isPresent() && clicked.get().equals(ButtonType.YES)) {
-			model.deleteAll();
-			close();
+			try {
+				model.deleteAll();
+				close();
+			} catch (DataStoreException e) {
+				FXUtil.showDataStoreExceptionAlert(e);
+			}
 		}
 	}
 
 	@FXML
 	private void saveButtonClick() {
 		if (!model.needsToSave()) {
-			model.save();
 			return;
 		}
 
@@ -179,7 +190,11 @@ public class EditOverrideController {
 		var clicked = alert.showAndWait();
 
 		if (clicked.isPresent() && clicked.get().equals(ButtonType.YES)) {
-			model.save();
+			try {
+				model.save();
+			} catch (DataStoreException e) {
+				FXUtil.showDataStoreExceptionAlert(e);
+			}
 		}
 	}
 

@@ -3,13 +3,16 @@ package hr.java.projektnizadatak.presentation.models;
 import hr.java.projektnizadatak.application.Util;
 import hr.java.projektnizadatak.application.entities.*;
 import hr.java.projektnizadatak.presentation.Application;
+import hr.java.projektnizadatak.presentation.FXUtil;
 import hr.java.projektnizadatak.presentation.util.WeekSwitcher;
+import hr.java.projektnizadatak.shared.exceptions.DataStoreException;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class TimetableModel {
@@ -195,16 +198,22 @@ public class TimetableModel {
 				timetableDays
 			);
 
-			var overrides = Application.getOverrideManager().getAllUserOverridesFor(
-				user.username(),
-				semester.subdepartment(),
-				semester.semester()
-			);
+			try {
+				List<ScheduleOverride> overrides = Application.getOverrideManager().getAllUserOverridesFor(
+					user.username(),
+					semester.subdepartment(),
+					semester.semester()
+				);
 
-			Platform.runLater(() -> {
-				timetable = ScheduleOverride.applyOverrides(fetchedTimetable, overrides);
-				setTimetable.accept(timetable);
-			});
+				Platform.runLater(() -> {
+					timetable = ScheduleOverride.applyOverrides(fetchedTimetable, overrides);
+					setTimetable.accept(timetable);
+				});
+			} catch (DataStoreException e) {
+				Platform.runLater(() -> {
+					FXUtil.showDataStoreExceptionAlert(e);
+				});
+			}
 		});
 
 		thread.setDaemon(true);

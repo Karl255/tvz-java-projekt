@@ -63,7 +63,7 @@ public class UserManager {
 			throw new UsernameTakenException(m);
 		}
 
-		var user = new User.UserBuilder(username, UserRole.USER)
+		var user = new User.UserBuilder(username, users.size() > 0 ? UserRole.USER : UserRole.ADMIN)
 			.withPassword(password)
 			.build();
 

@@ -5,6 +5,7 @@ import hr.java.projektnizadatak.presentation.Application;
 import hr.java.projektnizadatak.presentation.FXUtil;
 import hr.java.projektnizadatak.presentation.models.AllOverridesModel;
 import hr.java.projektnizadatak.presentation.views.ApplicationScreen;
+import hr.java.projektnizadatak.shared.exceptions.DataStoreException;
 import javafx.beans.Observable;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -50,7 +51,11 @@ public class AllOverridesController {
 		originalsTableView.setItems(model.getOverridesList());
 		originalsTableView.getSelectionModel().selectedItemProperty().addListener(this::onSelect);
 
-		model.initialize();
+		try {
+			model.initialize();
+		} catch (DataStoreException e) {
+			FXUtil.showDataStoreExceptionAlert(e);
+		}
 	}
 	
 	@FXML
@@ -100,7 +105,11 @@ public class AllOverridesController {
 		var clicked = alert.showAndWait();
 		
 		if (clicked.isPresent() && clicked.get().equals(ButtonType.YES)) {
-			model.deleteSelected();
+			try {
+				model.deleteSelected();
+			} catch (DataStoreException e) {
+				FXUtil.showDataStoreExceptionAlert(e);
+			}
 		}
 	}
 }

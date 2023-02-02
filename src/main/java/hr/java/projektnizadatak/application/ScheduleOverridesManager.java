@@ -5,6 +5,8 @@ import hr.java.projektnizadatak.application.entities.OverrideData;
 import hr.java.projektnizadatak.application.entities.ScheduleItem;
 import hr.java.projektnizadatak.application.entities.ScheduleOverride;
 import hr.java.projektnizadatak.presentation.Application;
+import hr.java.projektnizadatak.shared.exceptions.DataStoreException;
+import hr.java.projektnizadatak.shared.exceptions.UnreachableCodeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,15 +55,15 @@ public class ScheduleOverridesManager {
 
 	// read
 
-	public List<ScheduleOverride> getAllUserOverrides(String username) {
+	public List<ScheduleOverride> getAllUserOverrides(String username) throws DataStoreException {
 		return store.readAllUserOverrides(username);
 	}
 
-	public List<ScheduleOverride> getAllUserOverridesFor(String username, String subdepartment, int semester) {
+	public List<ScheduleOverride> getAllUserOverridesFor(String username, String subdepartment, int semester) throws DataStoreException {
 		return store.readAllUserOverridesFor(username, subdepartment, semester);
 	}
 
-	public ScheduleOverride getOverrideForOriginalId(Long id) {
+	public ScheduleOverride getOverrideForOriginalId(Long id) throws DataStoreException {
 		if (id != null) {
 			return store.readOverride(id);
 		} else {
@@ -73,7 +75,7 @@ public class ScheduleOverridesManager {
 
 	// delete
 
-	public void deleteOverride(ScheduleOverride scheduleOverride) {
+	public void deleteOverride(ScheduleOverride scheduleOverride) throws DataStoreException {
 		store.deleteReplacements(
 			scheduleOverride
 				.replacements()
@@ -88,7 +90,7 @@ public class ScheduleOverridesManager {
 
 	// mixed
 
-	public long saveOverride(ScheduleOverride scheduleOverride, List<Long> removedReplacementIds, String forSubdepartment, Integer forSemester, String forUsername) {
+	public long saveOverride(ScheduleOverride scheduleOverride, List<Long> removedReplacementIds, String forSubdepartment, Integer forSemester, String forUsername) throws DataStoreException {
 		if (scheduleOverride.original().originalId() != null) {
 			// edited override
 
@@ -116,8 +118,10 @@ public class ScheduleOverridesManager {
 			// new override
 
 			if (forSubdepartment == null || forSemester == null) {
-				// TODO
-				throw new RuntimeException();
+				String m = "All identifying parameters are null";
+				logger.error(m);
+				
+				throw new UnreachableCodeException(m);
 			}
 
 			long originalId = store.createOriginal(scheduleOverride.original(), forSubdepartment, forSemester, forUsername);

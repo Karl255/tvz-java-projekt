@@ -3,6 +3,7 @@ package hr.java.projektnizadatak.presentation.models;
 import hr.java.projektnizadatak.application.entities.ScheduleOverride;
 import hr.java.projektnizadatak.presentation.Application;
 import hr.java.projektnizadatak.presentation.FXUtil;
+import hr.java.projektnizadatak.shared.exceptions.DataStoreException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -14,7 +15,7 @@ public class AllOverridesModel {
 	private final ObservableList<ScheduleOverride> overridesList = FXCollections.observableArrayList();
 	private ScheduleOverride selected;
 
-	public void initialize() {
+	public void initialize() throws DataStoreException {
 		var username = Application.getUserManager().getLoggedInUser().username();
 		allOverrides = Application.getOverrideManager().getAllUserOverrides(username);
 
@@ -56,7 +57,7 @@ public class AllOverridesModel {
 			|| (original.note() != null && original.note().toLowerCase().contains(filter));
 	}
 
-	public void deleteSelected() {
+	public void deleteSelected() throws DataStoreException {
 		if (selected == null) {
 			return;
 		}

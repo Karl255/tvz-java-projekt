@@ -89,9 +89,10 @@ public final class User implements Serializable, Recordable {
 			.append(" (").append(role.getName()).append("); ");
 
 		if (defaultDepartmentCode != null) {
-			sb.append(defaultDepartmentCode)
-				.append("; ");
+			sb.append(defaultDepartmentCode);
 		}
+		
+		sb.append("; ");
 
 		if (defaultSemester != null) {
 			sb.append(defaultSemester.semester())

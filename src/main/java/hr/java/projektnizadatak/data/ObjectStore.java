@@ -46,17 +46,17 @@ public abstract class ObjectStore<T extends Serializable> {
 
 			throw new UnreachableCodeException(m, e);
 		} catch (IOException e) {
-			String m = "Reading file: " + path;
+			String m = "Error while reading file: " + path;
 			logger.error(m);
 
 			throw new ReadOrWriteErrorException(m, e);
 		} catch (ClassNotFoundException e) {
-			String m = "File: " + path;
+			String m = "Found unknown type in objects file, file is likely corrupted: " + path;
 			logger.error(m);
 
 			throw new InvalidDataException(m, e);
 		} catch (ClassCastException e) {
-			String m = "Found unexpected type in objects file: " + path;
+			String m = "Found unexpected type in objects file, file is likely corrupted: " + path;
 			logger.error(m);
 
 			throw new InvalidDataException(m, e);
@@ -92,7 +92,7 @@ public abstract class ObjectStore<T extends Serializable> {
 
 			throw new UnreachableCodeException(m, e);
 		} catch (IOException e) {
-			String m = "Writing file: " + path;
+			String m = "Error while writing file: " + path;
 			logger.error(m);
 
 			throw new ReadOrWriteErrorException(m, e);
