@@ -263,6 +263,27 @@ public class ScheduleOverridesDBStore implements OverridesStore {
 		);
 	}
 
+	@Override
+	public void deleteForUser(String username) throws DataStoreException {
+		var originalIds = DataBaseAccess.getInstance().selectGeneric(
+			"SELECT id FROM override_original WHERE username = ?;",
+			ps -> ps.setString(1, username),
+			rs -> rs.getLong(1)
+		);
+		
+		for (var id : originalIds) {
+			DataBaseAccess.getInstance().updateGeneric(
+				"DELETE FROM override_replacement WHERE identifier_id = ?;",
+				ps -> ps.setLong(1, id)
+			);
+		}
+		
+		DataBaseAccess.getInstance().updateGeneric(
+			"DELETE FROM override_original WHERE username = ?;",
+			ps -> ps.setString(1, username)
+		);
+	}
+
 	// util
 
 	private static ScheduleItem toOverrideOriginal(ResultSet rs) throws SQLException {

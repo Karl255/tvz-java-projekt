@@ -2,8 +2,10 @@ package hr.java.projektnizadatak.presentation.controllers;
 
 import hr.java.projektnizadatak.application.entities.Semester;
 import hr.java.projektnizadatak.application.entities.UserRole;
+import hr.java.projektnizadatak.presentation.FXUtil;
 import hr.java.projektnizadatak.presentation.models.ManageUsersModel;
 import hr.java.projektnizadatak.presentation.models.UserItemModel;
+import hr.java.projektnizadatak.shared.exceptions.DataStoreException;
 import hr.java.projektnizadatak.shared.exceptions.NoAdminUserException;
 import javafx.beans.Observable;
 import javafx.fxml.FXML;
@@ -84,6 +86,8 @@ public class ManageUsersController {
 				);
 				
 				errorAlert.show();
+			} catch (DataStoreException e) {
+				FXUtil.showDataStoreExceptionAlert(e);
 			}
 		}
 	}

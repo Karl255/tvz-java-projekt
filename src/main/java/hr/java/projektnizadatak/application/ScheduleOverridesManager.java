@@ -87,6 +87,10 @@ public class ScheduleOverridesManager {
 		
 		logChange(scheduleOverride, null);
 	}
+	
+	public void deleteForUser(String username) throws DataStoreException {
+		store.deleteForUser(username);
+	}
 
 	// mixed
 

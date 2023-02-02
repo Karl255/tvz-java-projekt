@@ -2,6 +2,7 @@ package hr.java.projektnizadatak.application;
 
 import hr.java.projektnizadatak.application.entities.*;
 import hr.java.projektnizadatak.presentation.Application;
+import hr.java.projektnizadatak.shared.exceptions.DataStoreException;
 import hr.java.projektnizadatak.shared.exceptions.InvalidUsernameException;
 import hr.java.projektnizadatak.shared.exceptions.UsernameTakenException;
 import org.slf4j.Logger;
@@ -102,7 +103,7 @@ public class UserManager {
 		return newUser;
 	}
 
-	public void overrideUsers(List<User> users) {
+	public void overrideUsers(List<User> users) throws DataStoreException {
 		if (loggedInUserFallback.role() == UserRole.ADMIN) {
 			usersStore.overrideAll(users);
 		}

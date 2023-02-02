@@ -7,6 +7,7 @@ import hr.java.projektnizadatak.application.entities.Semester;
 import hr.java.projektnizadatak.application.entities.User;
 import hr.java.projektnizadatak.application.entities.UserRole;
 import hr.java.projektnizadatak.presentation.Application;
+import hr.java.projektnizadatak.shared.exceptions.DataStoreException;
 import hr.java.projektnizadatak.shared.exceptions.ReadOrWriteErrorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,7 +64,7 @@ public class UsersFileStore implements UsersStore {
 	}
 
 	@Override
-	public void overrideAll(List<User> users) {
+	public void overrideAll(List<User> users) throws DataStoreException {
 		var oldUsers = read();
 		storeAll(users);
 		
@@ -81,6 +82,10 @@ public class UsersFileStore implements UsersStore {
 			
 			if (!oldUser.equals(modifiedUser)) {
 				logChange(oldUser, modifiedUser);
+			}
+			
+			if (modifiedUser == null) {
+				Application.getOverrideManager().deleteForUser(oldUser.username());
 			}
 		}
 	}

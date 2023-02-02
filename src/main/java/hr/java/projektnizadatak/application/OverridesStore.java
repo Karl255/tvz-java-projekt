@@ -18,7 +18,7 @@ public interface OverridesStore {
 	void updateOriginal(ScheduleItem original) throws DataStoreException;
 	void updateReplacements(List<OverrideData> replacements) throws DataStoreException;
 
-	void deleteReplacements(List<Long> replacementIds) throws DataStoreException;
-
 	void deleteOriginal(Long id) throws DataStoreException;
+	void deleteReplacements(List<Long> replacementIds) throws DataStoreException;
+	void deleteForUser(String username) throws DataStoreException;
 }
