@@ -66,7 +66,7 @@ public class Application extends javafx.application.Application {
 			var scene = new Scene(window);
 			scene.getStylesheets().add("main.css");
 			
-			stage.setResizable(screen.canResize());
+			//stage.setResizable(screen.canResize());
 			stage.setScene(scene);
 			stage.setTitle(screen.getTitle());
 			stage.show();
