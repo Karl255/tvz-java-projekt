@@ -6,6 +6,7 @@ import hr.java.projektnizadatak.presentation.Application;
 import hr.java.projektnizadatak.presentation.FXUtil;
 import hr.java.projektnizadatak.presentation.util.WeekSwitcher;
 import hr.java.projektnizadatak.shared.exceptions.DataStoreException;
+import hr.java.projektnizadatak.shared.exceptions.NetworkErrorException;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -55,12 +56,16 @@ public class TimetableController {
 	public Thread loadDepartmentsAsync() {
 		var thread = new Thread(() -> {
 			var api = Application.getScheduleSource();
-			var deps = api.getAvailableDepartments();
+			try {
+				List<Department> deps = api.getAvailableDepartments();
 
-			Platform.runLater(() -> {
-				departmentList.setAll(deps);
-				selectDefaultDepartment();
-			});
+				Platform.runLater(() -> {
+					departmentList.setAll(deps);
+					selectDefaultDepartment();
+				});
+			} catch (NetworkErrorException e) {
+				Platform.runLater(() -> FXUtil.showNetworkErrorAlert(e));
+			}
 		});
 
 		thread.setDaemon(true);
@@ -98,7 +103,7 @@ public class TimetableController {
 	}
 
 	// semester
-	
+
 	public Thread loadSemestersAsync() {
 		var thread = new Thread(() -> {
 			var department = selectedDepartment;
@@ -107,15 +112,19 @@ public class TimetableController {
 				return;
 			}
 
-			var sems = Application.getScheduleSource().getAvailableSemesters(
-				department.code(),
-				Util.getAcademicYear(week.getThisMonday())
-			);
+			try {
+				List<Semester> sems = Application.getScheduleSource().getAvailableSemesters(
+					department.code(),
+					Util.getAcademicYear(week.getThisMonday())
+				);
 
-			Platform.runLater(() -> {
-				semesterList.setAll(sems);
-				selectDefaultSemester();
-			});
+				Platform.runLater(() -> {
+					semesterList.setAll(sems);
+					selectDefaultSemester();
+				});
+			} catch (NetworkErrorException e) {
+				Platform.runLater(() -> FXUtil.showNetworkErrorAlert(e));
+			}
 		});
 
 		thread.setDaemon(true);
@@ -133,19 +142,19 @@ public class TimetableController {
 
 		loadTimetableAsync();
 	}
-	
+
 	private void selectDefaultSemester() {
 		var user = Application.getUserManager().getLoggedInUser();
 		var firstSem = semesterList.stream()
 			.findFirst()
 			.orElse(null);
-		
+
 		if (user.defaultSemester() != null) {
 			var sem = semesterList.stream()
 				.filter(s -> s.equals(user.defaultSemester()))
 				.findFirst()
 				.orElse(firstSem);
-				
+
 			selectSemester.accept(sem);
 		} else {
 			selectSemester.accept(
@@ -182,7 +191,7 @@ public class TimetableController {
 
 	public Thread loadTimetableAsync() {
 		var user = Application.getUserManager().getLoggedInUser();
-		
+
 		var thread = new Thread(() -> {
 			var semester = selectedSemester;
 
@@ -190,15 +199,15 @@ public class TimetableController {
 				return;
 			}
 
-			var fetchedTimetable = Application.getScheduleSource().getTimetable(
-				semester.subdepartment(),
-				semester.semester(),
-				Util.getAcademicYear(week.getThisMonday()),
-				week.getThisMonday(),
-				timetableDays
-			);
-
 			try {
+				var fetchedTimetable = Application.getScheduleSource().getTimetable(
+					semester.subdepartment(),
+					semester.semester(),
+					Util.getAcademicYear(week.getThisMonday()),
+					week.getThisMonday(),
+					timetableDays
+				);
+
 				List<ScheduleOverride> overrides = Application.getOverrideManager().getAllUserOverridesFor(
 					user.username(),
 					semester.subdepartment(),
@@ -210,9 +219,9 @@ public class TimetableController {
 					setTimetable.accept(timetable);
 				});
 			} catch (DataStoreException e) {
-				Platform.runLater(() -> {
-					FXUtil.showDataStoreExceptionAlert(e);
-				});
+				Platform.runLater(() -> FXUtil.showDataStoreExceptionAlert(e));
+			} catch (NetworkErrorException e) {
+				Platform.runLater(() -> FXUtil.showNetworkErrorAlert(e));
 			}
 		});
 

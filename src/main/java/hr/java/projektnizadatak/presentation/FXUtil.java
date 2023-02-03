@@ -4,6 +4,7 @@ import hr.java.projektnizadatak.application.entities.OverrideData;
 import hr.java.projektnizadatak.application.entities.ScheduleItem;
 import hr.java.projektnizadatak.presentation.models.ScheduleItemModel;
 import hr.java.projektnizadatak.shared.exceptions.DataStoreException;
+import hr.java.projektnizadatak.shared.exceptions.NetworkErrorException;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
@@ -69,6 +70,18 @@ public class FXUtil {
 		
 		alert.setTitle("Data access error");
 		alert.setHeaderText("An error occured while trying to read or write data. Details are below.");
+		alert.showAndWait();
+	}
+	
+	public static void showNetworkErrorAlert(NetworkErrorException e) {
+		var alert = new Alert(
+			Alert.AlertType.ERROR,
+			e.getMessage(),
+			ButtonType.OK
+		);
+		
+		alert.setTitle("Network error");
+		alert.setHeaderText("An error occured while trying to connect to the Internet. Please check your Internet connection.");
 		alert.showAndWait();
 	}
 }

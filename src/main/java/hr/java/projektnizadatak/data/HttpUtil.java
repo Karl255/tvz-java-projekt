@@ -1,5 +1,7 @@
 package hr.java.projektnizadatak.data;
 
+import hr.java.projektnizadatak.shared.exceptions.DataStoreException;
+import hr.java.projektnizadatak.shared.exceptions.NetworkErrorException;
 import hr.java.projektnizadatak.shared.exceptions.ReadOrWriteErrorException;
 import hr.java.projektnizadatak.shared.exceptions.UnexpectedInterruptException;
 import javafx.util.Pair;
@@ -18,7 +20,7 @@ public class HttpUtil {
 	private static final Logger logger = LoggerFactory.getLogger(FileUtil.class);
 	private static final HttpClient client = HttpClient.newHttpClient();
 
-	public static String fetchFromEndpoint(URI endpoint) {
+	public static String fetchFromEndpoint(URI endpoint) throws NetworkErrorException {
 		var request = HttpRequest.newBuilder(endpoint)
 			.header("accept", "application/json")
 			.build();
@@ -26,13 +28,13 @@ public class HttpUtil {
 		try {
 			return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
 		} catch (IOException e) {
-			String m = "Fetching endpoint: " + endpoint;
-			logger.error(m);
+			String m = "Error occured while fetching endpoint: " + endpoint;
+			logger.error(m, e);
 
-			throw new ReadOrWriteErrorException(m, e);
+			throw new NetworkErrorException(m, e);
 		} catch (InterruptedException e) {
 			String m = "Fetching endpoint: " + endpoint;
-			logger.error(m);
+			logger.error(m, e);
 
 			throw new UnexpectedInterruptException(m, e);
 		}

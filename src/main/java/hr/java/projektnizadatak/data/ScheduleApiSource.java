@@ -6,6 +6,8 @@ import hr.java.projektnizadatak.application.entities.*;
 import hr.java.projektnizadatak.data.api_response.ApiDepartment;
 import hr.java.projektnizadatak.data.api_response.ApiEvent;
 import hr.java.projektnizadatak.data.api_response.ApiSemester;
+import hr.java.projektnizadatak.shared.exceptions.DataStoreException;
+import hr.java.projektnizadatak.shared.exceptions.NetworkErrorException;
 import javafx.util.Pair;
 
 import java.net.URI;
@@ -23,7 +25,7 @@ public class ScheduleApiSource implements ScheduleSource {
 	
 	private static final Gson gson = new Gson();
 	
-	public List<Department> getAvailableDepartments() {
+	public List<Department> getAvailableDepartments() throws NetworkErrorException {
 		String json = HttpUtil.fetchFromEndpoint(AVAILABLE_DEPARTMENTS_ENDPOINT);
 		
 		return Arrays.stream(gson.fromJson(json, ApiDepartment[].class))
@@ -31,7 +33,7 @@ public class ScheduleApiSource implements ScheduleSource {
 			.toList();
 	}
 	
-	public List<Semester> getAvailableSemesters(String departmentCode, int year) {
+	public List<Semester> getAvailableSemesters(String departmentCode, int year) throws NetworkErrorException {
 		var uri = HttpUtil.buildUriWithParams(AVAILABLE_SEMESTERS_ENDPOINT_BASE,
 			new Pair<>("department", departmentCode),
 			new Pair<>("year", Integer.toString(year))
@@ -44,7 +46,7 @@ public class ScheduleApiSource implements ScheduleSource {
 			.toList();
 	}
 
-	public Timetable getTimetable(String subdepartment, int semester, int year, LocalDate start, int days) {
+	public Timetable getTimetable(String subdepartment, int semester, int year, LocalDate start, int days) throws NetworkErrorException {
 		var uri = HttpUtil.buildUriWithParams(TIMETABLE_ENDPOINT_BASE,
 			new Pair<>("department", subdepartment),
 			new Pair<>("semester", Integer.toString(semester)),
