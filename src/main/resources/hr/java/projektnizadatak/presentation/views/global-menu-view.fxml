@@ -13,6 +13,6 @@
 	<Menu mnemonicParsing="false" text="Navigation">
 		<MenuItem mnemonicParsing="false" text="Timetable" onAction="#showTimetableScreen"/>
 		<MenuItem mnemonicParsing="false" text="Manage overrides" onAction="#showManageOverridesScreen"/>
-		<MenuItem mnemonicParsing="false" text="View change log" onAction="#showChangeLogScreen"/>
+		<MenuItem mnemonicParsing="false" text="View change log" onAction="#showChangeLogScreen" fx:id="showChangeLogMenuItem" disable="true"/>
 	</Menu>
 </MenuBar>

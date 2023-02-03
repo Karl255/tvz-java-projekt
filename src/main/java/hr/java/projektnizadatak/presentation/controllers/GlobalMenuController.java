@@ -9,6 +9,7 @@ import javafx.scene.control.MenuItem;
 
 public class GlobalMenuController {
 	@FXML private MenuItem showManageUsersMenuItem;
+	@FXML private MenuItem showChangeLogMenuItem;
 	
 	@FXML
 	private void initialize() {
@@ -16,6 +17,7 @@ public class GlobalMenuController {
 		
 		if (user.role() == UserRole.ADMIN) {
 			showManageUsersMenuItem.setDisable(false);
+			showChangeLogMenuItem.setDisable(false);
 		}
 	}
 	

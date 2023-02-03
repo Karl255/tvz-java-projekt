@@ -58,23 +58,23 @@
 
 		<StackPane GridPane.rowIndex="4">
 			<TimetableDay fx:id="monday" title="Monday" onItemSelected="#showItemDetails"/>
-			<Label fx:id="mondayHolidayText"/>
+			<Label fx:id="mondayHolidayText" styleClass="bold"/>
 		</StackPane>
 		<StackPane GridPane.columnIndex="1" GridPane.rowIndex="4">
 			<TimetableDay fx:id="tuesday" title="Tuesday" onItemSelected="#showItemDetails"/>
-			<Label fx:id="tuesdayHolidayText"/>
+			<Label fx:id="tuesdayHolidayText" styleClass="bold"/>
 		</StackPane>
 		<StackPane GridPane.columnIndex="2" GridPane.rowIndex="4">
 			<TimetableDay fx:id="wednesday" title="Wednesday" onItemSelected="#showItemDetails"/>
-			<Label fx:id="wednesdayHolidayText"/>
+			<Label fx:id="wednesdayHolidayText" styleClass="bold"/>
 		</StackPane>
 		<StackPane GridPane.columnIndex="3" GridPane.rowIndex="4">
 			<TimetableDay fx:id="thursday" title="Thursday" onItemSelected="#showItemDetails"/>
-			<Label fx:id="thursdayHolidayText"/>
+			<Label fx:id="thursdayHolidayText" styleClass="bold"/>
 		</StackPane>
 		<StackPane GridPane.columnIndex="4" GridPane.rowIndex="4">
 			<TimetableDay fx:id="friday" title="Friday" onItemSelected="#showItemDetails"/>
-			<Label fx:id="fridayHolidayText"/>
+			<Label fx:id="fridayHolidayText" styleClass="bold"/>
 		</StackPane>
 	</GridPane>
 </GridPane>
