@@ -1,13 +1,13 @@
-package hr.java.projektnizadatak.presentation.controllers;
+package hr.java.projektnizadatak.presentation.views;
 
 import hr.java.projektnizadatak.application.entities.UserRole;
 import hr.java.projektnizadatak.presentation.Application;
-import hr.java.projektnizadatak.presentation.views.ApplicationScreen;
+import hr.java.projektnizadatak.presentation.ApplicationScreen;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
 
-public class GlobalMenuController {
+public class GlobalMenuView {
 	@FXML private MenuItem showManageUsersMenuItem;
 	@FXML private MenuItem showChangeLogMenuItem;
 	

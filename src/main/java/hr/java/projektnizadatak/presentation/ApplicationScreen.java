@@ -1,4 +1,4 @@
-package hr.java.projektnizadatak.presentation.views;
+package hr.java.projektnizadatak.presentation;
 
 public enum ApplicationScreen {
 	Login("Login", "views/login-view.fxml", false),

@@ -1,8 +1,8 @@
-package hr.java.projektnizadatak.presentation.controllers;
+package hr.java.projektnizadatak.presentation.views;
 
 import hr.java.projektnizadatak.application.entities.ScheduleItem;
 import hr.java.projektnizadatak.presentation.Application;
-import hr.java.projektnizadatak.presentation.models.TimetableDayItemModel;
+import hr.java.projektnizadatak.presentation.models.TimetableDayModel;
 import hr.java.projektnizadatak.shared.exceptions.FxmlLoadingException;
 import hr.java.projektnizadatak.shared.exceptions.UnreachableCodeException;
 import javafx.beans.property.ObjectProperty;
@@ -21,17 +21,17 @@ import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 
-public class TimetableDay extends GridPane {
-	private static final Logger logger = LoggerFactory.getLogger(TimetableDay.class);
+public class TimetableDayView extends GridPane {
+	private static final Logger logger = LoggerFactory.getLogger(TimetableDayView.class);
 
 	@FXML
 	private Label titleLabel;
 	@FXML
 	private AnchorPane contentAnchorPane;
 	
-	private List<TimetableItem> timetableItems;
+	private List<TimetableItemModel> timetableItems;
 
-	public TimetableDay() {
+	public TimetableDayView() {
 		FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("views/timetable-day-view.fxml"));
 		fxmlLoader.setRoot(this);
 		fxmlLoader.setController(this);
@@ -48,10 +48,10 @@ public class TimetableDay extends GridPane {
 	public void setItems(List<ScheduleItem> items) {
 		contentAnchorPane.getChildren().clear();
 
-		timetableItems = TimetableDayItemModel.organizeItems(items)
+		timetableItems = TimetableDayModel.organizeItems(items)
 			.stream()
 			.map(model -> {
-				TimetableItem timetableItem = new TimetableItem(model);
+				TimetableItemModel timetableItem = new TimetableItemModel(model);
 				timetableItem.setOnMouseClicked(this::calednarItemClicked);
 				return timetableItem;
 			})
@@ -75,7 +75,7 @@ public class TimetableDay extends GridPane {
 		contentAnchorPane.getChildren().setAll(timetableItems);
 
 		int maxColumn = contentAnchorPane.getChildren().stream()
-			.map(item -> (TimetableItem) item)
+			.map(item -> (TimetableItemModel) item)
 			.max(Comparator.comparing(item -> item.getModel().getColumn()))
 			.orElseThrow(() -> {
 				String m = "No maximum found while repositioning items";
@@ -106,7 +106,7 @@ public class TimetableDay extends GridPane {
 	private final ObjectProperty<EventHandler<MouseEvent>> onItemSelected = new ObjectPropertyBase<>() {
 		@Override
 		public Object getBean() {
-			return TimetableDay.this;
+			return TimetableDayView.this;
 		}
 
 		@Override

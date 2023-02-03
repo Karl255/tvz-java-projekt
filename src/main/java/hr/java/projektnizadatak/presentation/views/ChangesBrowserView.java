@@ -1,4 +1,4 @@
-package hr.java.projektnizadatak.presentation.controllers;
+package hr.java.projektnizadatak.presentation.views;
 
 import hr.java.projektnizadatak.application.ChangesManager;
 import hr.java.projektnizadatak.application.entities.Change;
@@ -14,7 +14,7 @@ import javafx.scene.text.TextFlow;
 
 import java.time.format.DateTimeFormatter;
 
-public class ChangesBrowserController {
+public class ChangesBrowserView {
 	private static final DateTimeFormatter TIMESTAMP_FORMAT = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss");
 
 	@FXML private TextFlow oldValueDetails;

@@ -6,7 +6,6 @@ import hr.java.projektnizadatak.application.UserManager;
 import hr.java.projektnizadatak.data.ScheduleApiSource;
 import hr.java.projektnizadatak.data.ScheduleOverridesDBStore;
 import hr.java.projektnizadatak.data.UsersFileStore;
-import hr.java.projektnizadatak.presentation.views.ApplicationScreen;
 import hr.java.projektnizadatak.shared.exceptions.FxmlLoadingException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -67,10 +66,10 @@ public class Application extends javafx.application.Application {
 			var scene = new Scene(window);
 			scene.getStylesheets().add("main.css");
 			
+			stage.setResizable(screen.canResize());
 			stage.setScene(scene);
 			stage.setTitle(screen.getTitle());
 			stage.show();
-			stage.setResizable(screen.canResize());
 		} catch (IOException e) {
 			String m = "Loading FXML for screen: " + screen;
 			logger.error(m);

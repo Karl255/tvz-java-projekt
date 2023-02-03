@@ -1,8 +1,8 @@
-package hr.java.projektnizadatak.presentation.controllers;
+package hr.java.projektnizadatak.presentation.views;
 
 import hr.java.projektnizadatak.application.entities.ScheduleItem;
 import hr.java.projektnizadatak.presentation.Application;
-import hr.java.projektnizadatak.presentation.models.TimetableDayItemModel;
+import hr.java.projektnizadatak.presentation.models.TimetableDayModel;
 import hr.java.projektnizadatak.shared.exceptions.FxmlLoadingException;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,15 +13,15 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-public class TimetableItem extends TextFlow {
-	private static final Logger logger = LoggerFactory.getLogger(TimetableItem.class);
-	private final TimetableDayItemModel model;
+public class TimetableItemModel extends TextFlow {
+	private static final Logger logger = LoggerFactory.getLogger(TimetableItemModel.class);
+	private final TimetableDayModel model;
 	
-	public TimetableItem(ScheduleItem item) {
-		this(new TimetableDayItemModel(item));
+	public TimetableItemModel(ScheduleItem item) {
+		this(new TimetableDayModel(item));
 	}
 
-	public TimetableItem(TimetableDayItemModel model) {
+	public TimetableItemModel(TimetableDayModel model) {
 		this.model = model;
 
 		FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("views/timetable-item-view.fxml"));
@@ -57,7 +57,7 @@ public class TimetableItem extends TextFlow {
 		);
 	}
 
-	public TimetableDayItemModel getModel() {
+	public TimetableDayModel getModel() {
 		return model;
 	}
 

@@ -12,8 +12,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public final class TimetableDayItemModel {
-	private static final Logger logger = LoggerFactory.getLogger(TimetableDayItemModel.class);
+public final class TimetableDayModel {
+	private static final Logger logger = LoggerFactory.getLogger(TimetableDayModel.class);
 
 	private static final LocalTime BEGINNING_TIME = LocalTime.of(8, 0);
 	private static final double BEGINNING_HOURS = Util.toHours(BEGINNING_TIME);
@@ -29,7 +29,7 @@ public final class TimetableDayItemModel {
 	private int column;
 	private int columnSpan;
 
-	public TimetableDayItemModel(ScheduleItem item) {
+	public TimetableDayModel(ScheduleItem item) {
 		this.scheduleItem = item;
 		this.start = item.start();
 		this.end = item.end();
@@ -45,16 +45,16 @@ public final class TimetableDayItemModel {
 		}
 	}
 
-	public static List<TimetableDayItemModel> organizeItems(List<ScheduleItem> items) {
+	public static List<TimetableDayModel> organizeItems(List<ScheduleItem> items) {
 		if (items.size() == 0) {
 			return Collections.emptyList();
 		}
 
 		var separated = items.stream()
-			.map(TimetableDayItemModel::new)
+			.map(TimetableDayModel::new)
 			.sorted(Comparator
-				.comparing(TimetableDayItemModel::start)
-				.thenComparing(TimetableDayItemModel::end)
+				.comparing(TimetableDayModel::start)
+				.thenComparing(TimetableDayModel::end)
 			)
 			.toList();
 
@@ -110,7 +110,7 @@ public final class TimetableDayItemModel {
 		return separated;
 	}
 
-	private static boolean timespanIntersects(TimetableDayItemModel m1, TimetableDayItemModel m2) {
+	private static boolean timespanIntersects(TimetableDayModel m1, TimetableDayModel m2) {
 		return Util.isBetween(m1.start(), m2.start(), m2.end())
 			|| Util.isBetween(m2.start(), m1.start(), m1.end());
 	}

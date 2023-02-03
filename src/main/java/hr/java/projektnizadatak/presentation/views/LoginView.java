@@ -1,8 +1,8 @@
-package hr.java.projektnizadatak.presentation.controllers;
+package hr.java.projektnizadatak.presentation.views;
 
 import hr.java.projektnizadatak.presentation.Application;
 import hr.java.projektnizadatak.presentation.FXUtil;
-import hr.java.projektnizadatak.presentation.views.ApplicationScreen;
+import hr.java.projektnizadatak.presentation.ApplicationScreen;
 import hr.java.projektnizadatak.shared.exceptions.InvalidUsernameException;
 import hr.java.projektnizadatak.shared.exceptions.UsernameTakenException;
 import javafx.fxml.FXML;
@@ -10,7 +10,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
-public class LoginController {
+public class LoginView {
 	@FXML
 	private TextField usernameInput;
 

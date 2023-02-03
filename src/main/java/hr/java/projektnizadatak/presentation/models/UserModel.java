@@ -8,14 +8,14 @@ import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 
-public class UserItemModel {
+public class UserModel {
 	private final ReadOnlyStringProperty username;
 	private final ReadOnlyStringProperty passwordHash;
 	private final SimpleObjectProperty<UserRole> role;
 	private final ReadOnlyStringProperty defaultDepartmentCode;
 	private final ReadOnlyObjectProperty<Semester> defaultSemester;
 
-	public UserItemModel(User user) {
+	public UserModel(User user) {
 		username = new SimpleStringProperty(user.username());
 		passwordHash = new SimpleStringProperty(user.passwordHash());
 		role = new SimpleObjectProperty<>(user.role());

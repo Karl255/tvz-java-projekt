@@ -10,9 +10,9 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<?import hr.java.projektnizadatak.presentation.controllers.TimetableDay?>
+<?import hr.java.projektnizadatak.presentation.views.TimetableDayView?>
 
-<GridPane prefHeight="1024.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hr.java.projektnizadatak.presentation.controllers.TimetableController">
+<GridPane prefHeight="1024.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hr.java.projektnizadatak.presentation.views.TimetableView">
 	<columnConstraints>
 		<ColumnConstraints hgrow="ALWAYS"/>
 	</columnConstraints>
@@ -57,23 +57,23 @@
 		</HBox>
 
 		<StackPane GridPane.rowIndex="4">
-			<TimetableDay fx:id="monday" title="Monday" onItemSelected="#showItemDetails"/>
+			<TimetableDayView fx:id="monday" title="Monday" onItemSelected="#showItemDetails"/>
 			<Label fx:id="mondayHolidayText" styleClass="bold"/>
 		</StackPane>
 		<StackPane GridPane.columnIndex="1" GridPane.rowIndex="4">
-			<TimetableDay fx:id="tuesday" title="Tuesday" onItemSelected="#showItemDetails"/>
+			<TimetableDayView fx:id="tuesday" title="Tuesday" onItemSelected="#showItemDetails"/>
 			<Label fx:id="tuesdayHolidayText" styleClass="bold"/>
 		</StackPane>
 		<StackPane GridPane.columnIndex="2" GridPane.rowIndex="4">
-			<TimetableDay fx:id="wednesday" title="Wednesday" onItemSelected="#showItemDetails"/>
+			<TimetableDayView fx:id="wednesday" title="Wednesday" onItemSelected="#showItemDetails"/>
 			<Label fx:id="wednesdayHolidayText" styleClass="bold"/>
 		</StackPane>
 		<StackPane GridPane.columnIndex="3" GridPane.rowIndex="4">
-			<TimetableDay fx:id="thursday" title="Thursday" onItemSelected="#showItemDetails"/>
+			<TimetableDayView fx:id="thursday" title="Thursday" onItemSelected="#showItemDetails"/>
 			<Label fx:id="thursdayHolidayText" styleClass="bold"/>
 		</StackPane>
 		<StackPane GridPane.columnIndex="4" GridPane.rowIndex="4">
-			<TimetableDay fx:id="friday" title="Friday" onItemSelected="#showItemDetails"/>
+			<TimetableDayView fx:id="friday" title="Friday" onItemSelected="#showItemDetails"/>
 			<Label fx:id="fridayHolidayText" styleClass="bold"/>
 		</StackPane>
 	</GridPane>

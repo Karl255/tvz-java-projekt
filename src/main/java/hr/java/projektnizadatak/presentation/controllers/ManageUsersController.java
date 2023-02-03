@@ -1,94 +1,59 @@
 package hr.java.projektnizadatak.presentation.controllers;
 
-import hr.java.projektnizadatak.application.entities.Semester;
 import hr.java.projektnizadatak.application.entities.UserRole;
-import hr.java.projektnizadatak.presentation.FXUtil;
-import hr.java.projektnizadatak.presentation.models.ManageUsersModel;
-import hr.java.projektnizadatak.presentation.models.UserItemModel;
+import hr.java.projektnizadatak.presentation.Application;
+import hr.java.projektnizadatak.presentation.models.UserModel;
 import hr.java.projektnizadatak.shared.exceptions.DataStoreException;
 import hr.java.projektnizadatak.shared.exceptions.NoAdminUserException;
-import javafx.beans.Observable;
-import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.ChoiceBoxTableCell;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ManageUsersController {
-	private final ManageUsersModel model;
+	private static final Logger logger = LoggerFactory.getLogger(ManageUsersController.class);
+	
+	private final ObservableList<UserModel> userList = FXCollections.observableArrayList();
+	private UserModel selected;
 
-	@FXML private TableView<UserItemModel> userTableView;
-	@FXML private TableColumn<UserItemModel, String> usernameColumn;
-	@FXML private TableColumn<UserItemModel, UserRole> roleColumn;
-	@FXML private TableColumn<UserItemModel, String> defaultDepartmentColumn;
-	@FXML private TableColumn<UserItemModel, Semester> defaultSemesterColumn;
-	
-	@FXML private Button deleteButton;
-	
-	public ManageUsersController() {
-		model = new ManageUsersModel();
+	public void initialize() {
+		var users = Application.getUserManager()
+			.getAllUsers()
+			.stream()
+			.map(UserModel::new)
+			.toList();
+
+		userList.setAll(users);
 	}
-	
-	@FXML
-	private void initialize() {
-		usernameColumn.setCellValueFactory(d -> d.getValue().usernameProperty());
-		roleColumn.setCellValueFactory(d -> d.getValue().roleProperty());
-		roleColumn.setCellFactory(ChoiceBoxTableCell.forTableColumn(UserRole.values()));
-		defaultDepartmentColumn.setCellValueFactory(d -> d.getValue().defaultDepartmentCodeProperty());
-		defaultSemesterColumn.setCellValueFactory(d -> d.getValue().defaultSemesterProperty());
-		
-		userTableView.setItems(model.getUserList());
-		userTableView.getSelectionModel().selectedItemProperty().addListener(this::onSelectedRow);
-		
-		model.initialize();
+
+	public ObservableList<UserModel> getUserList() {
+		return userList;
 	}
-	
-	private void onSelectedRow(Observable observable, UserItemModel oldValue, UserItemModel newValue) {
-		model.setSelected(newValue);
 
-		deleteButton.setDisable(newValue == null);
+	public UserModel getSelected() {
+		return selected;
 	}
-	
-	@FXML
-	private void deleteSelectedUser() {
-		var alert = new Alert(
-			Alert.AlertType.CONFIRMATION,
-			"Are you sure you want to delete this user?",
-			ButtonType.YES, ButtonType.CANCEL
-		);
 
-		alert.setTitle("Confirm deletion");
-		var clicked = alert.showAndWait();
+	public void setSelected(UserModel selected) {
+		this.selected = selected;
+	}
 
-		if (clicked.isPresent() && clicked.get().equals(ButtonType.YES)) {
-			model.deleteSelected();
+	public void saveChanges() throws DataStoreException, NoAdminUserException {
+		if (userList.stream().noneMatch(u -> u.getRole() == UserRole.ADMIN)) {
+			String m = "At least one user has to be an admin";
+			logger.info(m);
+			
+			throw new NoAdminUserException(m);
 		}
 		
+		var users = userList.stream()
+			.map(UserModel::toUser)
+			.toList();
+		
+		Application.getUserManager().overrideUsers(users);
 	}
-	
-	@FXML
-	private void save() {
-		var alert = new Alert(
-			Alert.AlertType.CONFIRMATION,
-			"Are you sure you want to save your changes?",
-			ButtonType.YES, ButtonType.CANCEL
-		);
-		
-		alert.setTitle("Confirm save");
-		var clicked = alert.showAndWait();
-		
-		if (clicked.isPresent() && clicked.get().equals(ButtonType.YES)) {
-			try {
-				model.saveChanges();
-			} catch (NoAdminUserException e) {
-				var errorAlert = new Alert(
-					Alert.AlertType.ERROR,
-					"There needs to be at least one admin user",
-					ButtonType.OK
-				);
-				
-				errorAlert.show();
-			} catch (DataStoreException e) {
-				FXUtil.showDataStoreExceptionAlert(e);
-			}
-		}
+
+	public void deleteSelected() {
+		userList.remove(selected);
 	}
 }
